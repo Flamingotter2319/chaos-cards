@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHAOS CARDS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap');
+
+:root {
+  --bg: #080604;
+  --felt: #0d1f0f;
+  --gold: #c9a84c;
+  --gold2: #e8c97a;
+  --red: #8b1a1a;
+  --red2: #c0392b;
+  --cream: #f5e6c8;
+  --dim: #6b5a3e;
+  --green: #1a4a1a;
+  --card-w: 76px;
+  --card-h: 108px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  font-family: 'Crimson Text', serif;
+  color: var(--cream);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,0.04) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 48px, rgba(255,255,255,0.008) 48px, rgba(255,255,255,0.008) 49px),
+    repeating-linear-gradient(90deg, transparent, transparent 48px, rgba(255,255,255,0.008) 48px, rgba(255,255,255,0.008) 49px);
+}
+
+/* ── SCREENS ─────────────────────────────── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: flex; flex-direction: column; align-items: center; }
+
+/* ── SHARED ──────────────────────────────── */
+.logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(32px, 7vw, 64px);
+  font-weight: 900;
+  background: linear-gradient(135deg, #7a5c0f, #c9a84c, #e8c97a, #c9a84c, #7a5c0f);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 0 24px rgba(201,168,76,0.35));
+  letter-spacing: 4px; text-align: center;
+}
+.tagline {
+  font-family: 'Special Elite', cursive;
+  color: var(--dim); font-size: 12px; letter-spacing: 6px;
+  text-transform: uppercase; text-align: center;
+}
+.divider { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 6px auto; }
+
+.card-panel {
+  background: linear-gradient(145deg, #100e08, #181208);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 14px;
+  padding: 28px 30px;
+  width: min(480px, 94vw);
+  box-shadow: 0 10px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(201,168,76,0.08);
+}
+.panel-title {
+  font-family: 'Cinzel Decorative', serif;
+  color: var(--gold); font-size: 13px; letter-spacing: 3px;
+  text-align: center; margin-bottom: 20px;
+}
+
+input[type=text], input[type=password], input[type=number] {
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--cream); padding: 10px 14px;
+  border-radius: 7px; font-family: 'Crimson Text', serif;
+  font-size: 15px; outline: none; width: 100%;
+  transition: border-color 0.2s;
+}
+input:focus { border-color: var(--gold); }
+input::placeholder { color: var(--dim); }
+label { font-size: 12px; color: var(--dim); letter-spacing: 1px; display: block; margin-bottom: 4px; margin-top: 12px; }
+
+.btn {
+  background: linear-gradient(135deg, #7a5c0f, #c9a84c);
+  color: #08060a; border: none; padding: 12px 28px;
+  font-family: 'Cinzel Decorative', serif; font-size: 12px;
+  font-weight: 700; letter-spacing: 2px; border-radius: 8px;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 18px rgba(201,168,76,0.25); width: 100%; margin-top: 10px;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(201,168,76,0.35); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.btn-ghost {
+  background: rgba(201,168,76,0.08);
+  color: var(--gold); border: 1px solid rgba(201,168,76,0.25);
+  box-shadow: none;
+}
+.btn-ghost:hover { background: rgba(201,168,76,0.16); box-shadow: none; }
+.btn-red {
+  background: linear-gradient(135deg, #4a0a0a, #8b1a1a);
+  color: var(--cream); box-shadow: 0 4px 18px rgba(139,26,26,0.3);
+}
+.btn-sm { padding: 7px 16px; font-size: 10px; width: auto; margin-top: 0; }
+.btn-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+
+.err { color: #ef9a9a; font-size: 13px; margin-top: 8px; min-height: 18px; font-family: 'Special Elite', cursive; }
+
+hr.gold { border: none; border-top: 1px solid rgba(201,168,76,0.15); margin: 16px 0; }
+
+/* ── CONNECT SCREEN ──────────────────────── */
+#screen-connect { justify-content: center; gap: 18px; padding: 40px 16px; }
+
+.status-dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: 6px;
+  background: var(--red2); vertical-align: middle;
+}
+.status-dot.connected { background: #4caf50; box-shadow: 0 0 6px #4caf50; }
+.conn-status { font-family: 'Special Elite', cursive; font-size: 12px; color: var(--dim); }
+
+/* ── LOBBY SCREEN ────────────────────────── */
+#screen-lobby { justify-content: flex-start; padding: 0; }
+
+.lobby-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%; max-width: 960px;
+  padding: 24px 16px;
+}
+@media(max-width:640px) { .lobby-layout { grid-template-columns: 1fr; } }
+
+.lobby-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  width: 100%; position: sticky; top: 0; z-index: 50;
+}
+
+.server-list { display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; }
+.server-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 8px; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.server-item:hover { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.04); }
+.server-name { font-family: 'Special Elite', cursive; color: var(--cream); font-size: 14px; }
+.server-meta { font-size: 12px; color: var(--dim); margin-top: 2px; }
+.server-badge {
+  font-family: 'Special Elite', cursive; font-size: 10px; letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 20px;
+}
+.badge-open { background: rgba(76,175,80,0.15); color: #81c784; border: 1px solid rgba(76,175,80,0.3); }
+.badge-pw { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+.badge-ing { background: rgba(139,26,26,0.2); color: #ef9a9a; border: 1px solid rgba(192,57,43,0.3); }
+.empty-list { color: var(--dim); font-family: 'Special Elite', cursive; font-size: 13px; text-align: center; padding: 24px; letter-spacing: 2px; }
+
+/* ── ROOM SCREEN ─────────────────────────── */
+#screen-room { justify-content: flex-start; }
+
+.room-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; width: 100%;
+  background: rgba(0,0,0,0.55);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  position: sticky; top: 0; z-index: 50;
+}
+
+.room-name-display { font-family: 'Cinzel Decorative', serif; color: var(--gold); font-size: 16px; }
+
+.room-layout {
+  display: grid; grid-template-columns: 1fr 260px;
+  gap: 0; width: 100%; flex: 1;
+}
+@media(max-width:700px){ .room-layout { grid-template-columns: 1fr; } }
+
+.room-main { padding: 20px 16px; }
+.room-sidebar {
+  padding: 20px 14px;
+  border-left: 1px solid rgba(201,168,76,0.1);
+  background: rgba(0,0,0,0.25);
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+.player-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 8px; margin-bottom: 8px;
+}
+.player-card.is-you { border-color: rgba(201,168,76,0.4); }
+.player-card .pname { font-family: 'Special Elite', cursive; font-size: 14px; }
+.player-card .pchips { font-size: 12px; color: var(--dim); }
+.bot-tag { font-size: 10px; padding: 2px 6px; border-radius: 10px; background: rgba(156,39,176,0.2); color: #ce93d8; border: 1px solid rgba(156,39,176,0.3); margin-left: 6px; }
+.owner-tag { font-size: 10px; padding: 2px 6px; border-radius: 10px; background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); margin-left: 6px; }
+
+/* ── GAME SCREEN ─────────────────────────── */
+#screen-game { justify-content: flex-start; }
+
+.game-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px; width: 100%;
+  background: rgba(0,0,0,0.6);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  position: sticky; top: 0; z-index: 50;
+}
+.game-title-sm { font-family: 'Cinzel Decorative', serif; color: var(--gold); font-size: 15px; }
+.round-badge { font-family: 'Special Elite', cursive; color: var(--dim); font-size: 11px; letter-spacing: 2px; }
+
+.table-area {
+  width: 100%;
+  background: radial-gradient(ellipse 100% 80% at 50% 40%, #0e1f10 0%, #080e09 60%, #040804 100%);
+  padding: 16px 16px 24px; flex: 1;
+}
+
+.center-zone {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 12px; margin-bottom: 12px;
+}
+.pot-label { font-family: 'Special Elite', cursive; color: var(--gold2); font-size: 12px; letter-spacing: 3px; }
+.community-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; min-height: 80px; align-items: center; }
+.comm-label { font-family: 'Special Elite', cursive; color: var(--dim); font-size: 9px; letter-spacing: 4px; text-transform: uppercase; }
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.pslot {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 10px; padding: 11px 13px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  position: relative; overflow: hidden;
+}
+.pslot.my-turn { border-color: var(--gold); box-shadow: 0 0 18px rgba(201,168,76,0.2), inset 0 0 16px rgba(201,168,76,0.04); }
+.pslot.busted { border-color: rgba(139,26,26,0.5); opacity: 0.6; }
+.pslot.winner { border-color: #4caf50; box-shadow: 0 0 20px rgba(76,175,80,0.25); }
+.pslot.standing { border-color: rgba(201,168,76,0.35); }
+
+.pslot-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.pslot-name { font-family: 'Special Elite', cursive; color: var(--gold); font-size: 13px; }
+.pslot-score { font-family: 'Cinzel Decorative', serif; font-size: 20px; font-weight: 700; }
+.pslot-score.bust { color: var(--red2); }
+.pslot-score.bj { color: #ffd700; }
+.pslot-score.safe { color: #81c784; }
+.pslot-chips { font-size: 11px; color: var(--dim); }
+
+.pslot-cards { display: flex; gap: 4px; flex-wrap: wrap; min-height: 56px; align-items: flex-start; margin: 6px 0; }
+.pslot-actions { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; align-items: center; }
+
+.sbadge {
+  position: absolute; top: 7px; right: 8px;
+  font-family: 'Special Elite', cursive; font-size: 9px; letter-spacing: 1px;
+  padding: 2px 7px; border-radius: 20px; text-transform: uppercase;
+}
+.sb-bust { background: var(--red); color: var(--cream); }
+.sb-stand { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid var(--gold); }
+.sb-bj { background: linear-gradient(135deg, #b8860b, #ffd700); color: #000; }
+.sb-winner { background: linear-gradient(135deg, #1a4a1a, #4caf50); color: #fff; }
+.sb-turn { background: var(--gold); color: #000; animation: pulseBadge 1s ease-in-out infinite; }
+
+@keyframes pulseBadge { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ── CARDS ───────────────────────────────── */
+.card {
+  width: var(--card-w); height: var(--card-h);
+  border-radius: 7px; display: flex; flex-direction: column;
+  justify-content: space-between; padding: 4px;
+  position: relative; cursor: default; flex-shrink: 0;
+  animation: dealIn 0.28s ease-out; overflow: hidden;
+  transition: transform 0.12s;
+}
+.card:hover { transform: translateY(-4px); }
+@keyframes dealIn { from{transform:translateY(-16px) scale(0.85);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+
+.card.normal { background: #faf6ee; border: 1px solid #ddd; box-shadow: 2px 3px 8px rgba(0,0,0,0.45); color: #1a1a1a; }
+.card.normal.red { color: #c0392b; }
+.card.face-down {
+  background: repeating-conic-gradient(#1a0808 0% 25%, #2d1212 0% 50%) 0 0 / 10px 10px;
+  border: 2px solid var(--gold); box-shadow: 2px 3px 8px rgba(0,0,0,0.5);
+}
+.card.special { border: 2px solid; box-shadow: 2px 3px 12px rgba(0,0,0,0.5); }
+.card.s-credit { background: linear-gradient(135deg,#1a237e,#283593); color:#fff; border-color:#7986cb; }
+.card.s-license { background: linear-gradient(135deg,#1b5e20,#2e7d32); color:#fff; border-color:#66bb6a; }
+.card.s-shopping { background: linear-gradient(135deg,#b71c1c,#c62828); color:#fff; border-color:#ef9a9a; }
+.card.s-blackhole { background: radial-gradient(circle,#1a0030,#000); color:#ce93d8; border-color:#9c27b0; }
+.card.s-lucky8 { background: linear-gradient(135deg,#e65100,#f57c00); color:#fff; border-color:#ffcc02; }
+.card.s-irs { background: linear-gradient(135deg,#212121,#424242); color:#fff; border-color:#757575; }
+.card.s-receipt { background: linear-gradient(135deg,#f5f5dc,#fffde7); color:#333; border-color:#bcaaa4; }
+.card.s-rubber { background: linear-gradient(135deg,#f9a825,#fbc02d); color:#5d4037; border-color:#ff6f00; }
+
+.cc { font-size: 10px; font-weight: 700; line-height: 1.1; display: flex; flex-direction: column; align-items: center; }
+.cc.bot { transform: rotate(180deg); }
+.cc-mid { font-size: 22px; text-align: center; }
+.sc-title { font-size: 6.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.85; }
+.sc-icon { font-size: 26px; text-align: center; }
+.sc-eff { font-size: 5.5px; text-align: center; opacity: 0.7; line-height: 1.25; padding: 0 2px; }
+
+/* bet input */
+.bet-field { width: 60px; background: rgba(0,0,0,0.4); border: 1px solid rgba(201,168,76,0.25); color: var(--cream); padding: 5px 6px; border-radius: 5px; font-size: 13px; text-align: center; outline: none; }
+
+/* ── EVENT LOG ───────────────────────────── */
+.event-log {
+  position: fixed; bottom: 16px; right: 16px;
+  width: 260px; z-index: 200;
+  display: flex; flex-direction: column; gap: 5px;
+  pointer-events: none;
+}
+.log-item {
+  background: rgba(8,6,4,0.93);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 6px; padding: 7px 11px;
+  font-family: 'Special Elite', cursive; font-size: 11px;
+  color: var(--cream); animation: logIn 0.25s ease-out;
+  transition: opacity 0.4s;
+}
+.log-item.chaos { border-color: #9c27b0; color: #ce93d8; }
+.log-item.good { border-color: #4caf50; color: #81c784; }
+.log-item.bad { border-color: var(--red2); color: #ef9a9a; }
+@keyframes logIn { from{transform:translateX(16px);opacity:0} to{transform:translateX(0);opacity:1} }
+
+/* ── MODAL ───────────────────────────────── */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.82);
+  z-index: 300; display: none; align-items: center; justify-content: center;
+  backdrop-filter: blur(5px);
+}
+.modal-bg.open { display: flex; }
+.modal-box {
+  background: linear-gradient(145deg,#100e08,#181208);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 14px; padding: 34px 30px;
+  width: min(440px,92vw);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.85);
+  text-align: center;
+}
+.modal-box h2 { font-family:'Cinzel Decorative',serif; color:var(--gold); font-size:20px; margin-bottom:16px; }
+.result-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 12px; border-radius: 6px;
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(201,168,76,0.1);
+  margin-bottom: 6px;
+}
+.result-row.win { background:rgba(76,175,80,0.1); border-color:#4caf50; }
+
+/* ── CHAT ────────────────────────────────── */
+.chat-area { display: flex; flex-direction: column; height: 200px; }
+.chat-msgs { flex:1; overflow-y:auto; font-size:12px; color:var(--dim); padding: 6px; background:rgba(0,0,0,0.2); border-radius:6px; border:1px solid rgba(201,168,76,0.08); margin-bottom:6px; }
+.chat-msgs p { margin-bottom: 3px; }
+.chat-msgs .cm-name { color:var(--gold); }
+.chat-input-row { display:flex; gap:6px; }
+.chat-input-row input { flex:1; padding:6px 10px; font-size:13px; }
+.chat-input-row button { width:auto; margin-top:0; padding:6px 12px; font-size:10px; }
+</style>
+</head>
+<body>
+
+<!-- ══ CONNECT ══════════════════════════════ -->
+<div id="screen-connect" class="screen active">
+  <div style="padding-top:48px;display:flex;flex-direction:column;align-items:center;gap:18px;width:100%">
+    <div class="logo">CHAOS CARDS</div>
+    <div class="tagline">Multiplayer · Blackjack × Poker · Mayhem</div>
+    <div class="divider"></div>
+
+    <div class="card-panel">
+      <div class="panel-title">⬡ CONNECT ⬡</div>
+      <div class="conn-status"><span class="status-dot" id="dot"></span><span id="conn-text">Connecting…</span></div>
+      <label>Your Name</label>
+      <input type="text" id="player-name" placeholder="Enter your name" maxlength="20" value="">
+      <div id="conn-err" class="err"></div>
+      <button class="btn" id="btn-enter" disabled>Enter the Casino</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOBBY ════════════════════════════════ -->
+<div id="screen-lobby" class="screen">
+  <div class="lobby-top">
+    <div class="logo" style="font-size:20px;letter-spacing:2px">CHAOS CARDS</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-family:'Special Elite',cursive;font-size:12px;color:var(--dim)" id="lobby-myname"></span>
+      <button class="btn btn-red btn-sm" id="btn-disconnect">Disconnect</button>
+    </div>
+  </div>
+
+  <div class="lobby-layout">
+    <!-- Left: server list -->
+    <div class="card-panel" style="width:100%">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="panel-title" style="margin-bottom:0">⬡ SERVERS ⬡</div>
+        <button class="btn btn-ghost btn-sm" id="btn-refresh">↻ Refresh</button>
+      </div>
+      <div class="server-list" id="server-list">
+        <div class="empty-list">No servers yet.<br>Create one!</div>
+      </div>
+    </div>
+
+    <!-- Right: create server + join with pw -->
+    <div style="display:flex;flex-direction:column;gap:14px;width:100%">
+      <div class="card-panel" style="width:100%">
+        <div class="panel-title">⬡ CREATE SERVER ⬡</div>
+        <label>Server Name</label>
+        <input type="text" id="new-server-name" placeholder="My Casino" maxlength="32">
+        <label>Password (optional)</label>
+        <input type="password" id="new-server-pw" placeholder="Leave blank for public">
+        <div id="create-err" class="err"></div>
+        <button class="btn" id="btn-create-server">Create Server</button>
+      </div>
+
+      <div class="card-panel" style="width:100%">
+        <div class="panel-title">⬡ JOIN WITH PASSWORD ⬡</div>
+        <label>Server ID</label>
+        <input type="text" id="join-id" placeholder="Server ID">
+        <label>Password</label>
+        <input type="password" id="join-pw" placeholder="Password">
+        <div id="join-err" class="err"></div>
+        <button class="btn btn-ghost" id="btn-join-pw">Join Server</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ROOM ═════════════════════════════════ -->
+<div id="screen-room" class="screen">
+  <div class="room-header">
+    <div>
+      <div class="room-name-display" id="room-name-display">Room</div>
+      <div style="font-family:'Special Elite',cursive;font-size:11px;color:var(--dim)" id="room-id-display"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost btn-sm" id="btn-leave-room">Leave</button>
+    </div>
+  </div>
+
+  <div class="room-layout">
+    <div class="room-main">
+      <div class="panel-title" style="text-align:left;margin-bottom:14px">PLAYERS IN LOBBY</div>
+      <div id="room-player-list"></div>
+
+      <!-- Host controls -->
+      <div id="host-controls" style="display:none">
+        <hr class="gold">
+        <div class="panel-title" style="text-align:left;margin-bottom:10px">HOST CONTROLS</div>
+        <div class="btn-row">
+          <button class="btn btn-ghost btn-sm" id="btn-add-bot">+ Add Bot</button>
+          <button class="btn btn-sm" id="btn-start-game" style="flex:1">▶ Start Game</button>
+        </div>
+        <div id="host-err" class="err"></div>
+      </div>
+    </div>
+
+    <div class="room-sidebar">
+      <div>
+        <div class="panel-title">CHAT</div>
+        <div class="chat-area">
+          <div class="chat-msgs" id="chat-msgs"></div>
+          <div class="chat-input-row">
+            <input type="text" id="chat-input" placeholder="Say something…" maxlength="120">
+            <button class="btn btn-ghost btn-sm" id="btn-send-chat">Send</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="panel-title" style="font-size:10px">SPECIAL CARDS</div>
+        <div style="font-size:11px;color:var(--dim);line-height:1.7">
+          💳 Credit Card<br>🪪 Driver's Licence<br>🛒 Shopping List<br>🕳️ Black Hole<br>🎱 Lucky 8-Ball<br>📋 IRS Notice<br>🧾 Receipt<br>🦆 Rubber Duck
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GAME ══════════════════════════════════ -->
+<div id="screen-game" class="screen">
+  <div class="game-header">
+    <div class="game-title-sm">CHAOS CARDS</div>
+    <div class="round-badge" id="g-round-info">ROUND 1</div>
+    <button class="btn btn-red btn-sm" id="btn-leave-game">Leave Game</button>
+  </div>
+
+  <div class="table-area">
+    <div class="center-zone">
+      <div class="pot-label" id="g-pot">POT: 0 CHIPS</div>
+      <div class="comm-label">— Community Cards —</div>
+      <div class="community-row" id="g-community"></div>
+      <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim)" id="g-deck">DECK: — CARDS</div>
+    </div>
+
+    <div class="players-grid" id="g-players"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL ════════════════════════════════ -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <h2 id="modal-title">Round Over</h2>
+    <div id="modal-body"></div>
+    <button class="btn" id="modal-ok" style="margin-top:16px">Back to Lobby</button>
+  </div>
+</div>
+
+<!-- ══ EVENT LOG ════════════════════════════ -->
+<div class="event-log" id="event-log"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  CHAOS CARDS — Multiplayer Client
+// ══════════════════════════════════════════════════════════
+
+// ── CONFIG ────────────────────────────────────────────────
+// Change this to your Railway URL after deployment:
+// e.g. wss://chaos-cards-production.up.railway.app
+// For local testing use: ws://localhost:3000
+const WS_URL = (() => {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  return `${proto}//${location.host}`;
+})();
+
+// ── State ─────────────────────────────────────────────────
+let ws = null;
+let myId = null;
+let myName = '';
+let currentServer = null; // server snapshot
+let gameState = null;
+let reconnectTimer = null;
+
+// ── WebSocket ─────────────────────────────────────────────
+function connect() {
+  ws = new WebSocket(WS_URL);
+
+  ws.onopen = () => {
+    setDot(true);
+    setText('Connected');
+    document.getElementById('btn-enter').disabled = false;
+    clearTimeout(reconnectTimer);
+  };
+
+  ws.onclose = () => {
+    setDot(false);
+    setText('Disconnected — reconnecting…');
+    document.getElementById('btn-enter').disabled = true;
+    reconnectTimer = setTimeout(connect, 3000);
+  };
+
+  ws.onerror = () => ws.close();
+
+  ws.onmessage = (e) => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+    handleMsg(msg);
+  };
+}
+
+function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+
+function setDot(on) {
+  document.getElementById('dot').className = 'status-dot' + (on ? ' connected' : '');
+}
+function setText(t) { document.getElementById('conn-text').textContent = t; }
+
+// ── Message Handler ───────────────────────────────────────
+function handleMsg(msg) {
+  switch (msg.type) {
+    case 'welcome':
+      myId = msg.playerId;
+      renderServerList(msg.servers);
+      break;
+
+    case 'serverList':
+      renderServerList(msg.servers);
+      break;
+
+    case 'joinedServer':
+      currentServer = msg.server;
+      showScreen('room');
+      renderRoom();
+      break;
+
+    case 'playerJoined':
+      currentServer = msg.server;
+      renderRoom();
+      addChatMsg('🟢', msg.player.name + ' joined.');
+      break;
+
+    case 'playerLeft':
+      currentServer = msg.server;
+      renderRoom();
+      break;
+
+    case 'gameState':
+      gameState = msg;
+      renderGame();
+      if (msg.logs) msg.logs.forEach(l => log(l.msg, l.type || ''));
+      break;
+
+    case 'roundOver':
+      showRoundOver(msg);
+      break;
+
+    case 'chat':
+      addChatMsg(msg.from, msg.text);
+      break;
+
+    case 'error':
+      showError(msg.message);
+      break;
+  }
+}
+
+// ── Screen management ─────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+// ── Lobby ─────────────────────────────────────────────────
+function renderServerList(servers) {
+  const el = document.getElementById('server-list');
+  if (!servers || servers.length === 0) {
+    el.innerHTML = '<div class="empty-list">No servers yet.<br>Create one to start!</div>';
+    return;
+  }
+  el.innerHTML = '';
+  servers.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'server-item';
+    const badge = s.inGame
+      ? '<span class="server-badge badge-ing">In Game</span>'
+      : s.hasPassword
+        ? '<span class="server-badge badge-pw">🔒 Private</span>'
+        : '<span class="server-badge badge-open">Open</span>';
+    div.innerHTML = `
+      <div>
+        <div class="server-name">${esc(s.name)}</div>
+        <div class="server-meta">${s.playerCount}/8 players · ID: ${s.id}</div>
+      </div>
+      ${badge}
+    `;
+    div.addEventListener('click', () => {
+      if (s.inGame) { showError('Game already in progress.'); return; }
+      if (s.hasPassword) {
+        document.getElementById('join-id').value = s.id;
+        document.getElementById('join-pw').focus();
+      } else {
+        send({ type: 'joinServer', serverId: s.id, playerName: myName });
+      }
+    });
+    el.appendChild(div);
+  });
+}
+
+// ── Room ──────────────────────────────────────────────────
+function renderRoom() {
+  if (!currentServer) return;
+  document.getElementById('room-name-display').textContent = currentServer.name;
+  document.getElementById('room-id-display').textContent = 'ID: ' + currentServer.id;
+
+  const isOwner = currentServer.ownerId === myId;
+  document.getElementById('host-controls').style.display = isOwner ? '' : 'none';
+
+  const list = document.getElementById('room-player-list');
+  list.innerHTML = '';
+  currentServer.players.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'player-card' + (p.id === myId ? ' is-you' : '');
+    const tags = (p.isOwner ? '<span class="owner-tag">HOST</span>' : '') +
+                 (p.isBot ? `<span class="bot-tag">${p.botType || 'bot'}</span>` : '') +
+                 (p.id === myId ? '<span class="owner-tag" style="background:rgba(76,175,80,0.15);color:#81c784;border-color:rgba(76,175,80,0.3)">YOU</span>' : '');
+    const removeBtn = isOwner && p.isBot
+      ? `<button class="btn btn-red btn-sm" onclick="send({type:'removeBot',botId:'${p.id}'})">✕</button>`
+      : '';
+    div.innerHTML = `
+      <div><span class="pname">${esc(p.name)}${tags}</span><div class="pchips">${p.chips} chips</div></div>
+      ${removeBtn}
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ── Game Rendering ─────────────────────────────────────────
+function renderGame() {
+  const g = gameState;
+  if (!g) return;
+
+  const phaseLabel = { betting:'BETTING', play:'PLAY', reveal:'SHOWDOWN' }[g.phase] || g.phase.toUpperCase();
+  document.getElementById('g-round-info').textContent = `ROUND ${g.round} · ${phaseLabel}`;
+  document.getElementById('g-pot').textContent = `POT: ${g.pot} CHIPS`;
+  document.getElementById('g-deck').textContent = `DECK: ${g.deckSize} CARDS REMAINING`;
+
+  // Community
+  const comm = document.getElementById('g-community');
+  comm.innerHTML = '';
+  g.community.forEach(c => comm.appendChild(mkCard(c)));
+
+  // Players
+  const grid = document.getElementById('g-players');
+  grid.innerHTML = '';
+  g.players.forEach((p, i) => {
+    const isMe = p.id === myId;
+    const isMyTurn = g.currentPlayerId === myId && p.id === myId && g.phase === 'play' && p.status === 'active';
+    const isTurn = g.currentPlayerId === p.id && g.phase === 'play';
+
+    const div = document.createElement('div');
+    let cls = 'pslot';
+    if (isTurn && isMe) cls += ' my-turn';
+    if (p.status === 'bust') cls += ' busted';
+    if (p.status === 'winner') cls += ' winner';
+    if (p.status === 'standing') cls += ' standing';
+    div.className = cls;
+
+    // Score display
+    const score = p.score ?? '';
+    let scoreCls = '';
+    if (score > 21) scoreCls = 'bust';
+    else if (score === 21) scoreCls = 'bj';
+    else if (score >= 17) scoreCls = 'safe';
+
+    // Badge
+    let badge = '';
+    if (p.status === 'bust') badge = '<div class="sbadge sb-bust">Bust</div>';
+    else if (score === 21 && p.hand?.length === 2) badge = '<div class="sbadge sb-bj">Blackjack!</div>';
+    else if (p.status === 'standing') badge = '<div class="sbadge sb-stand">Standing</div>';
+    else if (p.status === 'winner') badge = '<div class="sbadge sb-winner">🏆 Winner</div>';
+    else if (isTurn) badge = `<div class="sbadge sb-turn">${isMe ? 'Your Turn' : 'Playing…'}</div>`;
+
+    div.innerHTML = `
+      ${badge}
+      <div class="pslot-header">
+        <div>
+          <div class="pslot-name">${esc(p.name)}${p.isBot ? ' 🤖' : ''}${isMe ? ' <span style="font-size:9px;color:#81c784">(you)</span>' : ''}</div>
+          <div class="pslot-chips">${p.chips} chips${p.bet ? ' · bet ' + p.bet : ''}${p.debt ? ' · owes ' + p.debt : ''}</div>
+        </div>
+        <div class="pslot-score ${scoreCls}">${p.duckLocked ? '🦆17' : (score || '')}</div>
+      </div>
+      <div class="pslot-cards" id="pc-${p.id}"></div>
+      <div class="pslot-actions" id="pa-${p.id}"></div>
+    `;
+    grid.appendChild(div);
+
+    // Cards
+    const cardEl = document.getElementById('pc-' + p.id);
+    if (p.hand && p.hand.length > 0) {
+      p.hand.forEach(c => cardEl.appendChild(mkCard(c)));
+    } else if (g.phase === 'play') {
+      cardEl.innerHTML = '<span style="color:var(--dim);font-size:11px;font-family:\'Special Elite\',cursive">No cards</span>';
+    }
+
+    // Actions
+    const actEl = document.getElementById('pa-' + p.id);
+    if (g.phase === 'betting' && isMe && (p.status === 'waiting' || p.status === 'betting')) {
+      actEl.innerHTML = `
+        <input class="bet-field" type="number" id="bet-val" min="1" max="${p.chips}" value="${Math.min(10, p.chips)}">
+        <button class="btn btn-sm" onclick="placeBet()">Confirm Bet</button>
+      `;
+    } else if (isMyTurn) {
+      actEl.innerHTML = `
+        <button class="btn btn-sm" onclick="send({type:'hit'})">Hit</button>
+        <button class="btn btn-ghost btn-sm" onclick="send({type:'stand'})">Stand</button>
+      `;
+    }
+  });
+}
+
+function placeBet() {
+  const v = parseInt(document.getElementById('bet-val')?.value) || 10;
+  send({ type: 'placeBet', bet: v });
+}
+
+function showRoundOver(msg) {
+  document.getElementById('modal-title').textContent = '🏆 Round Over';
+  const body = document.getElementById('modal-body');
+  body.innerHTML = '';
+  msg.results.sort((a, b) => b.score - a.score).forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'result-row' + (r.status === 'winner' ? ' win' : '');
+    row.innerHTML = `
+      <span style="font-family:'Special Elite',cursive">${r.status==='winner'?'🏆 ':r.status==='bust'?'💀 ':''}${esc(r.name)}</span>
+      <span style="font-family:'Cinzel Decorative',serif;color:${r.status==='bust'?'var(--red2)':r.status==='winner'?'#ffd700':'var(--cream)'}">${r.status==='bust'?'BUST':r.score}</span>
+      <span style="color:var(--dim);font-size:12px">${r.chips} chips</span>
+    `;
+    body.appendChild(row);
+  });
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-ok').onclick = () => {
+    document.getElementById('modal').classList.remove('open');
+    // Return to room if we have a server
+    if (currentServer) {
+      gameState = null;
+      showScreen('room');
+      // Request fresh room snapshot
+      send({ type: 'refreshServers' });
+    }
+  };
+}
+
+// ── Card Rendering ────────────────────────────────────────
+function mkCard(card) {
+  const div = document.createElement('div');
+  if (!card) { div.className = 'card face-down'; return div; }
+
+  if (card.isSpecial) {
+    div.className = `card special s-${card.style || card.id}`;
+    div.innerHTML = `<div class="sc-title">${card.name}</div><div class="sc-icon">${card.icon}</div><div class="sc-eff">${card.effect}</div>`;
+    return div;
+  }
+
+  const red = ['♥', '♦'].includes(card.suit);
+  div.className = `card normal${red ? ' red' : ''}`;
+  div.innerHTML = `
+    <div class="cc"><span>${card.rank}</span><span>${card.suit}</span></div>
+    <div class="cc-mid">${card.suit}</div>
+    <div class="cc bot"><span>${card.rank}</span><span>${card.suit}</span></div>
+  `;
+  return div;
+}
+
+// ── Log ───────────────────────────────────────────────────
+function log(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = `log-item${type ? ' ' + type : ''}`;
+  el.textContent = msg;
+  const logEl = document.getElementById('event-log');
+  logEl.appendChild(el);
+  while (logEl.children.length > 6) logEl.removeChild(logEl.firstChild);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 450); }, 4500);
+}
+
+function showError(msg) { log('⚠ ' + msg, 'bad'); }
+
+// ── Chat ──────────────────────────────────────────────────
+function addChatMsg(from, text) {
+  const box = document.getElementById('chat-msgs');
+  const p = document.createElement('p');
+  p.innerHTML = `<span class="cm-name">${esc(from)}:</span> ${esc(text)}`;
+  box.appendChild(p);
+  box.scrollTop = box.scrollHeight;
+}
+
+// ── Helpers ───────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ══════════════════════════════════════════════════════════
+//  EVENT LISTENERS
+// ══════════════════════════════════════════════════════════
+
+// Connect screen
+document.getElementById('btn-enter').addEventListener('click', () => {
+  const name = document.getElementById('player-name').value.trim();
+  if (!name) { document.getElementById('conn-err').textContent = 'Please enter your name.'; return; }
+  myName = name;
+  document.getElementById('lobby-myname').textContent = name;
+  showScreen('lobby');
+  send({ type: 'refreshServers' });
+});
+
+document.getElementById('player-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btn-enter').click();
+});
+
+document.getElementById('btn-disconnect').addEventListener('click', () => {
+  ws?.close(); showScreen('connect');
+});
+
+// Lobby
+document.getElementById('btn-refresh').addEventListener('click', () => send({ type: 'refreshServers' }));
+
+document.getElementById('btn-create-server').addEventListener('click', () => {
+  const name = document.getElementById('new-server-name').value.trim();
+  const pw = document.getElementById('new-server-pw').value;
+  if (!name) { document.getElementById('create-err').textContent = 'Server needs a name.'; return; }
+  document.getElementById('create-err').textContent = '';
+  send({ type: 'createServer', name, password: pw, playerName: myName });
+});
+
+document.getElementById('btn-join-pw').addEventListener('click', () => {
+  const id = document.getElementById('join-id').value.trim();
+  const pw = document.getElementById('join-pw').value;
+  if (!id) { document.getElementById('join-err').textContent = 'Enter a server ID.'; return; }
+  document.getElementById('join-err').textContent = '';
+  send({ type: 'joinServer', serverId: id, password: pw, playerName: myName });
+});
+
+// Room
+document.getElementById('btn-leave-room').addEventListener('click', () => {
+  send({ type: 'leaveServer' });
+  currentServer = null;
+  showScreen('lobby');
+});
+
+document.getElementById('btn-add-bot').addEventListener('click', () => {
+  document.getElementById('host-err').textContent = '';
+  send({ type: 'addBot' });
+});
+
+document.getElementById('btn-start-game').addEventListener('click', () => {
+  document.getElementById('host-err').textContent = '';
+  send({ type: 'startGame' });
+  showScreen('game');
+});
+
+document.getElementById('btn-leave-game').addEventListener('click', () => {
+  if (confirm('Leave the current game?')) {
+    send({ type: 'leaveServer' });
+    gameState = null; currentServer = null;
+    showScreen('lobby');
+  }
+});
+
+// Chat
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  send({ type: 'chat', text });
+  addChatMsg(myName, text);
+  input.value = '';
+}
+document.getElementById('btn-send-chat').addEventListener('click', sendChat);
+document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
+
+// Modal
+document.getElementById('modal-ok').addEventListener('click', () => {
+  document.getElementById('modal').classList.remove('open');
+});
+
+// ── Error messages from server ────────────────────────────
+const origHandle = handleMsg;
+
+// ── Boot ──────────────────────────────────────────────────
+connect();
+</script>
+</body>
+</html>
