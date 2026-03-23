@@ -366,325 +366,250 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .eli.good{border-color:#2e7a32;color:#80c880;}
 .eli.bad{border-color:#7a2020;color:#f08080;}
 @keyframes logIn{from{transform:translateX(11px);opacity:0}to{transform:none;opacity:1}}
-/* ══ UNDERTALE MODE — PIXEL ART ══════════════════════════ */
+/* ══ UNDERTALE — EXACT REPLICA ════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
-:root {
-  --ut-font: 'Press Start 2P', monospace;
-  --ut-yellow: #ffff00;
-  --ut-white: #ffffff;
-  --ut-bg: #000000;
-  --ut-dialog-border: 3px solid #fff;
-}
+:root { --ut-font:'Press Start 2P',monospace; }
 
 #sc-ut {
-  overflow: hidden;
-  background: var(--ut-bg);
-  font-family: var(--ut-font);
-  color: var(--ut-white);
-  image-rendering: pixelated;
+  background:#000; font-family:var(--ut-font); color:#fff;
+  image-rendering:pixelated; overflow:hidden;
 }
 
-.ut-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 14px; background: #000;
-  border-bottom: 3px solid #fff; flex-shrink: 0;
+/* Top utility bar */
+.ut-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:3px 8px; background:#000; border-bottom:2px solid #333; flex-shrink:0;
 }
-.ut-bar-title { font-family: var(--ut-font); font-size: 11px; color: #fff; letter-spacing: 1px; }
-.ut-body { flex: 1; display: flex; overflow: hidden; min-height: 0; }
-
-/* LEFT BATTLE AREA */
-.ut-left {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-start;
-  padding: 14px 10px; overflow-y: auto; gap: 10px;
-  background: #000;
+.ut-topbar-btn {
+  background:#000; border:1px solid #555; color:#aaa;
+  padding:3px 7px; font-family:var(--ut-font); font-size:6px; cursor:pointer;
 }
+.ut-topbar-btn:hover { border-color:#fff; color:#fff; }
+.ut-topbar-btn.red { border-color:#700; color:#f44; }
+.ut-topbar-btn.red:hover { border-color:#f00; color:#f00; }
 
-/* RIGHT STATS PANEL */
-.ut-right {
-  width: 220px; border-left: 3px solid #fff;
-  background: #000; display: flex; flex-direction: column; overflow: hidden;
+/* Main battle area with dark green grid */
+.ut-main {
+  flex:1; display:flex; overflow:hidden; min-height:0;
 }
-.ut-right-inner { flex: 1; overflow-y: auto; padding: 10px; }
-@media(max-width:700px){ .ut-right{ display:none; } }
-
-/* ── PIXEL ART ENEMY DISPLAY ── */
-.ut-enemy-box {
-  background: #000; border: 3px solid #fff;
-  padding: 14px 18px; text-align: center;
-  width: 100%; max-width: 480px;
-  image-rendering: pixelated;
+.ut-battle-col {
+  flex:1; display:flex; flex-direction:column; overflow:hidden; position:relative;
+  background-image:
+    linear-gradient(rgba(0,80,0,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,80,0,0.35) 1px, transparent 1px);
+  background-size:40px 40px; background-color:#000;
 }
 
-/* Pixel sprite canvas */
-.ut-sprite-canvas {
-  display: block; margin: 0 auto 8px;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+/* Enemy area — top */
+.ut-enemy-area {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-end;
+  padding:12px 12px 8px; min-height:0;
+}
+#ut-sprite-canvas {
+  image-rendering:pixelated; image-rendering:crisp-edges; display:block;
+}
+.ut-boss-label {
+  font-family:var(--ut-font); font-size:7px; color:#f00;
+  letter-spacing:2px; text-align:center; margin-bottom:6px;
 }
 
-.ut-enemy-name {
-  font-family: var(--ut-font); font-size: 10px;
-  color: #fff; letter-spacing: 1px; margin-bottom: 6px;
-  text-transform: uppercase;
+/* Dialogue box */
+.ut-dialog-box {
+  background:#000; border:3px solid #fff;
+  padding:10px 14px; margin:0 8px 4px;
+  min-height:54px; font-family:var(--ut-font);
+  font-size:9px; line-height:2.2; color:#fff;
+  flex-shrink:0; position:relative;
 }
-.ut-enemy-desc { font-family: var(--ut-font); font-size: 7px; color: #aaa; margin-bottom: 10px; line-height: 1.8; }
-.ut-boss-label { color: #f00; font-family: var(--ut-font); font-size: 8px; letter-spacing: 2px; margin-bottom: 4px; }
+.ut-dialog-arrow {
+  position:absolute; bottom:5px; right:10px;
+  font-size:8px; color:#fff;
+  animation:ut-blink .7s step-end infinite;
+}
+@keyframes ut-blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* Pixel HP bar */
-.ut-hp-bar {
-  height: 16px; background: #000;
-  border: 3px solid #fff; margin-bottom: 3px;
-  position: relative; overflow: hidden;
+/* Status bar: LU 1  HP [bar] 20/20 */
+.ut-status-bar {
+  display:flex; align-items:center; gap:10px;
+  padding:5px 10px; background:#000;
+  font-family:var(--ut-font); font-size:8px; color:#fff;
+  flex-shrink:0; border-top:2px solid #555;
 }
-.ut-hp-fill {
-  height: 100%; background: #ff0;
-  transition: width 0.3s steps(20);
-  image-rendering: pixelated;
+.ut-status-hp-bar {
+  display:inline-block; width:80px; height:14px;
+  background:#000; border:2px solid #fff; vertical-align:middle;
+  position:relative; overflow:hidden;
 }
-.ut-hp-fill.boss { background: #f00; }
-/* Pixel notches on hp bar */
-.ut-hp-fill::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0px, transparent 7px, rgba(0,0,0,0.3) 7px, rgba(0,0,0,0.3) 8px);
-}
-.ut-hp-text { font-family: var(--ut-font); font-size: 7px; color: #aaa; text-align: right; }
+.ut-status-hp-bar-fill { height:100%; background:#ff0; transition:width .3s steps(10); }
+.ut-status-hp-nums { font-size:7px; }
 
-/* ── PIXEL DIALOGUE BOX ── */
-.ut-dialog {
-  background: #000; border: 3px solid #fff;
-  padding: 10px 14px; width: 100%; max-width: 480px;
-  min-height: 56px; font-family: var(--ut-font);
-  font-size: 8px; line-height: 2; color: #fff;
-  position: relative;
+/* Menu bar: FIGHT ACT ITEM MERCY */
+.ut-menu-bar {
+  display:flex; padding:5px 8px; gap:6px;
+  background:#000; border-top:2px solid #fff; flex-shrink:0;
 }
-/* Arrow indicator */
-.ut-dialog::after {
-  content: '▼';
-  position: absolute; bottom: 4px; right: 8px;
-  font-size: 8px; color: #fff;
-  animation: ut-blink 0.8s step-end infinite;
+.ut-menu-btn {
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  background:#000; border:2px solid #fff; color:#fff;
+  padding:7px 0; font-family:var(--ut-font); font-size:9px;
+  cursor:pointer; flex:1; outline:none;
 }
-@keyframes ut-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.ut-menu-btn .heart { display:none; color:#ff8c00; }
+.ut-menu-btn.selected { border-color:#ff8c00; color:#ff8c00; }
+.ut-menu-btn.selected .heart { display:inline; }
 
-/* ── PIXEL BATTLE MENU ── */
-.ut-menu {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 3px; width: 100%; max-width: 480px;
-  border: 3px solid #fff; background: #000;
-  padding: 6px;
+/* Fight overlay — full screen attack bar */
+.ut-fight-overlay {
+  position:absolute; inset:0; background:#000;
+  background-image:
+    linear-gradient(rgba(0,80,0,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,80,0,0.35) 1px, transparent 1px);
+  background-size:40px 40px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:14px; z-index:20;
 }
-.ut-btn {
-  background: #000; border: 2px solid #555;
-  color: #fff; padding: 8px 6px;
-  font-family: var(--ut-font); font-size: 9px;
-  cursor: pointer; text-align: left;
-  transition: all 0s; display: flex;
-  align-items: center; gap: 6px;
-  letter-spacing: 0px;
-  image-rendering: pixelated;
-  position: relative;
+.ut-enemy-area-small {
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
 }
-/* Undertale selection heart */
-.ut-btn.selected::before,
-.ut-btn:focus::before {
-  content: '❤';
-  position: absolute; left: -2px;
-  color: #ff0; font-size: 8px;
+/* Pill attack bar */
+.ut-attack-pill-wrap { position:relative; width:88%; max-width:500px; height:52px; }
+.ut-attack-pill {
+  position:absolute; inset:0; border-radius:26px;
+  border:3px solid #fff; background:#000; overflow:hidden;
 }
-.ut-btn.selected, .ut-btn:focus {
-  background: #000; border-color: #fff;
-  color: #ff0; outline: none;
-  padding-left: 14px;
+.ut-pill-lane {
+  position:absolute; top:50%; left:0; right:0;
+  height:12px; background:#080; transform:translateY(-50%);
 }
-.ut-btn:hover { background: #000; border-color: #fff; color: #ff0; padding-left: 14px; }
-.ut-btn:hover::before { content: '❤'; position:absolute; left:-2px; color:#ff0; font-size:8px; }
-.ut-btn:disabled { opacity: .35; cursor: not-allowed; }
-.ut-btn-icon { font-size: 14px; flex-shrink: 0; }
-
-/* ACT submenu */
-.ut-acts { display: flex; flex-direction: column; gap: 2px; width: 100%; max-width: 480px; }
-.ut-act-btn {
-  background: #000; border: 2px solid #555;
-  color: #fff; padding: 7px 12px;
-  font-family: var(--ut-font); font-size: 8px;
-  cursor: pointer; text-align: left;
-  transition: all 0s;
+.ut-pill-cursor {
+  position:absolute; top:0; bottom:0; width:5px;
+  background:#fff; transform:translateX(-50%); z-index:5;
+  box-shadow:0 0 6px #fff;
 }
-.ut-act-btn:hover, .ut-act-btn.selected { border-color: #fff; color: #ff0; }
-
-/* ── PIXEL ACCURACY / ATTACK BAR ── */
-.ut-attack-box {
-  width: 100%; max-width: 480px;
-  background: #000; border: 3px solid #fff;
-  padding: 14px 16px; text-align: center;
+.ut-bone {
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:9px; background:#900;
 }
-.ut-attack-title {
-  font-family: var(--ut-font); font-size: 8px;
-  color: #aaa; margin-bottom: 12px; letter-spacing: 1px;
-}
-/* Centered accuracy track */
-.ut-acc-outer {
-  position: relative; height: 48px;
-  background: #000; border: 3px solid #fff;
-  margin: 8px 0; overflow: visible;
-}
-/* Damage zones colored on track */
-.ut-acc-track-fill {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(90deg,
-    #550000 0%, #aa0000 20%,
-    #ffaa00 35%, #ffff00 45%,
-    #ffffff 50%,
-    #ffff00 55%, #ffaa00 65%,
-    #aa0000 80%, #550000 100%
-  );
-}
-/* Center target zone marker */
-.ut-acc-center-line {
-  position: absolute; top: -4px; bottom: -4px;
-  left: 50%; width: 3px;
-  background: #fff; transform: translateX(-50%);
-  z-index: 3;
-}
-/* The moving slider */
-.ut-acc-slider {
-  position: absolute; top: -6px; bottom: -6px;
-  width: 6px; background: #fff;
-  transform: translateX(-50%); z-index: 5;
-  box-shadow: 0 0 0 2px #000, 0 0 0 4px #fff;
-  transition: left 0.03s linear;
-}
-/* Damage preview below track */
 .ut-dmg-preview {
-  font-family: var(--ut-font); font-size: 14px;
-  color: #fff; margin-top: 10px; min-height: 24px;
-  text-shadow: 2px 2px #f00;
+  font-family:var(--ut-font); font-size:18px; color:#fff;
+  text-align:center; text-shadow:2px 2px #f00; min-height:26px;
 }
+.ut-attack-hint { font-family:var(--ut-font); font-size:7px; color:#888; text-align:center; }
 
-/* ── DODGE BOX — THE SOUL BOX ── */
+/* Submenu overlays (ACT / ITEM) */
+.ut-submenu-overlay {
+  position:absolute; bottom:0; left:0; right:0;
+  background:#000; border-top:2px solid #fff;
+  padding:6px 10px; z-index:20;
+  display:flex; flex-direction:column; gap:3px;
+  max-height:50%; overflow-y:auto;
+}
+.ut-sub-item {
+  display:flex; align-items:center; gap:6px;
+  font-family:var(--ut-font); font-size:8px; color:#fff;
+  padding:5px 8px; cursor:pointer; border:1px solid transparent;
+}
+.ut-sub-item.selected,.ut-sub-item:hover { color:#ff8c00; border-color:#ff8c00; }
+.ut-sub-item .heart { display:none; }
+.ut-sub-item.selected .heart,.ut-sub-item:hover .heart { display:inline; color:#ff8c00; }
+
+/* DODGE OVERLAY */
 .ut-dodge-overlay {
-  position: fixed; inset: 0;
-  background: #000; z-index: 500;
-  display: none; align-items: center;
-  justify-content: center; flex-direction: column; gap: 10px;
+  position:fixed; inset:0; z-index:500; display:none;
+  flex-direction:column;
+  background-color:#000;
+  background-image:
+    linear-gradient(rgba(0,80,0,0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,80,0,0.35) 1px, transparent 1px);
+  background-size:40px 40px;
 }
-.ut-dodge-overlay.open { display: flex; }
-.ut-dodge-title {
-  font-family: var(--ut-font); font-size: 8px;
-  color: #fff; letter-spacing: 1px; text-align: center;
-  max-width: 320px; line-height: 2;
+.ut-dodge-overlay.open { display:flex; }
+/* Enemy sprite at top during dodge */
+.ut-dodge-enemy-area {
+  flex:1; display:flex; align-items:flex-start; padding:14px;
+  position:relative; min-height:0;
 }
+#ut-dodge-sprite { image-rendering:pixelated; image-rendering:crisp-edges; }
+/* Soul box bottom-centre */
+.ut-dodge-box-wrap { display:flex; justify-content:center; padding:6px 0 4px; }
 .ut-soul-arena {
-  position: relative; width: 220px; height: 190px;
-  border: 4px solid #fff; background: #000;
-  overflow: hidden; flex-shrink: 0;
-  image-rendering: pixelated;
-  box-shadow: 0 0 0 4px #000, 0 0 0 8px #fff;
+  position:relative; width:168px; height:168px;
+  border:4px solid #fff; background:#000;
+  overflow:hidden; flex-shrink:0; image-rendering:pixelated;
 }
-/* Pixel soul — drawn as a heart shape via CSS */
 .ut-soul {
-  position: absolute;
-  width: 16px; height: 16px;
-  z-index: 10; pointer-events: none;
-  transform: translate(-50%, -50%);
-  image-rendering: pixelated;
+  position:absolute; width:14px; height:14px; background:#f00;
+  z-index:10; pointer-events:none; transform:translate(-50%,-50%);
+  clip-path:polygon(50% 0%,61% 11%,100% 11%,100% 50%,50% 100%,0% 50%,0% 11%,39% 11%);
 }
-/* CSS pixel art heart */
-.ut-soul::before {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    /* pixel heart: 5x4 grid */
-    linear-gradient(#000 0px,#000 2px,transparent 2px) 0 0/2px 16px no-repeat,
-    linear-gradient(#000 0px,#000 2px,transparent 2px) 14px 0/2px 16px no-repeat,
-    linear-gradient(#000 0px,#000 12px,transparent 12px) 0 0/2px 12px no-repeat,
-    linear-gradient(#000 0px,#000 12px,transparent 12px) 14px 0/2px 12px no-repeat;
+.ut-projectile { position:absolute; pointer-events:none; image-rendering:pixelated; }
+.ut-wall        { position:absolute; pointer-events:none; background:#fff; }
+.ut-laser       { position:absolute; pointer-events:none; background:#ff0; }
+/* Dodge status bar */
+.ut-dodge-status {
+  display:flex; align-items:center; gap:10px;
+  padding:5px 10px; background:#000;
+  font-family:var(--ut-font); font-size:8px; color:#fff;
+  flex-shrink:0; border-top:2px solid #555;
 }
-.ut-soul-inner {
-  position: absolute; inset: 0;
-  /* Heart shape via box-shadow pixel art */
-  font-size: 0;
-}
-/* Simpler: just a red square with rounded pixel feel */
-.ut-soul { background: #f00; clip-path: polygon(4px 0,12px 0,16px 4px,16px 8px,8px 16px,0 8px,0 4px); }
-
-.ut-projectile {
-  position: absolute; pointer-events: none;
-  image-rendering: pixelated;
-}
-.ut-wall { position: absolute; pointer-events: none; background: #fff; }
-.ut-laser { position: absolute; pointer-events: none; background: #ff0; }
-
-.ut-dodge-hp-bar-wrap {
-  display: flex; align-items: center; gap: 8px;
-}
-.ut-dodge-hp-label { font-family: var(--ut-font); font-size: 7px; color: #fff; white-space: nowrap; }
 .ut-dodge-hp-bar {
-  width: 220px; height: 14px;
-  background: #000; border: 3px solid #fff;
-  image-rendering: pixelated;
+  display:inline-block; width:80px; height:14px;
+  background:#000; border:2px solid #fff; vertical-align:middle; overflow:hidden;
 }
-.ut-dodge-hp-fill { height: 100%; background: #ff0; transition: width 0.2s steps(10); }
-.ut-dodge-hint { font-family: var(--ut-font); font-size: 7px; color: #555; }
+.ut-dodge-hp-fill { height:100%; background:#ff0; transition:width .2s steps(8); }
+/* Dodge menu bar (greyed out) */
+.ut-dodge-menu-bar {
+  display:flex; padding:5px 8px; gap:6px;
+  background:#000; border-top:2px solid #fff; flex-shrink:0;
+}
+.ut-dodge-menu-btn {
+  display:flex; align-items:center; justify-content:center;
+  background:#000; border:2px solid #555; color:#555;
+  padding:7px 0; font-family:var(--ut-font); font-size:9px; flex:1;
+}
 
-/* ── STATS PANEL ── */
+/* Stats sidebar */
+.ut-right {
+  width:200px; border-left:2px solid #333;
+  background:#000; display:flex; flex-direction:column; overflow:hidden;
+}
+.ut-right-inner { flex:1; overflow-y:auto; padding:10px; }
+@media(max-width:700px){ .ut-right{ display:none; } }
 .ut-stat-row {
-  display: flex; justify-content: space-between;
-  font-family: var(--ut-font); font-size: 7px;
-  padding: 4px 0; border-bottom: 1px solid #1a1a1a; color: #ccc;
+  display:flex; justify-content:space-between;
+  font-family:var(--ut-font); font-size:7px;
+  padding:4px 0; border-bottom:1px solid #1a1a1a; color:#ccc;
 }
-.ut-stat-val { color: #ff0; }
-.ut-section {
-  font-family: var(--ut-font); font-size: 7px;
-  color: #555; letter-spacing: 2px; margin: 10px 0 5px;
-  text-transform: uppercase;
-}
+.ut-stat-val { color:#ff0; }
+.ut-section { font-family:var(--ut-font); font-size:7px; color:#555; letter-spacing:2px; margin:8px 0 4px; }
 .ut-inv-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 5px 6px; border: 2px solid #333; margin-bottom: 3px;
-  font-family: var(--ut-font); font-size: 7px; cursor: pointer;
-  background: #000;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:4px 6px; border:1px solid #333; margin-bottom:3px;
+  font-family:var(--ut-font); font-size:7px; cursor:pointer;
 }
-.ut-inv-item:hover, .ut-inv-item.selected { border-color: #fff; color: #ff0; }
-.ut-inv-item.equipped { border-color: #ff0; }
-.ut-gold { color: #ffd700; font-family: var(--ut-font); font-size: 8px; }
+.ut-inv-item:hover,.ut-inv-item.selected { border-color:#fff; color:#ff0; }
+.ut-inv-item.equipped { border-color:#ff0; }
+.ut-gold { color:#ffd700; font-family:var(--ut-font); font-size:8px; }
 
-/* ── SHOP ── */
+/* Shop / PvP modals */
 .ut-shop-item {
-  padding: 7px 8px; border: 2px solid #333;
-  margin-bottom: 4px; cursor: pointer;
-  font-family: var(--ut-font); font-size: 7px;
-  background: #000; color: #fff;
+  padding:6px 8px; border:1px solid #333; margin-bottom:4px;
+  cursor:pointer; font-family:var(--ut-font); font-size:7px; background:#000; color:#fff;
 }
-.ut-shop-item:hover { border-color: #ff0; color: #ff0; }
-.ut-inp {
-  background: #000; border: 2px solid #fff;
-  color: #fff; padding: 5px 8px;
-  font-family: var(--ut-font); font-size: 9px; width: 70px;
-}
-
-/* ── PVP ── */
-.ut-pvp-hp-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-family: var(--ut-font); font-size: 8px; }
-.ut-challenge-item {
-  padding: 7px 8px; border: 2px solid #555; margin-bottom: 4px;
-  display: flex; justify-content: space-between; align-items: center;
-  font-family: var(--ut-font); font-size: 8px;
-}
-.ut-acc-label { font-family: var(--ut-font); font-size: 7px; color: #aaa; margin-bottom: 4px; }
-
-/* Pixel button in UT shop/pvp */
-.ut-px-btn {
-  background: #000; border: 2px solid #fff; color: #fff;
-  padding: 6px 10px; font-family: var(--ut-font); font-size: 8px;
-  cursor: pointer; letter-spacing: 0;
-}
-.ut-px-btn:hover { background: #fff; color: #000; }
-
-/* ── PIXEL ART SPRITES (canvas-based, defined in JS) ── */
-
+.ut-shop-item:hover { border-color:#ff0; color:#ff0; }
+.ut-inp { background:#000; border:2px solid #fff; color:#fff; padding:5px 8px; font-family:var(--ut-font); font-size:9px; width:70px; }
+.ut-px-btn { background:#000; border:2px solid #fff; color:#fff; padding:6px 10px; font-family:var(--ut-font); font-size:8px; cursor:pointer; }
+.ut-px-btn:hover { background:#fff; color:#000; }
+.ut-pvp-hp-row { display:flex; justify-content:space-between; margin-bottom:10px; font-family:var(--ut-font); font-size:8px; }
+.ut-challenge-item { padding:6px 8px; border:1px solid #555; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center; font-family:var(--ut-font); font-size:8px; }
+.ut-acc-label { font-family:var(--ut-font); font-size:7px; color:#aaa; margin-bottom:4px; }
+.ut-acc-outer { position:relative; height:48px; background:#000; border:3px solid #fff; margin:8px 0; overflow:visible; }
+.ut-acc-track-fill { position:absolute; inset:0; background:linear-gradient(90deg,#550000 0%,#aa0000 20%,#ffaa00 35%,#ffff00 45%,#fff 50%,#ffff00 55%,#ffaa00 65%,#aa0000 80%,#550000 100%); }
+.ut-acc-center-line { position:absolute; top:-4px; bottom:-4px; left:50%; width:3px; background:#fff; transform:translateX(-50%); z-index:3; }
+.ut-acc-slider { position:absolute; top:-6px; bottom:-6px; width:6px; background:#fff; transform:translateX(-50%); z-index:5; box-shadow:0 0 0 2px #000,0 0 0 4px #fff; }
+.ut-dmg-preview-small { font-family:var(--ut-font); font-size:12px; color:#fff; margin-top:8px; text-align:center; text-shadow:2px 2px #f00; }
 
 </style>
 </head>
@@ -1563,6 +1488,25 @@ function renderGame(){
   renderActBar(g,myP);
 }
 
+// Client-side card scoring (mirrors server)
+function simpleVal(card){
+  if(!card) return 0;
+  if(card.isSpecial) return card.id==='wildcard'?7:0;
+  if(['J','Q','K'].includes(card.rank)) return 10;
+  return parseInt(card.rank)||0;
+}
+function handScore(hand, duckLocked){
+  if(duckLocked) return 17;
+  let total=0, aces=0;
+  (hand||[]).forEach(c=>{
+    if(c.isSpecial){total+=simpleVal(c);return;}
+    if(c.rank==='A'){aces++;total+=11;}
+    else total+=simpleVal(c);
+  });
+  while(total>21&&aces>0){total-=10;aces--;}
+  return total;
+}
+
 function renderDealerSeat(g){
   const d=g.dealer;
   const pos=DEALER_POS;
@@ -1855,70 +1799,96 @@ connect();
 
 <!-- ════ UNDERTALE BATTLE SCREEN ════ -->
 <div id="sc-ut" class="screen">
-  <div class="ut-bar">
-    <span class="ut-bar-title">* UNDERTALE</span>
-    <div style="display:flex;gap:6px">
-      <button class="ut-px-btn" id="ut-btn-shop">SHOP</button>
-      <button class="ut-px-btn" id="ut-btn-pvp">PvP</button>
-      <button class="ut-px-btn" id="ut-btn-leave-battle" style="border-color:#f00;color:#f00">LEAVE</button>
+  <!-- Thin top bar: shop/pvp/leave -->
+  <div class="ut-topbar">
+    <span style="font-family:var(--ut-font);font-size:7px;color:#555">* UNDERTALE</span>
+    <div style="display:flex;gap:5px">
+      <button class="ut-topbar-btn" id="ut-btn-shop">SHOP</button>
+      <button class="ut-topbar-btn" id="ut-btn-pvp">PvP</button>
+      <button class="ut-topbar-btn red" id="ut-btn-leave-battle">LEAVE</button>
     </div>
   </div>
-  <div class="ut-body">
-    <div class="ut-left">
 
-      <!-- Enemy area -->
-      <div class="ut-enemy-box" id="ut-enemy-box">
+  <!-- Main layout: battle column + stats sidebar -->
+  <div class="ut-main">
+    <div class="ut-battle-col" id="ut-battle-col">
+
+      <!-- Enemy sprite area -->
+      <div class="ut-enemy-area" id="ut-enemy-area">
         <div id="ut-boss-label" class="ut-boss-label" style="display:none">* BOSS ENCOUNTER *</div>
-        <!-- Pixel sprite canvas -->
-        <canvas id="ut-sprite-canvas" class="ut-sprite-canvas" width="80" height="80"></canvas>
-        <div class="ut-enemy-name" id="ut-enemy-name">???</div>
-        <div class="ut-enemy-desc" id="ut-enemy-desc"></div>
-        <div class="ut-hp-bar"><div class="ut-hp-fill" id="ut-enemy-hp-fill" style="width:100%"></div></div>
-        <div class="ut-hp-text" id="ut-enemy-hp-text">HP: ?/?</div>
+        <canvas id="ut-sprite-canvas" width="96" height="96"></canvas>
       </div>
 
       <!-- Dialogue box -->
-      <div class="ut-dialog" id="ut-dialog">* ...</div>
-
-      <!-- Main battle menu -->
-      <div class="ut-menu" id="ut-main-menu">
-        <button class="ut-btn" id="ut-btn-fight" data-menu="0"><span class="ut-btn-icon">*</span>FIGHT</button>
-        <button class="ut-btn" id="ut-btn-act"   data-menu="1"><span class="ut-btn-icon">*</span>ACT</button>
-        <button class="ut-btn" id="ut-btn-item"  data-menu="2"><span class="ut-btn-icon">*</span>ITEM</button>
-        <button class="ut-btn" id="ut-btn-mercy" data-menu="3"><span class="ut-btn-icon">*</span>MERCY</button>
+      <div class="ut-dialog-box" id="ut-dialog">
+        * ...
+        <span class="ut-dialog-arrow">▼</span>
       </div>
 
-      <!-- FIGHT panel — centered color gradient accuracy bar -->
-      <div id="ut-fight-panel" style="display:none" class="ut-attack-box">
-        <div class="ut-attack-title">STOP THE MARKER!</div>
-        <div class="ut-acc-outer" id="ut-acc-outer">
-          <div class="ut-acc-track-fill"></div>
-          <div class="ut-acc-center-line"></div>
-          <div class="ut-acc-slider" id="ut-acc-slider" style="left:0%"></div>
+      <!-- Status bar: LU 1  HP [bar] 20/20 -->
+      <div class="ut-status-bar">
+        <span class="ut-status-lv">LV <span id="ut-lv">1</span></span>
+        <span style="margin-left:8px">HP</span>
+        <span class="ut-status-hp-bar">
+          <span class="ut-status-hp-bar-fill" id="ut-status-hp-fill" style="width:100%;display:block;height:100%;"></span>
+        </span>
+        <span class="ut-status-hp-nums"><span id="ut-status-hp">20</span> / <span id="ut-status-maxhp">20</span></span>
+        <span style="margin-left:auto;font-size:7px;color:#555" id="ut-gold-bar">G:0</span>
+      </div>
+
+      <!-- Menu bar: FIGHT ACT ITEM MERCY -->
+      <div class="ut-menu-bar" id="ut-menu-bar">
+        <button class="ut-menu-btn" id="ut-btn-fight" data-menu="0" onclick="utShowFight()">
+          <span class="heart">&#9829; </span>FIGHT
+        </button>
+        <button class="ut-menu-btn" id="ut-btn-act" data-menu="1" onclick="utShowActs()">
+          <span class="heart">&#9829; </span>ACT
+        </button>
+        <button class="ut-menu-btn" id="ut-btn-item" data-menu="2" onclick="utShowItems()">
+          <span class="heart">&#9829; </span>ITEM
+        </button>
+        <button class="ut-menu-btn" id="ut-btn-mercy" data-menu="3" onclick="utMercy()">
+          <span class="heart">&#9829; </span>MERCY
+        </button>
+      </div>
+
+      <!-- FIGHT overlay (full screen, shown over battle col) -->
+      <div id="ut-fight-overlay" class="ut-fight-overlay" style="display:none">
+        <!-- Sprite shown small above bar -->
+        <canvas id="ut-fight-sprite" width="72" height="72" style="image-rendering:pixelated;margin-bottom:4px"></canvas>
+
+        <!-- Pill attack bar -->
+        <div class="ut-attack-pill-wrap" id="ut-attack-pill-wrap">
+          <div class="ut-attack-pill" id="ut-attack-pill">
+            <div class="ut-pill-lane"></div>
+            <!-- bone obstacles injected by JS -->
+            <div id="ut-pill-obstacles"></div>
+            <div class="ut-pill-cursor" id="ut-pill-cursor" style="left:0%"></div>
+          </div>
         </div>
+
+        <!-- Damage preview -->
         <div class="ut-dmg-preview" id="ut-dmg-preview">—</div>
-        <button class="ut-px-btn" id="ut-acc-stop" style="margin-top:10px;width:100%">ATTACK</button>
-        <button class="ut-px-btn" onclick="utShowMenu()" style="margin-top:4px;width:100%;border-color:#333;color:#555">BACK</button>
+        <div class="ut-attack-hint">Z / ENTER to attack &nbsp;|&nbsp; X to back</div>
       </div>
 
-      <!-- ACT submenu -->
-      <div id="ut-act-panel" style="display:none;width:100%;max-width:480px">
-        <div class="ut-acts" id="ut-acts-list"></div>
-        <button class="ut-px-btn" onclick="utShowMenu()" style="margin-top:6px;width:100%">BACK</button>
+      <!-- ACT submenu overlay -->
+      <div id="ut-act-overlay" class="ut-submenu-overlay" style="display:none">
+        <div id="ut-acts-list"></div>
       </div>
 
-      <!-- ITEM submenu -->
-      <div id="ut-item-panel" style="display:none;width:100%;max-width:480px">
+      <!-- ITEM submenu overlay -->
+      <div id="ut-item-overlay" class="ut-submenu-overlay" style="display:none">
         <div id="ut-item-list"></div>
-        <button class="ut-px-btn" onclick="utShowMenu()" style="margin-top:6px;width:100%">BACK</button>
       </div>
-    </div>
+
+    </div><!-- end .ut-battle-col -->
 
     <!-- Stats sidebar -->
     <div class="ut-right">
       <div class="ut-right-inner">
         <div class="ut-section">STATS</div>
-        <div class="ut-stat-row"><span>LV</span><span class="ut-stat-val" id="ut-lv">1</span></div>
+        <div class="ut-stat-row"><span>LV</span><span class="ut-stat-val" id="ut-lv-side">1</span></div>
         <div class="ut-stat-row"><span>HP</span><span class="ut-stat-val" id="ut-hp">20/20</span></div>
         <div class="ut-stat-row"><span>ATK</span><span class="ut-stat-val" id="ut-atk">10</span></div>
         <div class="ut-stat-row"><span>DEF</span><span class="ut-stat-val" id="ut-def">10</span></div>
@@ -1933,26 +1903,44 @@ connect();
         <div id="ut-log" style="font-family:var(--ut-font);font-size:7px;color:#aaa;line-height:2;overflow-y:auto;max-height:200px"></div>
       </div>
     </div>
-  </div>
-</div>
+  </div><!-- end .ut-main -->
+</div><!-- end #sc-ut -->
 
-<!-- UNDERTALE DODGE OVERLAY -->
+<!-- DODGE OVERLAY -->
 <div class="ut-dodge-overlay" id="ut-dodge-overlay">
-  <div class="ut-dodge-title" id="ut-dodge-title">DODGE!</div>
-  <div class="ut-soul-arena" id="ut-soul-arena">
-    <div class="ut-soul" id="ut-soul"></div>
+  <!-- Enemy sprite top area -->
+  <div class="ut-dodge-enemy-area">
+    <canvas id="ut-dodge-sprite" width="96" height="96"></canvas>
+    <div style="position:absolute;top:14px;left:120px;font-family:var(--ut-font);font-size:8px;color:#fff;line-height:2.2;max-width:200px" id="ut-dodge-dialog">* ...</div>
   </div>
-  <div class="ut-dodge-hp-bar-wrap">
-    <span class="ut-dodge-hp-label" id="ut-dodge-hp-text">HP 20</span>
-    <div class="ut-dodge-hp-bar"><div class="ut-dodge-hp-fill" id="ut-dodge-hp-fill" style="width:100%"></div></div>
+
+  <!-- Soul box centred bottom -->
+  <div class="ut-dodge-box-wrap">
+    <div class="ut-soul-arena" id="ut-soul-arena">
+      <div class="ut-soul" id="ut-soul"></div>
+    </div>
   </div>
-  <div class="ut-dodge-hint">ARROW KEYS / WASD TO DODGE</div>
+
+  <!-- Status bar -->
+  <div class="ut-dodge-status">
+    <span>LV <span id="ut-dodge-lv">1</span></span>
+    <span style="margin-left:8px">HP</span>
+    <span class="ut-dodge-hp-bar"><span class="ut-dodge-hp-fill" id="ut-dodge-hp-fill" style="width:100%;display:block;height:100%"></span></span>
+    <span style="font-size:7px" id="ut-dodge-hp-text">20 / 20</span>
+  </div>
+  <!-- Greyed menu bar -->
+  <div class="ut-dodge-menu-bar">
+    <div class="ut-dodge-menu-btn">FIGHT</div>
+    <div class="ut-dodge-menu-btn">ACT</div>
+    <div class="ut-dodge-menu-btn">ITEM</div>
+    <div class="ut-dodge-menu-btn">MERCY</div>
+  </div>
 </div>
 
-<!-- UNDERTALE SHOP MODAL -->
+<!-- SHOP MODAL -->
 <div class="mbg" id="ut-shop-modal">
   <div class="mbox" style="background:#000;border:3px solid #fff;font-family:var(--ut-font);max-width:480px;text-align:left;border-radius:0">
-    <div style="font-size:10px;color:#fff;margin-bottom:12px;letter-spacing:1px">* SHOP</div>
+    <div style="font-size:10px;color:#fff;margin-bottom:12px">* SHOP</div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
       <span class="ut-gold" id="ut-shop-gold">G: 0</span>
       <span style="font-size:7px;color:#555">CONVERT CHIPS:</span>
@@ -1964,7 +1952,7 @@ connect();
   </div>
 </div>
 
-<!-- UNDERTALE PvP MODAL -->
+<!-- PvP MODAL -->
 <div class="mbg" id="ut-pvp-modal">
   <div class="mbox" style="background:#000;border:3px solid #fff;font-family:var(--ut-font);max-width:480px;text-align:left;border-radius:0">
     <div style="font-size:10px;color:#fff;margin-bottom:12px">* PvP BATTLE</div>
@@ -1991,7 +1979,7 @@ connect();
               <div class="ut-acc-center-line"></div>
               <div class="ut-acc-slider" id="ut-pvp-acc-slider" style="left:0%"></div>
             </div>
-            <div class="ut-dmg-preview" id="ut-pvp-dmg-preview">—</div>
+            <div class="ut-dmg-preview-small" id="ut-pvp-dmg-preview">—</div>
             <button class="ut-px-btn" id="ut-pvp-acc-stop" style="margin-top:6px;width:100%">ATTACK</button>
           </div>
         </div>
@@ -2149,145 +2137,128 @@ function renderUtState() {
   if(!utState) return;
   const { stats, enemy, log } = utState;
 
-  // Stats sidebar
-  Q('#ut-lv').textContent = stats.level;
-  Q('#ut-hp').textContent = `${stats.hp}/${stats.maxHp}`;
-  Q('#ut-atk').textContent = stats.baseAtk + (UT_ITEMS[stats.weapon]?.attack||0) + (stats.weapon ? ` (+${UT_ITEMS[stats.weapon]?.desc?.match(/\+(\d+)/)?.[1]||0})` : '');
-  Q('#ut-def').textContent = stats.baseDef + (UT_ITEMS[stats.armor]?.defense||0);
-  Q('#ut-xp').textContent = `${stats.xp}/${utState.stats?.xpToNext||'?'}`;
+  // Status bar
+  const lvEl=Q('#ut-lv'); if(lvEl) lvEl.textContent=stats.level;
+  const lvSide=Q('#ut-lv-side'); if(lvSide) lvSide.textContent=stats.level;
+  const hpEl=Q('#ut-hp'); if(hpEl) hpEl.textContent=`${stats.hp}/${stats.maxHp}`;
+  const stHp=Q('#ut-status-hp'); if(stHp) stHp.textContent=stats.hp;
+  const stMax=Q('#ut-status-maxhp'); if(stMax) stMax.textContent=stats.maxHp;
+  const stFill=Q('#ut-status-hp-fill');
+  if(stFill) stFill.style.width=Math.max(0,stats.hp/stats.maxHp*100)+'%';
+  const goldBar=Q('#ut-gold-bar'); if(goldBar) goldBar.textContent=`G:${stats.gold||0}`;
+
+  Q('#ut-atk').textContent = (stats.baseAtk||10)+(UT_ITEMS[stats.weapon]?.attack||0);
+  Q('#ut-def').textContent = (stats.baseDef||10)+(UT_ITEMS[stats.armor]?.defense||0);
+  Q('#ut-xp').textContent = `${stats.xp}/${stats.xpToNext||'?'}`;
   Q('#ut-kills').textContent = stats.kills||0;
   Q('#ut-gold').textContent = `G: ${stats.gold||0}`;
 
   // Equipment
-  const weaponName = stats.weapon ? (UT_ITEMS[stats.weapon]?.icon+' '+UT_ITEMS[stats.weapon]?.name) : 'None';
-  const armorName  = stats.armor  ? (UT_ITEMS[stats.armor]?.icon +' '+UT_ITEMS[stats.armor]?.name)  : 'None';
-  Q('#ut-equip').innerHTML = `<div>⚔️ ${weaponName}</div><div>🛡️ ${armorName}</div>`;
+  const wn=stats.weapon?(UT_ITEMS[stats.weapon]?.name||stats.weapon):'None';
+  const an=stats.armor?(UT_ITEMS[stats.armor]?.name||stats.armor):'None';
+  Q('#ut-equip').innerHTML=`<div>W: ${wn}</div><div>A: ${an}</div>`;
 
   // Inventory
-  const invEl = Q('#ut-inv');
-  if(!stats.inventory?.length) { invEl.textContent='Empty'; }
-  else {
-    invEl.innerHTML = stats.inventory.map((id,i)=>{
-      const it=UT_ITEMS[id]||{icon:'?',name:id};
-      const isWeapon=id===stats.weapon, isArmor=id===stats.armor;
-      return `<div class="ut-inv-item${(isWeapon||isArmor)?' equipped':''}" onclick="utUseItem('${id}',${i})">${it.icon} ${it.name}${isWeapon?' [W]':isArmor?' [A]':''}</div>`;
-    }).join('');
-  }
+  const invEl=Q('#ut-inv');
+  if(!stats.inventory?.length) invEl.textContent='Empty';
+  else invEl.innerHTML=stats.inventory.map((id,i)=>{
+    const it=UT_ITEMS[id]||{name:id};
+    const eq=(id===stats.weapon||id===stats.armor);
+    return `<div class="ut-inv-item${eq?' equipped':''}" onclick="utUseItem('${id}',${i})">${it.name}${eq?' *':''}</div>`;
+  }).join('');
 
   // Log
-  if(log?.length) {
-    Q('#ut-log').innerHTML = log.map(l=>`<div>* ${esc(l)}</div>`).join('');
-    Q('#ut-log').scrollTop = Q('#ut-log').scrollHeight;
+  if(log?.length){
+    Q('#ut-log').innerHTML=log.map(l=>`<div>* ${esc(l)}</div>`).join('');
+    Q('#ut-log').scrollTop=Q('#ut-log').scrollHeight;
   }
 
-  // Enemy
-  if(enemy) {
+  // Enemy sprite + dialogue
+  if(enemy){
     drawSprite('ut-sprite-canvas', enemy.id, !!enemy.isBoss);
-    Q('#ut-enemy-name').textContent = enemy.name;
-    Q('#ut-enemy-desc').textContent = enemy.desc||'';
-    Q('#ut-boss-label').style.display = enemy.isBoss ? '' : 'none';
-    const pct = Math.max(0,(enemy.hp/enemy.maxHp)*100);
-    Q('#ut-enemy-hp-fill').style.width = pct+'%';
-    Q('#ut-enemy-hp-fill').className = 'ut-hp-fill'+(enemy.isBoss?' boss':'');
-    Q('#ut-enemy-hp-text').textContent = `HP: ${enemy.hp} / ${enemy.maxHp}`;
-    if(enemy.flavorTexts?.length) {
-      const txt = enemy.flavorTexts[Math.floor(Math.random()*enemy.flavorTexts.length)];
+    drawSprite('ut-fight-sprite', enemy.id, !!enemy.isBoss);
+    const bl=Q('#ut-boss-label'); if(bl) bl.style.display=enemy.isBoss?'':'none';
+    if(enemy.flavorTexts?.length){
+      const txt=enemy.flavorTexts[Math.floor(Math.random()*enemy.flavorTexts.length)];
       utDialog('* '+txt);
     }
   }
 
-  // Update lobby mini-stats
-  const lobbyLv = Q('#ut-lobby-lv'); if(lobbyLv) lobbyLv.textContent = `LV ${stats.level}`;
-  const lobbyHp = Q('#ut-lobby-hp'); if(lobbyHp) lobbyHp.textContent = `HP ${stats.hp}/${stats.maxHp}`;
-  const lobbyK  = Q('#ut-lobby-kills'); if(lobbyK) lobbyK.textContent = `Kills: ${stats.kills||0}`;
+  // Lobby mini-stats
+  const ll=Q('#ut-lobby-lv'); if(ll) ll.textContent=`LV ${stats.level}`;
+  const lh=Q('#ut-lobby-hp'); if(lh) lh.textContent=`HP ${stats.hp}/${stats.maxHp}`;
+  const lk=Q('#ut-lobby-kills'); if(lk) lk.textContent=`Kills: ${stats.kills||0}`;
 
-  // Phase handling
-  if(utState.battlePhase === 'dodging' && utState.attackPattern) {
+  if(utState.battlePhase==='dodging'&&utState.attackPattern){
     startDodge(utState.attackPattern, enemy?.name||'Enemy');
   } else {
     utShowMenu();
   }
-
-  // If attack pattern was in the state, trigger dodge
-  if(utState.attackPattern) {
-    startDodge(utState.attackPattern, enemy?.name||'Enemy');
-  }
 }
 
 function utDialog(text) {
-  const el = Q('#ut-dialog'); if(!el) return;
-  el.textContent = text;
+  const el=Q('#ut-dialog'); if(!el) return;
+  el.innerHTML=text+'<span class="ut-dialog-arrow">▼</span>';
 }
 
 function utLog(msg) {
-  const el = Q('#ut-log'); if(!el) return;
-  el.innerHTML += `<div>* ${esc(msg)}</div>`;
-  el.scrollTop = el.scrollHeight;
+  const el=Q('#ut-log'); if(!el) return;
+  el.innerHTML+=`<div>* ${esc(msg)}</div>`;
+  el.scrollTop=el.scrollHeight;
 }
 
 // ── Menu navigation ────────────────────────────────────────
 function utShowMenu() {
-  utCurrentPanel = 'menu';
-  Q('#ut-main-menu').style.display = '';
-  Q('#ut-fight-panel').style.display = 'none';
-  Q('#ut-act-panel').style.display = 'none';
-  Q('#ut-item-panel').style.display = 'none';
+  utCurrentPanel='menu';
+  const fo=Q('#ut-fight-overlay'); if(fo) fo.style.display='none';
+  const ao=Q('#ut-act-overlay');   if(ao) ao.style.display='none';
+  const io=Q('#ut-item-overlay');  if(io) io.style.display='none';
   stopSlider();
   utUpdateMenuSelection();
 }
 
 function utShowFight() {
-  utCurrentPanel = 'fight';
-  Q('#ut-main-menu').style.display = 'none';
-  Q('#ut-fight-panel').style.display = '';
-  Q('#ut-act-panel').style.display = 'none';
-  Q('#ut-item-panel').style.display = 'none';
+  utCurrentPanel='fight';
+  const fo=Q('#ut-fight-overlay'); if(fo) fo.style.display='flex';
+  const ao=Q('#ut-act-overlay');   if(ao) ao.style.display='none';
+  const io=Q('#ut-item-overlay');  if(io) io.style.display='none';
   startSlider();
 }
 
 function utShowActs() {
   if(!utState?.enemy) return;
-  utCurrentPanel = 'act';
-  utActIdx = 0;
-  Q('#ut-main-menu').style.display = 'none';
-  Q('#ut-act-panel').style.display = '';
-  Q('#ut-fight-panel').style.display = 'none';
-  Q('#ut-item-panel').style.display = 'none';
-  const actsList = Q('#ut-acts-list');
-  actsList.innerHTML = '';
-  const acts = utState.enemy.acts || [];
-  if(utState.enemy._spareable) {
-    const spare = document.createElement('button');
-    spare.className='ut-act-btn';
-    spare.textContent='* SPARE (ready!)';
-    spare.onclick = ()=>{ send({type:'utSpare'}); utShowMenu(); };
-    actsList.appendChild(spare);
+  utCurrentPanel='act'; utActIdx=0;
+  const fo=Q('#ut-fight-overlay'); if(fo) fo.style.display='none';
+  const ao=Q('#ut-act-overlay');   if(ao) ao.style.display='flex';
+  const io=Q('#ut-item-overlay');  if(io) io.style.display='none';
+  const list=Q('#ut-acts-list'); list.innerHTML='';
+  if(utState.enemy._spareable){
+    const d=document.createElement('div'); d.className='ut-sub-item';
+    d.innerHTML='<span class="heart">♥ </span>SPARE (ready!)';
+    d.onclick=()=>{ send({type:'utSpare'}); utShowMenu(); };
+    list.appendChild(d);
   }
-  acts.forEach(act=>{
-    const btn = document.createElement('button');
-    btn.className='ut-act-btn';
-    btn.textContent='* '+act;
-    btn.onclick=()=>{ send({type:'utAct',act}); utShowMenu(); };
-    actsList.appendChild(btn);
+  (utState.enemy.acts||[]).forEach(act=>{
+    const d=document.createElement('div'); d.className='ut-sub-item';
+    d.innerHTML=`<span class="heart">♥ </span>${act}`;
+    d.onclick=()=>{ send({type:'utAct',act}); utShowMenu(); };
+    list.appendChild(d);
   });
   utUpdateActSelection();
 }
 
 function utShowItems() {
-  utCurrentPanel = 'item';
-  utItemIdx = 0;
-  Q('#ut-main-menu').style.display = 'none';
-  Q('#ut-item-panel').style.display = '';
-  Q('#ut-fight-panel').style.display = 'none';
-  Q('#ut-act-panel').style.display = 'none';
-  const list = Q('#ut-item-list');
-  list.innerHTML = '';
-  const inv = utState?.stats?.inventory||[];
-  if(!inv.length) { list.innerHTML='<div style="font-family:var(--ut-font);font-size:8px;color:#666;padding:8px">* (Nothing)</div>'; return; }
+  utCurrentPanel='item'; utItemIdx=0;
+  const fo=Q('#ut-fight-overlay'); if(fo) fo.style.display='none';
+  const ao=Q('#ut-act-overlay');   if(ao) ao.style.display='none';
+  const io=Q('#ut-item-overlay');  if(io) io.style.display='flex';
+  const list=Q('#ut-item-list'); list.innerHTML='';
+  const inv=utState?.stats?.inventory||[];
+  if(!inv.length){ list.innerHTML='<div class="ut-sub-item" style="color:#555">* (Nothing)</div>'; return; }
   inv.forEach((id,i)=>{
     const it=UT_ITEMS[id]||{name:id,desc:''};
-    const d=document.createElement('div'); d.className='ut-inv-item';
-    d.innerHTML=`${it.name}<span style="color:#555;font-size:7px">${it.desc||''}</span>`;
+    const d=document.createElement('div'); d.className='ut-sub-item';
+    d.innerHTML=`<span class="heart">♥ </span>${it.name} <span style="color:#555;font-size:7px;margin-left:6px">${it.desc||''}</span>`;
     d.onclick=()=>{ send({type:'utUseItem',itemId:id,index:i}); utShowMenu(); };
     list.appendChild(d);
   });
@@ -2296,13 +2267,11 @@ function utShowItems() {
 
 function utMercy() {
   if(!utState?.enemy) return;
-  if(utState.enemy._spareable) { send({type:'utSpare'}); }
-  else { utDialog('* ...\n* (Use ACT first to make them\n  willing to be spared.)'); }
+  if(utState.enemy._spareable) send({type:'utSpare'});
+  else utDialog('* ...\n* (Use ACT first.)');
 }
 
-function utUseItem(id) {
-  send({type:'utUseItem',itemId:id});
-}
+function utUseItem(id) { send({type:'utUseItem',itemId:id}); }
 
 // ── Pixel sprite renderer ──────────────────────────────────
 // Each enemy has a unique pixel art sprite drawn on canvas
@@ -2379,19 +2348,19 @@ let utActIdx = 0;
 let utItemIdx = 0;
 
 function utUpdateMenuSelection() {
-  QQ('#ut-main-menu .ut-btn').forEach((btn, i) => {
+  QQ('#ut-menu-bar .ut-menu-btn').forEach((btn, i) => {
     btn.classList.toggle('selected', i === utMenuIdx);
   });
 }
 
 function utUpdateActSelection() {
-  QQ('#ut-acts-list .ut-act-btn').forEach((btn, i) => {
+  QQ('#ut-acts-list .ut-sub-item').forEach((btn, i) => {
     btn.classList.toggle('selected', i === utActIdx);
   });
 }
 
 function utUpdateItemSelection() {
-  QQ('#ut-item-list .ut-inv-item').forEach((btn, i) => {
+  QQ('#ut-item-list .ut-sub-item').forEach((btn, i) => {
     btn.classList.toggle('selected', i === utItemIdx);
   });
 }
@@ -2407,10 +2376,12 @@ document.addEventListener('keydown', e => {
     return;
   }
 
-  // Fight slider — space to stop
+  // Fight slider — Z or Enter to stop
   if(utCurrentPanel === 'fight') {
-    if(e.key === ' ' || e.key === 'z' || e.key === 'Z') { e.preventDefault(); utStopSlider(); }
-    if(e.key === 'Escape' || e.key === 'x' || e.key === 'X') { e.preventDefault(); utShowMenu(); }
+    if(e.key === 'z' || e.key === 'Z' || e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault(); utStopSlider();
+    }
+    if(e.key === 'x' || e.key === 'X' || e.key === 'Escape') { e.preventDefault(); utShowMenu(); }
     return;
   }
 
@@ -2432,7 +2403,7 @@ document.addEventListener('keydown', e => {
 
   // ACT submenu navigation
   if(utCurrentPanel === 'act') {
-    const acts = QQ('#ut-acts-list .ut-act-btn');
+    const acts = QQ('#ut-acts-list .ut-sub-item');
     if(e.key === 'ArrowDown' || e.key === 's') { utActIdx = Math.min(utActIdx+1, acts.length-1); utUpdateActSelection(); e.preventDefault(); }
     if(e.key === 'ArrowUp'   || e.key === 'w') { utActIdx = Math.max(utActIdx-1, 0); utUpdateActSelection(); e.preventDefault(); }
     if(e.key === 'z' || e.key === 'Z' || e.key === 'Enter') { e.preventDefault(); acts[utActIdx]?.click(); }
@@ -2442,7 +2413,7 @@ document.addEventListener('keydown', e => {
 
   // ITEM submenu navigation
   if(utCurrentPanel === 'item') {
-    const items = QQ('#ut-item-list .ut-inv-item');
+    const items = QQ('#ut-item-list .ut-sub-item');
     if(e.key === 'ArrowDown' || e.key === 's') { utItemIdx = Math.min(utItemIdx+1, items.length-1); utUpdateItemSelection(); e.preventDefault(); }
     if(e.key === 'ArrowUp'   || e.key === 'w') { utItemIdx = Math.max(utItemIdx-1, 0); utUpdateItemSelection(); e.preventDefault(); }
     if(e.key === 'z' || e.key === 'Z' || e.key === 'Enter') { e.preventDefault(); items[utItemIdx]?.click(); }
@@ -2453,59 +2424,70 @@ document.addEventListener('keydown', e => {
 
 document.addEventListener('keyup', e => { dodgeKeys[e.key] = false; });
 
-// ── Accuracy slider — centered gradient, shows damage ──────
-// Slider state (vars declared above in first script block, reused here)
-// sliderAnim, sliderPos, sliderDir, sliderSpeed, sliderStopped are already declared
-let currentEnemyAtk = 10; // used to calc damage preview
-
+// ── Damage preview calculator ──────────────────────────────
 function calcPreviewDamage(pos) {
-  // pos 0–100, centre=50 is best
-  const dist = Math.abs(pos - 50); // 0=perfect, 50=worst
-  const acc = Math.max(0, 1 - dist/50);
-  const stats = utState?.stats;
-  if(!stats) return 0;
-  const atkStat = (stats.baseAtk||10) + (UT_ITEMS[stats.weapon]?.attack||0);
-  const defStat = utState?.enemy?.def||0;
-  const base = Math.max(1, atkStat - Math.floor(defStat/2));
-  return Math.max(1, Math.round(base * (0.5 + acc * 0.8)));
+  const dist=Math.abs(pos-50);
+  const acc=Math.max(0,1-dist/50);
+  const stats=utState?.stats; if(!stats) return 0;
+  const atkStat=(stats.baseAtk||10)+(UT_ITEMS[stats.weapon]?.attack||0);
+  const defStat=utState?.enemy?.def||0;
+  const base=Math.max(1,atkStat-Math.floor(defStat/2));
+  return Math.max(1,Math.round(base*(0.5+acc*0.8)));
 }
 
+// ── Accuracy slider — pill bar with bones ─────────────────
 function startSlider() {
   stopSlider();
-  sliderPos = 0; sliderDir = 1; sliderStopped = false;
-  const slider = Q('#ut-acc-slider');
-  const preview = Q('#ut-dmg-preview');
-  const animate = () => {
+  sliderPos=0; sliderDir=1; sliderStopped=false;
+
+  // Build bone obstacles in pill
+  const pill=Q('#ut-attack-pill'); if(!pill) return;
+  pill.querySelectorAll('.ut-bone').forEach(b=>b.remove());
+  const bonePositions=[18,35,52,68,82]; // % positions
+  const boneHeights=[20,14,28,14,20];
+  bonePositions.forEach((pos,i)=>{
+    const b=document.createElement('div'); b.className='ut-bone';
+    b.style.left=pos+'%'; b.style.height=(boneHeights[i]||18)+'px';
+    pill.appendChild(b);
+  });
+
+  const cursor=Q('#ut-pill-cursor');
+  const preview=Q('#ut-dmg-preview');
+
+  const animate=()=>{
     if(sliderStopped) return;
-    sliderPos += sliderDir * sliderSpeed;
-    if(sliderPos >= 100) { sliderPos = 100; sliderDir = -1; }
-    if(sliderPos <= 0)   { sliderPos = 0;   sliderDir =  1; }
-    if(slider) slider.style.left = sliderPos + '%';
-    if(preview) {
-      const dmg = calcPreviewDamage(sliderPos);
-      // Color the preview based on how good it is
-      const dist = Math.abs(sliderPos - 50);
-      const col = dist < 10 ? '#fff' : dist < 25 ? '#ffff00' : dist < 38 ? '#ff8800' : '#ff3300';
-      preview.style.color = col;
-      preview.textContent = dmg + ' DMG';
+    sliderPos+=sliderDir*sliderSpeed;
+    if(sliderPos>=100){sliderPos=100;sliderDir=-1;}
+    if(sliderPos<=0){sliderPos=0;sliderDir=1;}
+    if(cursor) cursor.style.left=sliderPos+'%';
+    if(preview){
+      const dmg=calcPreviewDamage(sliderPos);
+      // Check if cursor is on a bone (bad position)
+      const onBone=bonePositions.some(bp=>Math.abs(sliderPos-bp)<3);
+      // Green lane is the sweet spot (centre of pill)
+      const dist=Math.abs(sliderPos-50);
+      const col=onBone?'#f00':dist<15?'#fff':dist<30?'#ff0':'#f80';
+      preview.style.color=col;
+      preview.textContent=dmg+' DMG';
     }
-    sliderAnim = requestAnimationFrame(animate);
+    sliderAnim=requestAnimationFrame(animate);
   };
-  sliderAnim = requestAnimationFrame(animate);
+  sliderAnim=requestAnimationFrame(animate);
 }
 
 function stopSlider() {
-  if(sliderAnim) cancelAnimationFrame(sliderAnim); sliderAnim = null;
+  if(sliderAnim) cancelAnimationFrame(sliderAnim); sliderAnim=null;
 }
 
 function utStopSlider() {
   if(sliderStopped) return;
-  sliderStopped = true; stopSlider();
-  const dist = Math.abs(sliderPos - 50);
-  const acc = Math.max(0, 1 - dist/50);
-  const dmg = calcPreviewDamage(sliderPos);
-  Q('#ut-dmg-preview').textContent = dmg + ' DMG!';
-  send({ type: 'utAttack', accuracy: acc });
+  sliderStopped=true; stopSlider();
+  const dist=Math.abs(sliderPos-50);
+  const acc=Math.max(0,1-dist/50);
+  const dmg=calcPreviewDamage(sliderPos);
+  const preview=Q('#ut-dmg-preview');
+  if(preview) preview.textContent=dmg+' DMG!';
+  send({type:'utAttack',accuracy:acc});
 }
 
 // ── Dodge mechanic ─────────────────────────────────────────
@@ -2517,25 +2499,27 @@ function startDodge(pattern, enemyName, isPvp=false) {
   isPvpDodge = isPvp;
   const overlay=Q('#ut-dodge-overlay'); if(!overlay) return;
   overlay.classList.add('open');
-  Q('#ut-dodge-title').textContent = `* ${enemyName} used ${pattern.name}!`;
+  // Draw enemy sprite in dodge overlay
+  if(utState?.enemy) drawSprite('ut-dodge-sprite', utState.enemy.id, !!utState.enemy.isBoss);
+  // Set dialogue
+  const dd=Q('#ut-dodge-dialog');
+  if(dd&&enemyName) dd.textContent=`* ${enemyName} attacks!`;
   const arena=Q('#ut-soul-arena');
-  arenaW=arena.clientWidth||220; arenaH=arena.clientHeight||190;
+  arenaW=arena.clientWidth||168; arenaH=arena.clientHeight||168;
   soulX=arenaW/2; soulY=arenaH/2;
   dodgeDmg=0; dodgeKeys={};
   projectiles=[];
-  // Clear old projectiles
   arena.querySelectorAll('.ut-projectile,.ut-wall,.ut-laser').forEach(el=>el.remove());
-  // Update HP display
+  // Update dodge HP bar
   const hp=utState?.stats?.hp||20, maxHp=utState?.stats?.maxHp||20;
-  Q('#ut-dodge-hp-text').textContent=`HP: ${hp}/${maxHp}`;
+  const lv=utState?.stats?.level||1;
+  const dlv=Q('#ut-dodge-lv'); if(dlv) dlv.textContent=lv;
+  Q('#ut-dodge-hp-text').textContent=`${hp} / ${maxHp}`;
   Q('#ut-dodge-hp-fill').style.width=(hp/maxHp*100)+'%';
-  // Spawn projectiles
   spawnAttackPattern(pattern, arena);
-  // Start dodge loop
   stopDodge();
   dodgeAnimId=requestAnimationFrame(dodgeLoop);
-  // End dodge after duration
-  setTimeout(()=>endDodge(pattern), (pattern.duration||4000)+500);
+  setTimeout(()=>endDodge(pattern),(pattern.duration||4000)+500);
 }
 
 function stopDodge() {
@@ -2547,15 +2531,12 @@ function endDodge(pattern) {
   const overlay=Q('#ut-dodge-overlay');
   if(!overlay?.classList.contains('open')) return;
   overlay.classList.remove('open');
-  // Clear projectiles
   const arena=Q('#ut-soul-arena');
   arena?.querySelectorAll('.ut-projectile,.ut-wall,.ut-laser').forEach(el=>el.remove());
   projectiles=[];
   if(isPvpDodge) {
     send({type:'utPvpDodgeResult', dmgTaken:dodgeDmg});
-    // Now it's our turn to attack
   } else {
-    const baseDmg = pattern.damage||10;
     send({type:'utDodgeResult', dmgTaken:dodgeDmg});
   }
 }
@@ -2564,34 +2545,35 @@ function dodgeLoop() {
   const soul=Q('#ut-soul');
   const arena=Q('#ut-soul-arena');
   if(!soul||!arena) return;
-  // Move soul
   const spd=soulSpeed;
-  if(dodgeKeys['ArrowLeft']||dodgeKeys['a']) soulX=Math.max(10,soulX-spd);
-  if(dodgeKeys['ArrowRight']||dodgeKeys['d']) soulX=Math.min(arenaW-10,soulX+spd);
-  if(dodgeKeys['ArrowUp']||dodgeKeys['w']) soulY=Math.max(10,soulY-spd);
-  if(dodgeKeys['ArrowDown']||dodgeKeys['s']) soulY=Math.min(arenaH-10,soulY+spd);
+  if(dodgeKeys['ArrowLeft']||dodgeKeys['a']) soulX=Math.max(8,soulX-spd);
+  if(dodgeKeys['ArrowRight']||dodgeKeys['d']) soulX=Math.min(arenaW-8,soulX+spd);
+  if(dodgeKeys['ArrowUp']||dodgeKeys['w']) soulY=Math.max(8,soulY-spd);
+  if(dodgeKeys['ArrowDown']||dodgeKeys['s']) soulY=Math.min(arenaH-8,soulY+spd);
   soul.style.left=soulX+'px';
   soul.style.top=soulY+'px';
-  // Check collisions
+  // Collision detection — 7px radius for heart
+  const def=utState?.stats?.baseDef||0;
   projectiles.forEach(p=>{
-    if(!p.el||!p.el.parentNode) return;
+    if(!p.el||!p.el.parentNode||p.hit) return;
     const px=parseFloat(p.el.style.left)||0;
     const py=parseFloat(p.el.style.top)||0;
-    const pw=parseFloat(p.el.style.width)||10;
-    const ph=parseFloat(p.el.style.height)||10;
-    if(soulX>px-8&&soulX<px+pw+8&&soulY>py-8&&soulY<py+ph+8&&!p.hit) {
+    const pw=p.el.offsetWidth||10;
+    const ph=p.el.offsetHeight||10;
+    if(soulX>px-6&&soulX<px+pw+6&&soulY>py-6&&soulY<py+ph+6){
       p.hit=true;
-      dodgeDmg+=p.damage||5;
-      p.el.style.opacity='0';
-      // Flash soul
-      soul.style.filter='brightness(3)';
-      setTimeout(()=>soul.style.filter='',200);
-      // Update HP display immediately
-      const def=utState?.stats?.baseDef||0;
-      const actualDmg=Math.max(1,p.damage-Math.floor(def/2));
-      const hp=Math.max(0,(utState?.stats?.hp||20)-actualDmg);
-      Q('#ut-dodge-hp-text').textContent=`HP: ${hp}/${utState?.stats?.maxHp||20}`;
-      Q('#ut-dodge-hp-fill').style.width=(hp/(utState?.stats?.maxHp||20)*100)+'%';
+      const rawDmg=p.damage||5;
+      const actualDmg=Math.max(1,rawDmg-Math.floor(def/2));
+      dodgeDmg+=actualDmg;
+      // Flash soul red
+      soul.style.background='#fff';
+      setTimeout(()=>soul.style.background='#f00',120);
+      // Update HP display
+      const hp=Math.max(0,(utState?.stats?.hp||20)-dodgeDmg);
+      const maxHp=utState?.stats?.maxHp||20;
+      Q('#ut-dodge-hp-text').textContent=`${hp} / ${maxHp}`;
+      Q('#ut-dodge-hp-fill').style.width=(hp/maxHp*100)+'%';
+      if(p.el.parentNode) p.el.style.opacity='0.3';
     }
   });
   dodgeAnimId=requestAnimationFrame(dodgeLoop);
@@ -2843,7 +2825,14 @@ Q('#ut-btn-fight').addEventListener('click', utShowFight);
 Q('#ut-btn-act').addEventListener('click', utShowActs);
 Q('#ut-btn-item').addEventListener('click', utShowItems);
 Q('#ut-btn-mercy').addEventListener('click', utMercy);
-Q('#ut-acc-stop').addEventListener('click', utStopSlider);
+// Click anywhere on the attack pill bar to stop
+const pillWrap=Q('#ut-attack-pill-wrap');
+if(pillWrap) pillWrap.addEventListener('click', utStopSlider);
+// Also wire up the fight overlay itself
+const fightOverlay=Q('#ut-fight-overlay');
+if(fightOverlay) fightOverlay.addEventListener('click', e=>{
+  if(utCurrentPanel==='fight') utStopSlider();
+});
 
 Q('#ut-btn-convert').addEventListener('click',()=>{
   const chips=parseInt(Q('#ut-convert-chips').value)||0;
