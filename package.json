@@ -1,14 +1,14 @@
 {
   "name": "chaos-cards",
-  "version": "1.0.0",
-  "description": "Multiplayer Chaos Cards — Blackjack x Poker with weird cards",
+  "version": "4.0.0",
+  "description": "Multiplayer Chaos Cards",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "ws": "^8.16.0"
+    "ws": "^8.16.0",
+    "mongodb": "^6.5.0"
   },
   "engines": {
     "node": ">=18.0.0"
