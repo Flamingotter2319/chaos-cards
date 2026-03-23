@@ -7,6 +7,7 @@ const WebSocket = require('ws');
 const path = require('path');
 const fs = require('fs');
 const { MongoClient } = require('mongodb');
+const UT = require('./undertale');
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGODB_URI;
@@ -679,8 +680,25 @@ function roomSnap(room){
     playerCount:room.players.size,inGame:!!room.game,settings:room.settings,
     players:[...room.players.values()].map(p=>({id:p.id,name:p.name,isBot:p.isBot,chips:p.chips,isOwner:p.id===room.ownerId,spectating:p.spectating||false,botType:p.botType}))};
 }
-function srvList(){return[...servers.values()].map(r=>({id:r.id,name:r.name,hasPassword:!!r.password,playerCount:r.players.size,inGame:!!r.game}));}
+function srvList(){
+  const cards=[...servers.values()].map(r=>({id:r.id,name:r.name,hasPassword:!!r.password,playerCount:r.players.size,inGame:!!r.game,gameType:'cards'}));
+  return cards;
+}
 function broadcastSrvList(){const list=srvList();wss.clients.forEach(ws=>{const m=clients.get(ws);if(!m||!m.serverId)sendTo(ws,{type:'serverList',servers:list});});}
+
+// ── Global chat & online list ──────────────────────────────
+function broadcastGlobal(msg){ wss.clients.forEach(ws=>{ const m=clients.get(ws); if(m&&m.username) sendTo(ws,msg); }); }
+
+function onlineList(){
+  const out=[];
+  wss.clients.forEach(ws=>{ const m=clients.get(ws); if(m&&m.username) out.push(m.username); });
+  return [...new Set(out)];
+}
+
+function broadcastOnlineList(){
+  const list=onlineList();
+  wss.clients.forEach(ws=>{ const m=clients.get(ws); if(m&&m.username) sendTo(ws,{type:'onlineList',users:list}); });
+}
 
 // ── WS handler ─────────────────────────────────────────────
 wss.on('connection',ws=>{
@@ -703,6 +721,7 @@ wss.on('connection',ws=>{
       const acc=await createAcc(u,hashPass(p));
       loggedIn.set(u,playerId);meta.username=u;
       sendTo(ws,{type:'authOk',playerId,username:u,chips:acc.chips,totalWon:0,gamesPlayed:0,servers:srvList()});
+      setTimeout(broadcastOnlineList,100);
       return;
     }
 
@@ -720,6 +739,7 @@ wss.on('connection',ws=>{
       }
       loggedIn.set(u,playerId);meta.username=u;
       sendTo(ws,{type:'authOk',playerId,username:u,chips:acc.chips,totalWon:acc.totalWon||0,gamesPlayed:acc.gamesPlayed||0,servers:srvList()});
+      setTimeout(broadcastOnlineList,100);
       return;
     }
 
@@ -799,6 +819,341 @@ wss.on('connection',ws=>{
         const sender=room.players.get(playerId);if(!sender)return;
         broadcastToRoom(room,{type:'chat',from:sender.name,text:String(msg.text||'').slice(0,200)});break;
       }
+      case 'globalChat':{
+        const text=String(msg.text||'').trim().slice(0,300);
+        if(!text) break;
+        // Parse @mentions — highlight but deliver to all
+        broadcastGlobal({type:'globalChat',from:meta.username,text,ts:Date.now()});
+        break;
+      }
+      case 'dm':{
+        const to=(msg.to||'').toLowerCase();
+        const text=String(msg.text||'').trim().slice(0,300);
+        if(!to||!text||to===meta.username) break;
+        // Find target ws
+        let found=false;
+        wss.clients.forEach(ws2=>{ const m2=clients.get(ws2); if(m2&&m2.username===to){
+          sendTo(ws2,{type:'dm',from:meta.username,text,ts:Date.now()});
+          found=true;
+        }});
+        // Echo back to sender so they see it in their DM window
+        sendTo(ws,{type:'dm',from:meta.username,to,text,ts:Date.now(),self:true});
+        if(!found) sendTo(ws,{type:'dmError',message:`${to} is not online.`});
+        break;
+      }
+      case 'friendRequest':{
+        const to=(msg.to||'').toLowerCase();
+        if(!to||to===meta.username) break;
+        const toAcc=await getAcc(to);
+        if(!toAcc){sendTo(ws,{type:'friendError',message:'User not found.'});break;}
+        // Add to DB
+        const fromAcc=await getAcc(meta.username);
+        const friends=fromAcc?.friends||[];
+        const pending=fromAcc?.friendRequestsSent||[];
+        if(friends.includes(to)){sendTo(ws,{type:'friendError',message:'Already friends.'});break;}
+        if(pending.includes(to)){sendTo(ws,{type:'friendError',message:'Request already sent.'});break;}
+        await updateAcc(meta.username,{friendRequestsSent:[...pending,to]});
+        const toReqs=toAcc?.friendRequestsReceived||[];
+        await updateAcc(to,{friendRequestsReceived:[...toReqs,meta.username]});
+        // Notify target if online
+        wss.clients.forEach(ws2=>{ const m2=clients.get(ws2); if(m2&&m2.username===to)
+          sendTo(ws2,{type:'friendRequest',from:meta.username}); });
+        sendTo(ws,{type:'friendOk',message:`Friend request sent to ${to}.`});
+        break;
+      }
+      case 'friendAccept':{
+        const from=(msg.from||'').toLowerCase();
+        if(!from) break;
+        const myAcc=await getAcc(meta.username);
+        const received=myAcc?.friendRequestsReceived||[];
+        if(!received.includes(from)){sendTo(ws,{type:'friendError',message:'No request from that user.'});break;}
+        // Add both ways
+        const myFriends=[...(myAcc?.friends||[]).filter(f=>f!==from),from];
+        await updateAcc(meta.username,{friends:myFriends,friendRequestsReceived:received.filter(r=>r!==from)});
+        const fromAcc=await getAcc(from);
+        const fromFriends=[...(fromAcc?.friends||[]).filter(f=>f!==meta.username),meta.username];
+        const fromSent=(fromAcc?.friendRequestsSent||[]).filter(r=>r!==meta.username);
+        await updateAcc(from,{friends:fromFriends,friendRequestsSent:fromSent});
+        sendTo(ws,{type:'friendsUpdate',friends:myFriends});
+        // Notify the original sender
+        wss.clients.forEach(ws2=>{ const m2=clients.get(ws2); if(m2&&m2.username===from)
+          sendTo(ws2,{type:'friendAccepted',by:meta.username}); });
+        break;
+      }
+      case 'friendDecline':{
+        const from=(msg.from||'').toLowerCase();
+        const myAcc=await getAcc(meta.username);
+        const received=(myAcc?.friendRequestsReceived||[]).filter(r=>r!==from);
+        await updateAcc(meta.username,{friendRequestsReceived:received});
+        sendTo(ws,{type:'friendsData',friendRequestsReceived:received,friends:myAcc?.friends||[]});
+        break;
+      }
+      case 'removeFriend':{
+        const target=(msg.target||'').toLowerCase();
+        const myAcc=await getAcc(meta.username);
+        const friends=(myAcc?.friends||[]).filter(f=>f!==target);
+        await updateAcc(meta.username,{friends});
+        const targetAcc=await getAcc(target);
+        if(targetAcc){
+          const tf=(targetAcc.friends||[]).filter(f=>f!==meta.username);
+          await updateAcc(target,{friends:tf});
+        }
+        sendTo(ws,{type:'friendsUpdate',friends});
+        break;
+      }
+      case 'getFriends':{
+        const myAcc=await getAcc(meta.username);
+        sendTo(ws,{type:'friendsData',
+          friends:myAcc?.friends||[],
+          friendRequestsReceived:myAcc?.friendRequestsReceived||[],
+          friendRequestsSent:myAcc?.friendRequestsSent||[],
+        });
+        break;
+      }
+      case 'inviteFriend':{
+        const to=(msg.to||'').toLowerCase();
+        const room=servers.get(meta.serverId);
+        if(!room){sendTo(ws,{type:'friendError',message:'You must be in a room to invite.'});break;}
+        wss.clients.forEach(ws2=>{ const m2=clients.get(ws2); if(m2&&m2.username===to)
+          sendTo(ws2,{type:'gameInvite',from:meta.username,serverId:room.id,serverName:room.name,hasPassword:!!room.password}); });
+        sendTo(ws,{type:'friendOk',message:`Invite sent to ${to}.`});
+        break;
+      }
+      case 'getOnline':
+        sendTo(ws,{type:'onlineList',users:onlineList()}); break;
+      // ── UNDERTALE ───────────────────────────────────────────
+      case 'utGetState':{
+        const s=UT.getOrCreateSession(meta.username);
+        // Load saved stats from DB if available
+        const dbAcc=await getAcc(meta.username);
+        if(dbAcc?.utStats) s.stats=dbAcc.utStats;
+        if(!s.enemy) s.enemy=UT.pickEnemy(s.stats.kills||0);
+        s.battlePhase='idle';
+        sendTo(ws,UT.sessionState(s));
+        break;
+      }
+      case 'utAttack':{
+        const s=UT.utSessions.get(meta.username);
+        if(!s||!s.enemy||s.battlePhase!=='idle') break;
+        const accuracy=Math.max(0,Math.min(1,parseFloat(msg.accuracy)||0.5));
+        const dmg=UT.calcDamage(UT.getAtk(s.stats),s.enemy.def,accuracy);
+        s.enemy.hp=Math.max(0,s.enemy.hp-dmg);
+        s.log.push(`⚔️ You attacked ${s.enemy.name} for ${dmg} damage! (acc: ${Math.round(accuracy*100)}%)`);
+        if(s.enemy.hp<=0){
+          // Enemy defeated
+          const logs=[`💥 ${s.enemy.name} was defeated!`];
+          s.stats.kills++;
+          const xpLogs=UT.gainXP(s.stats,s.enemy.xp);
+          logs.push(...xpLogs);
+          s.stats.gold+=s.enemy.gold;
+          logs.push(`+${s.enemy.xp} XP  +${s.enemy.gold}G`);
+          // Drops
+          (s.enemy.drops||[]).forEach(d=>{
+            if(Math.random()<d.chance&&s.stats.inventory.length<8){
+              s.stats.inventory.push(d.item);
+              logs.push(`📦 Found: ${UT.ITEMS[d.item]?.name||d.item}!`);
+            }
+          });
+          s.log.push(...logs);
+          // Save stats
+          await updateAcc(meta.username,{utStats:s.stats});
+          // Spawn next enemy
+          s.enemy=UT.pickEnemy(s.stats.kills);
+          s.battlePhase='idle';
+          if(s.enemy.isBoss) s.log.push(`⚠️ A BOSS appears! ${s.enemy.icon} ${s.enemy.name}!`);
+          else s.log.push(`A wild ${s.enemy.icon} ${s.enemy.name} appears!`);
+          sendTo(ws,UT.sessionState(s));
+        } else {
+          // Enemy counterattacks
+          const pattern=s.enemy.attackPatterns[Math.floor(Math.random()*s.enemy.attackPatterns.length)];
+          s.battlePhase='dodging';
+          s.log.push(`✅ Hit! ${s.enemy.name} has ${s.enemy.hp}/${s.enemy.maxHp} HP left.`);
+          s.log.push(s.enemy.flavorTexts[Math.floor(Math.random()*s.enemy.flavorTexts.length)]);
+          sendTo(ws,{...UT.sessionState(s),attackPattern:pattern});
+        }
+        break;
+      }
+      case 'utDodgeResult':{
+        const s=UT.utSessions.get(meta.username);
+        if(!s||s.battlePhase!=='dodging') break;
+        const dmgTaken=parseInt(msg.dmgTaken)||0;
+        s.stats.hp=Math.max(0,s.stats.hp-dmgTaken);
+        if(dmgTaken===0) s.log.push('✨ You dodged perfectly! No damage taken.');
+        else s.log.push(`💔 You took ${dmgTaken} damage. HP: ${s.stats.hp}/${s.stats.maxHp}`);
+        s.battlePhase='idle';
+        if(s.stats.hp<=0){
+          // Player died
+          s.log.push('💀 You have been defeated! Returning to LV 1...');
+          s.stats=UT.newPlayerStats();
+          s.enemy=UT.pickEnemy(0);
+          await updateAcc(meta.username,{utStats:s.stats});
+          s.log.push('You lost everything and start over.');
+        }
+        await updateAcc(meta.username,{utStats:s.stats});
+        sendTo(ws,UT.sessionState(s));
+        break;
+      }
+      case 'utAct':{
+        const s=UT.utSessions.get(meta.username);
+        if(!s||!s.enemy||s.battlePhase!=='idle') break;
+        const act=msg.act||'';
+        const effect=s.enemy.actEffects?.[act]||'Nothing happened.';
+        s.log.push(`💬 "${act}" — ${effect}`);
+        // Check mercy
+        if(s.enemy.mercy?.includes(act)){
+          s.log.push(`🕊️ ${s.enemy.name} can now be spared!`);
+          s.enemy._spareable=true;
+        }
+        // Still triggers enemy attack after ACT
+        const pattern=s.enemy.attackPatterns[Math.floor(Math.random()*s.enemy.attackPatterns.length)];
+        s.battlePhase='dodging';
+        sendTo(ws,{...UT.sessionState(s),attackPattern:pattern});
+        break;
+      }
+      case 'utSpare':{
+        const s=UT.utSessions.get(meta.username);
+        if(!s||!s.enemy||!s.enemy._spareable) break;
+        s.log.push(`🕊️ You spared ${s.enemy.name}. They walk away.`);
+        s.stats.kills++;
+        const xpLogs=UT.gainXP(s.stats,Math.floor(s.enemy.xp/2));
+        s.log.push(...xpLogs);
+        s.enemy=UT.pickEnemy(s.stats.kills);
+        s.battlePhase='idle';
+        s.log.push(`${s.enemy.icon} ${s.enemy.name} appears!`);
+        await updateAcc(meta.username,{utStats:s.stats});
+        sendTo(ws,UT.sessionState(s));
+        break;
+      }
+      case 'utUseItem':{
+        const s=UT.utSessions.get(meta.username);
+        if(!s) break;
+        const itemId=msg.itemId;
+        const idx=s.stats.inventory.indexOf(itemId);
+        if(idx===-1) break;
+        const item=UT.ITEMS[itemId];
+        if(!item) break;
+        if(item.type==='heal'){
+          s.stats.hp=Math.min(s.stats.maxHp,s.stats.hp+(item.hpRestore||0));
+          s.log.push(`🍬 Used ${item.name}. HP +${item.hpRestore} → ${s.stats.hp}/${s.stats.maxHp}`);
+          s.stats.inventory.splice(idx,1);
+          // Using item still triggers enemy turn
+          if(s.battlePhase==='idle'&&s.enemy){
+            const pattern=s.enemy.attackPatterns[Math.floor(Math.random()*s.enemy.attackPatterns.length)];
+            s.battlePhase='dodging';
+            sendTo(ws,{...UT.sessionState(s),attackPattern:pattern});
+          } else sendTo(ws,UT.sessionState(s));
+        } else if(item.type==='weapon'){
+          s.stats.weapon=itemId;
+          s.log.push(`⚔️ Equipped ${item.name}! ATK +${item.attack}`);
+          sendTo(ws,UT.sessionState(s));
+        } else if(item.type==='armor'){
+          s.stats.armor=itemId;
+          s.log.push(`🛡️ Equipped ${item.name}! DEF +${item.defense}`);
+          sendTo(ws,UT.sessionState(s));
+        }
+        await updateAcc(meta.username,{utStats:s.stats});
+        break;
+      }
+      case 'utShopBuy':{
+        const s=UT.getOrCreateSession(meta.username);
+        const item=UT.ITEMS[msg.itemId];
+        if(!item){sendTo(ws,{type:'utError',msg:'Item not found.'});break;}
+        if(s.stats.gold<item.goldCost){sendTo(ws,{type:'utError',msg:'Not enough gold.'});break;}
+        if(s.stats.inventory.length>=8){sendTo(ws,{type:'utError',msg:'Inventory full (max 8).'});break;}
+        s.stats.gold-=item.goldCost;
+        s.stats.inventory.push(item.id);
+        s.log.push(`🛒 Bought ${item.name} for ${item.goldCost}G.`);
+        await updateAcc(meta.username,{utStats:s.stats});
+        sendTo(ws,UT.sessionState(s));
+        break;
+      }
+      case 'utConvertChips':{
+        const amount=Math.max(1,parseInt(msg.chips)||0);
+        const acc2=await getAcc(meta.username);
+        if(!acc2||acc2.chips<amount){sendTo(ws,{type:'utError',msg:'Not enough chips.'});break;}
+        const gold=amount*UT.CHIPS_TO_GOLD;
+        await updateAcc(meta.username,{chips:acc2.chips-amount});
+        const s=UT.getOrCreateSession(meta.username);
+        s.stats.gold+=gold;
+        await updateAcc(meta.username,{utStats:s.stats});
+        sendTo(ws,{type:'utConvertOk',chipsSpent:amount,goldGained:gold,newChips:acc2.chips-amount,newGold:s.stats.gold});
+        sendTo(ws,UT.sessionState(s));
+        break;
+      }
+      // PvP challenge
+      case 'utChallenge':{
+        const target=(msg.target||'').toLowerCase();
+        if(target===meta.username) break;
+        let found=false;
+        wss.clients.forEach(ws2=>{ const m2=clients.get(ws2); if(m2&&m2.username===target){
+          found=true;
+          const cid=`chal_${Date.now()}`;
+          UT.pvpChallenges.set(cid,{from:meta.username,to:target,fromWs:ws,toWs:ws2});
+          sendTo(ws2,{type:'utChallengeReceived',from:meta.username,challengeId:cid});
+          sendTo(ws,{type:'utChallengeSent',to:target});
+        }});
+        if(!found) sendTo(ws,{type:'utError',msg:`${target} is not online.`});
+        break;
+      }
+      case 'utChallengeAccept':{
+        const chal=UT.pvpChallenges.get(msg.challengeId);
+        if(!chal){sendTo(ws,{type:'utError',msg:'Challenge expired.'});break;}
+        UT.pvpChallenges.delete(msg.challengeId);
+        const s1=UT.getOrCreateSession(chal.from);
+        const s2=UT.getOrCreateSession(chal.to);
+        const battle=UT.createPvpBattle(s1.stats,s2.stats,chal.fromWs,ws);
+        // Store battle ID on both ws metas
+        clients.get(chal.fromWs) && (clients.get(chal.fromWs).pvpBattle=battle.id);
+        clients.get(ws) && (clients.get(ws).pvpBattle=battle.id);
+        const state={type:'utPvpStart',battleId:battle.id,opponent:chal.to,role:'p2'};
+        sendTo(chal.fromWs,{...state,opponent:chal.to,role:'p1'});
+        sendTo(ws,{...state,opponent:chal.from,role:'p2'});
+        break;
+      }
+      case 'utChallengeDecline':{
+        const chal=UT.pvpChallenges.get(msg.challengeId);
+        if(chal){ UT.pvpChallenges.delete(msg.challengeId); sendTo(chal.fromWs,{type:'utError',msg:`${chal.to} declined your challenge.`}); }
+        break;
+      }
+      case 'utPvpAttack':{
+        // P1 or P2 submits their attack
+        const bid=clients.get(ws)?.pvpBattle;
+        const b=bid&&UT.pvpBattles.get(bid);
+        if(!b) break;
+        const accuracy=Math.max(0,Math.min(1,parseFloat(msg.accuracy)||0.5));
+        const attackName=msg.attackName||'Strike';
+        const attackPattern=msg.attackPattern||{name:attackName,type:'bullets',count:6,speed:3,duration:3000};
+        // Scale pattern difficulty by accuracy
+        attackPattern.count=Math.round((attackPattern.count||6)*(0.5+accuracy));
+        attackPattern.speed=Math.round(Math.min(5,(attackPattern.speed||3)*(0.7+accuracy*0.6)));
+        const role=b.p1.ws===ws?'p1':'p2';
+        const defender=role==='p1'?b.p2:b.p1;
+        sendTo(defender.ws,{type:'utPvpIncoming',attackPattern,from:meta.username,accuracy});
+        sendTo(ws,{type:'utPvpAttackSent'});
+        break;
+      }
+      case 'utPvpDodgeResult':{
+        const bid=clients.get(ws)?.pvpBattle;
+        const b=bid&&UT.pvpBattles.get(bid);
+        if(!b) break;
+        const role=b.p1.ws===ws?'p1':'p2';
+        const attacker=role==='p1'?b.p2:b.p1;
+        const defender=role==='p1'?b.p1:b.p2;
+        const dmg=parseInt(msg.dmgTaken)||0;
+        defender.stats.hp=Math.max(0,defender.stats.hp-dmg);
+        b.log.push(`${meta.username} took ${dmg} damage. HP: ${defender.stats.hp}/${defender.stats.maxHp}`);
+        // Notify both
+        const stateMsg={type:'utPvpState',p1:{name:b.p1.username||'P1',hp:b.p1.stats.hp,maxHp:b.p1.stats.maxHp},p2:{name:b.p2.username||'P2',hp:b.p2.stats.hp,maxHp:b.p2.stats.maxHp},log:b.log.slice(-6)};
+        sendTo(b.p1.ws,stateMsg); sendTo(b.p2.ws,stateMsg);
+        if(defender.stats.hp<=0){
+          sendTo(attacker.ws,{type:'utPvpEnd',result:'win'});
+          sendTo(defender.ws,{type:'utPvpEnd',result:'lose'});
+          UT.pvpBattles.delete(bid);
+          if(clients.get(b.p1.ws)) clients.get(b.p1.ws).pvpBattle=null;
+          if(clients.get(b.p2.ws)) clients.get(b.p2.ws).pvpBattle=null;
+        }
+        break;
+      }
       case 'refreshServers':sendTo(ws,{type:'serverList',servers:srvList()});break;
     }
   });
@@ -807,6 +1162,7 @@ wss.on('connection',ws=>{
     const m=clients.get(ws);
     if(m){handleLeave(ws,m);if(m.username&&loggedIn.get(m.username)===m.playerId)loggedIn.delete(m.username);}
     clients.delete(ws);
+    setTimeout(broadcastOnlineList,100);
   });
 });
 

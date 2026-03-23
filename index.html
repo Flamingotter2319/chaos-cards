@@ -365,9 +365,84 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .eli.good{border-color:#2e7a32;color:#80c880;}
 .eli.bad{border-color:#7a2020;color:#f08080;}
 @keyframes logIn{from{transform:translateX(11px);opacity:0}to{transform:none;opacity:1}}
-::-webkit-scrollbar{width:3px;height:3px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:rgba(201,168,76,.16);border-radius:2px;}
+/* ══ UNDERTALE MODE ══════════════════════════════════════ */
+#sc-ut{ overflow:hidden; background:#000; font-family:'Courier New',monospace; color:#fff; }
+.ut-bar{ display:flex; align-items:center; justify-content:space-between; padding:6px 14px; background:#111; border-bottom:2px solid #fff; flex-shrink:0; }
+.ut-bar-title{ font-size:14px; font-weight:bold; letter-spacing:2px; }
+.ut-body{ flex:1; display:flex; overflow:hidden; min-height:0; }
+.ut-left{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:16px; overflow-y:auto; gap:12px; }
+.ut-right{ width:240px; border-left:2px solid #333; background:#0a0a0a; display:flex; flex-direction:column; overflow:hidden; }
+.ut-right-inner{ flex:1; overflow-y:auto; padding:12px; }
+@media(max-width:700px){ .ut-right{ width:180px; } }
+
+/* Enemy display */
+.ut-enemy-box{ background:#111; border:2px solid #fff; border-radius:4px; padding:16px 20px; text-align:center; width:100%; max-width:500px; }
+.ut-enemy-icon{ font-size:56px; line-height:1; margin-bottom:8px; }
+.ut-enemy-name{ font-size:18px; font-weight:bold; letter-spacing:2px; margin-bottom:4px; }
+.ut-enemy-desc{ font-size:11px; color:#aaa; margin-bottom:12px; }
+.ut-hp-bar{ height:14px; background:#333; border:1px solid #fff; border-radius:2px; overflow:hidden; margin-bottom:4px; }
+.ut-hp-fill{ height:100%; background:#ff0; transition:width .4s; }
+.ut-hp-fill.boss{ background:#f00; }
+.ut-hp-text{ font-size:11px; color:#aaa; text-align:right; }
+.ut-boss-label{ color:#f00; font-size:11px; letter-spacing:3px; font-weight:bold; margin-bottom:4px; }
+
+/* Battle menu */
+.ut-menu{ display:grid; grid-template-columns:1fr 1fr; gap:6px; width:100%; max-width:500px; }
+.ut-btn{ background:#000; border:2px solid #fff; color:#fff; padding:10px 8px; font-family:'Courier New',monospace; font-size:13px; font-weight:bold; cursor:pointer; text-align:left; transition:all .1s; letter-spacing:1px; display:flex; align-items:center; gap:8px; }
+.ut-btn:hover{ background:#fff; color:#000; }
+.ut-btn:disabled{ opacity:.4; cursor:not-allowed; }
+.ut-btn .ut-btn-icon{ font-size:18px; }
+
+/* ACT submenu */
+.ut-acts{ display:flex; flex-direction:column; gap:5px; width:100%; max-width:500px; }
+.ut-act-btn{ background:#000; border:1px solid #555; color:#fff; padding:8px 12px; font-family:'Courier New',monospace; font-size:12px; cursor:pointer; text-align:left; transition:all .1s; }
+.ut-act-btn:hover{ border-color:#fff; background:#1a1a1a; }
+
+/* ATTACK accuracy bar */
+.ut-attack-box{ width:100%; max-width:500px; background:#111; border:2px solid #fff; padding:16px; text-align:center; }
+.ut-acc-track{ position:relative; height:24px; background:#333; border:1px solid #fff; margin:10px 0; overflow:hidden; cursor:pointer; }
+.ut-acc-slider{ position:absolute; top:0; width:6px; height:100%; background:#ff0; transition:left .05s linear; }
+.ut-acc-zone{ position:absolute; top:0; height:100%; background:rgba(255,255,0,0.15); }
+
+/* DODGE box — THE SOUL BOX */
+.ut-dodge-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.95); z-index:500; display:none; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
+.ut-dodge-overlay.open{ display:flex; }
+.ut-dodge-title{ font-family:'Courier New',monospace; font-size:14px; color:#fff; letter-spacing:2px; }
+.ut-soul-arena{ position:relative; width:300px; height:280px; border:3px solid #fff; background:#000; overflow:hidden; flex-shrink:0; }
+.ut-soul{ position:absolute; width:16px; height:16px; font-size:16px; line-height:1; z-index:10; pointer-events:none; transform:translate(-50%,-50%); transition:left .04s, top .04s; }
+.ut-projectile{ position:absolute; pointer-events:none; border-radius:50%; }
+.ut-wall{ position:absolute; pointer-events:none; background:#fff; }
+.ut-laser{ position:absolute; pointer-events:none; background:rgba(255,255,0,0.85); }
+.ut-dodge-hp{ font-family:'Courier New',monospace; font-size:12px; color:#fff; }
+.ut-dodge-hp-bar{ width:300px; height:12px; background:#333; border:1px solid #fff; }
+.ut-dodge-hp-fill{ height:100%; background:#ff0; transition:width .3s; }
+
+/* Dialogue box */
+.ut-dialog{ background:#000; border:2px solid #fff; padding:10px 14px; width:100%; max-width:500px; min-height:50px; font-family:'Courier New',monospace; font-size:13px; line-height:1.6; }
+
+/* Stats panel */
+.ut-stat-row{ display:flex; justify-content:space-between; font-family:'Courier New',monospace; font-size:11px; padding:3px 0; border-bottom:1px solid #222; color:#ccc; }
+.ut-stat-val{ color:#ff0; font-weight:bold; }
+.ut-section{ font-size:10px; color:#888; letter-spacing:2px; margin:10px 0 5px; }
+.ut-inv-item{ display:flex; justify-content:space-between; align-items:center; padding:4px 6px; border:1px solid #333; margin-bottom:4px; font-family:'Courier New',monospace; font-size:11px; cursor:pointer; }
+.ut-inv-item:hover{ border-color:#fff; background:#111; }
+.ut-inv-item.equipped{ border-color:#ff0; }
+.ut-gold{ color:#ffd700; font-family:'Courier New',monospace; font-size:12px; }
+
+/* Shop */
+.ut-shop-item{ padding:6px 8px; border:1px solid #333; margin-bottom:5px; cursor:pointer; font-family:'Courier New',monospace; font-size:11px; }
+.ut-shop-item:hover{ border-color:#ff0; background:#111; }
+.ut-convert-row{ display:flex; gap:6px; align-items:center; margin-bottom:10px; }
+.ut-inp{ background:#000; border:1px solid #fff; color:#fff; padding:5px 8px; font-family:'Courier New',monospace; font-size:12px; width:70px; }
+
+/* PvP */
+.ut-pvp-arena{ position:relative; width:100%; max-width:500px; }
+.ut-pvp-hp-row{ display:flex; justify-content:space-between; margin-bottom:10px; font-family:'Courier New',monospace; font-size:12px; }
+.ut-challenge-item{ padding:8px 10px; border:1px solid #555; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center; font-family:'Courier New',monospace; font-size:12px; }
+
+/* Accuracy meter in PvP */
+.ut-acc-label{ font-family:'Courier New',monospace; font-size:11px; color:#aaa; margin-bottom:4px; }
+
 </style>
 </head>
 <body>
@@ -411,12 +486,74 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
     </div>
   </div>
   <div class="lby-grid">
-    <div class="panel">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="ptitle" style="margin-bottom:0">⬡ SERVERS ⬡</div>
-        <button class="btn btn-ghost btn-sm" id="btn-refresh">↻ Refresh</button>
+    <!-- LEFT: tabbed panel -->
+    <div class="panel" style="display:flex;flex-direction:column;min-height:0;">
+      <div class="tabs" style="margin-bottom:12px">
+        <div class="tab active" id="ltab-servers" onclick="switchLTab('servers')">Servers</div>
+        <div class="tab" id="ltab-chat" onclick="switchLTab('chat')">Global Chat</div>
+        <div class="tab" id="ltab-friends" onclick="switchLTab('friends')">Friends</div>
+        <div class="tab" id="ltab-ut" onclick="switchLTab('ut')">⚔️ Battle</div>
       </div>
-      <div class="srv-list" id="srv-list"><div class="empty">No servers yet — create one!</div></div>
+
+      <!-- SERVERS pane -->
+      <div id="lpane-servers">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="ptitle" style="margin-bottom:0">⬡ SERVERS ⬡</div>
+          <button class="btn btn-ghost btn-sm" id="btn-refresh">↻ Refresh</button>
+        </div>
+        <div class="srv-list" id="srv-list"><div class="empty">No servers yet — create one!</div></div>
+      </div>
+
+      <!-- GLOBAL CHAT pane -->
+      <div id="lpane-chat" style="display:none;flex-direction:column;flex:1;min-height:0;">
+        <div class="ptitle">⬡ GLOBAL CHAT ⬡</div>
+        <div id="global-chat-msgs" style="flex:1;min-height:200px;max-height:380px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:7px;padding:8px;font-size:12px;margin-bottom:8px;"></div>
+        <div style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);margin-bottom:5px">Type @username to mention someone · @username message to DM</div>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="gchat-lobby-inp" placeholder="Message everyone…" maxlength="300" style="flex:1;font-size:12px;padding:7px 10px;">
+          <button class="btn btn-ghost btn-sm" id="btn-gchat-lobby" style="margin-top:0">→</button>
+        </div>
+      </div>
+
+      <!-- FRIENDS pane -->
+      <div id="lpane-friends" style="display:none;">
+        <div class="ptitle">⬡ FRIENDS ⬡</div>
+        <!-- Add friend -->
+        <div style="display:flex;gap:6px;margin-bottom:12px">
+          <input type="text" id="friend-inp" placeholder="Add friend by username…" maxlength="20" style="flex:1;font-size:12px;padding:7px 10px;">
+          <button class="btn btn-ghost btn-sm" id="btn-add-friend" style="margin-top:0">+ Add</button>
+        </div>
+        <div id="friend-err" class="err"></div>
+        <!-- Incoming requests -->
+        <div id="friend-requests-section" style="display:none">
+          <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">INCOMING REQUESTS</div>
+          <div id="friend-requests-list"></div>
+          <hr class="g">
+        </div>
+        <!-- Friends list -->
+        <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">YOUR FRIENDS</div>
+        <div id="friends-list"><div class="empty" style="padding:14px">No friends yet. Add someone!</div></div>
+        <!-- DM panel -->
+        <div id="dm-panel" style="display:none;margin-top:12px">
+          <hr class="g">
+          <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">DM: <span id="dm-with"></span></div>
+          <div id="dm-msgs" style="height:160px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:6px;padding:7px;font-size:11px;margin-bottom:6px;"></div>
+          <div style="display:flex;gap:5px">
+            <input type="text" id="dm-inp" placeholder="Direct message…" maxlength="300" style="flex:1;font-size:11px;padding:6px 9px;">
+            <button class="btn btn-ghost btn-sm" id="btn-dm-send" style="margin-top:0">→</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BATTLE pane (Undertale) -->
+      <div id="lpane-ut" style="display:none">
+        <div class="ptitle">⚔️ BATTLE MODE</div>
+        <p style="font-family:'Courier New',monospace;font-size:11px;color:#aaa;margin-bottom:12px;line-height:1.6">Fight monsters, level up, collect items.<br>Die and lose everything.</p>
+        <button class="btn" id="btn-enter-battle" style="background:linear-gradient(135deg,#3a0000,#8a0000);border:1px solid #f00;color:#fff;font-family:'Courier New',monospace;letter-spacing:2px">▶ ENTER BATTLE</button>
+        <hr class="g">
+        <div class="ptitle" style="font-size:10px;margin-top:8px">PvP CHALLENGES</div>
+        <div id="ut-challenge-list"><div class="empty" style="font-family:'Courier New',monospace;font-size:11px">No challenges.</div></div>
+      </div>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <!-- Stats -->
@@ -710,24 +847,91 @@ function connect(){
 }
 
 function handle(msg){
+  // Route Undertale messages to the UT handler (defined below in second script)
+  if(typeof handleUtMessage==='function' && (msg.type.startsWith('ut'))) { handleUtMessage(msg); return; }
   switch(msg.type){
     case 'hello': myId=msg.playerId; break;
     case 'authOk':
       myUser=msg.username; myChips=msg.chips;
-      if(msg.playerId) myId=msg.playerId; // extra safety
+      if(msg.playerId) myId=msg.playerId;
       Q('#lby-user').textContent=msg.username;
       Q('#stat-chips').textContent=msg.chips;
       Q('#stat-won').textContent=msg.totalWon||0;
       Q('#stat-games').textContent=msg.gamesPlayed||0;
       renderSrvList(msg.servers||[]);
       show('lobby');
+      setTimeout(()=>{ send({type:'getFriends'}); send({type:'getOnline'}); },300);
+      if(Q('#ltab-chat')) Q('#ltab-chat').textContent='Global Chat';
+      if(Q('#ltab-friends')) Q('#ltab-friends').textContent='Friends';
       break;
     case 'authError':
-      Q('#li-err').textContent=msg.message||'Error';
-      Q('#rg-err').textContent=msg.message||'Error';
+      // Only show error on the active pane
+      if(Q('#pane-login').style.display!=='none'){
+        Q('#li-err').textContent=msg.message||'Error';
+      } else {
+        Q('#rg-err').textContent=msg.message||'Error';
+      }
       break;
     case 'broke':
       showBroke(msg.waitMs); break;
+    case 'globalChat':
+      addGlobalMsg(msg.from,msg.text,msg.ts);
+      // If not on chat tab, show a notification badge
+      if(Q('#ltab-chat')&&!Q('#ltab-chat').classList.contains('active')){
+        Q('#ltab-chat').textContent='Global Chat 🔴';
+      }
+      break;
+    case 'dm':
+      // Show in DM panel if open to this person, otherwise notify
+      if(msg.self){
+        if(dmTarget===msg.to) addDMMsg(msg.from,msg.text,true);
+        addGlobalMsg(`DM→${msg.to}`,msg.text,msg.ts);
+      } else {
+        if(dmTarget===msg.from) addDMMsg(msg.from,msg.text,false);
+        else { openDM(msg.from); addDMMsg(msg.from,msg.text,false); }
+        addGlobalMsg(`DM from ${msg.from}`,msg.text,msg.ts);
+        log(`💬 DM from ${msg.from}: ${msg.text.slice(0,40)}`,'good');
+      }
+      break;
+    case 'dmError':
+      log('⚠ '+msg.message,'bad'); break;
+    case 'friendRequest':
+      pendingRequests=[...new Set([...pendingRequests,msg.from])];
+      renderFriends();
+      log(`🤝 Friend request from ${msg.from}`,'good');
+      // Badge the Friends tab
+      if(Q('#ltab-friends')&&!Q('#ltab-friends').classList.contains('active'))
+        Q('#ltab-friends').textContent=`Friends (${pendingRequests.length})`;
+      break;
+    case 'friendAccepted':
+      log(`🤝 ${msg.by} accepted your friend request!`,'good');
+      send({type:'getFriends'}); break;
+    case 'friendsData':
+      myFriends=msg.friends||[];
+      pendingRequests=msg.friendRequestsReceived||[];
+      renderFriends();
+      if(pendingRequests.length&&Q('#ltab-friends')&&!Q('#ltab-friends').classList.contains('active'))
+        Q('#ltab-friends').textContent=`Friends (${pendingRequests.length})`;
+      break;
+    case 'friendsUpdate':
+      myFriends=msg.friends||[];
+      renderFriends(); break;
+    case 'friendOk':
+      Q('#friend-err') && (Q('#friend-err').style.color='#81c784');
+      Q('#friend-err') && (Q('#friend-err').textContent=msg.message);
+      setTimeout(()=>{ if(Q('#friend-err')) Q('#friend-err').textContent=''; },3000);
+      break;
+    case 'friendError':
+      Q('#friend-err') && (Q('#friend-err').style.color='#ef9a9a');
+      Q('#friend-err') && (Q('#friend-err').textContent=msg.message); break;
+    case 'onlineList':
+      onlineUsers=msg.users||[];
+      renderFriends(); break;
+    case 'gameInvite':{
+      const accept=confirm(`🎮 ${msg.from} invited you to "${msg.serverName}"!\n\nJoin the game?`);
+      if(accept) send({type:'joinServer',serverId:msg.serverId,password:''});
+      break;
+    }
     case 'serverList': renderSrvList(msg.servers); break;
     case 'joinedServer':
       curRoom=msg.server; amSpec=!!msg.spectating;
@@ -777,6 +981,104 @@ function switchTab(t){
   Q('#pane-login').style.display=t==='login'?'':'none';
   Q('#pane-reg').style.display=t==='reg'?'':'none';
   Q('#li-err').textContent=''; Q('#rg-err').textContent='';
+}
+
+// ── Lobby tabs ──────────────────────────────────────────────
+function switchLTab(t){
+  ['servers','chat','friends'].forEach(n=>{
+    const tab=Q(`#ltab-${n}`); if(tab) tab.className='tab'+(t===n?' active':'');
+    const pane=Q(`#lpane-${n}`); if(pane) pane.style.display=t===n?(n==='chat'?'flex':''):'none';
+  });
+  if(t==='friends'){ send({type:'getFriends'}); send({type:'getOnline'}); }
+  if(t==='chat') setTimeout(()=>Q('#gchat-lobby-inp')?.focus(),50);
+}
+
+// ── Global chat ─────────────────────────────────────────────
+function sendGlobalChat(){
+  const inp=Q('#gchat-lobby-inp'); const t=inp?.value?.trim(); if(!t) return;
+  const dmMatch=t.match(/^@(\S+)\s+(.+)$/);
+  if(dmMatch){ send({type:'dm',to:dmMatch[1].toLowerCase(),text:dmMatch[2]}); }
+  else { send({type:'globalChat',text:t}); }
+  inp.value='';
+}
+
+function addGlobalMsg(from,text,ts){
+  const box=Q('#global-chat-msgs'); if(!box) return;
+  const p=document.createElement('p');
+  p.style.cssText='margin-bottom:5px;line-height:1.5;word-break:break-word;padding:3px 5px;border-radius:4px;';
+  const isMe=from===myUser;
+  if(isMe) p.style.background='rgba(201,168,76,0.05)';
+  const time=ts?new Date(ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
+  const highlighted=esc(text).replace(/@(\w+)/g,(_,u)=>`<span style="background:rgba(201,168,76,0.15);color:var(--gold2);border-radius:3px;padding:0 3px">@${esc(u)}</span>`);
+  p.innerHTML=`<span style="color:var(--dim);font-size:9px;margin-right:5px">${time}</span><span style="color:${isMe?'#81c784':'var(--gold)'};font-weight:bold">${esc(from)}:</span> ${highlighted}`;
+  box.appendChild(p); box.scrollTop=box.scrollHeight;
+}
+
+// ── DM ───────────────────────────────────────────────────────
+let dmTarget='';
+function openDM(username){
+  dmTarget=username.toLowerCase();
+  Q('#dm-panel').style.display='';
+  Q('#dm-with').textContent=dmTarget;
+  Q('#dm-msgs').innerHTML='';
+  switchLTab('friends');
+  setTimeout(()=>Q('#dm-inp')?.focus(),50);
+}
+function sendDM(){
+  const inp=Q('#dm-inp'); const t=inp?.value?.trim(); if(!t||!dmTarget) return;
+  send({type:'dm',to:dmTarget,text:t}); inp.value='';
+}
+function addDMMsg(from,text,self=false){
+  const box=Q('#dm-msgs'); if(!box) return;
+  const p=document.createElement('p');
+  p.style.cssText='margin-bottom:4px;line-height:1.4;word-break:break-word;';
+  p.innerHTML=`<span style="color:${self?'#81c784':'var(--gold)'};font-weight:bold">${esc(self?'You':from)}:</span> ${esc(text)}`;
+  box.appendChild(p); box.scrollTop=box.scrollHeight;
+}
+
+// ── Friends ──────────────────────────────────────────────────
+let onlineUsers=[], myFriends=[], pendingRequests=[];
+
+function renderFriends(){
+  const reqSection=Q('#friend-requests-section');
+  const reqList=Q('#friend-requests-list');
+  if(reqSection&&reqList){
+    if(pendingRequests.length>0){
+      reqSection.style.display='';
+      reqList.innerHTML='';
+      pendingRequests.forEach(u=>{
+        const d=document.createElement('div'); d.className='pr-row'; d.style.marginBottom='5px';
+        d.innerHTML=`
+          <div class="pr-name">${esc(u)} wants to be friends</div>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-green btn-xs" onclick="send({type:'friendAccept',from:'${esc(u)}'})">✓</button>
+            <button class="btn btn-red btn-xs" onclick="send({type:'friendDecline',from:'${esc(u)}'})">✕</button>
+          </div>`;
+        reqList.appendChild(d);
+      });
+    } else reqSection.style.display='none';
+  }
+
+  const fl=Q('#friends-list'); if(!fl) return;
+  if(!myFriends.length){ fl.innerHTML='<div class="empty" style="padding:14px">No friends yet.</div>'; return; }
+  fl.innerHTML='';
+  myFriends.forEach(u=>{
+    const online=onlineUsers.includes(u);
+    const d=document.createElement('div'); d.className='pr-row'; d.style.marginBottom='5px';
+    d.innerHTML=`
+      <div>
+        <div class="pr-name">
+          <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${online?'#4caf50':'#444'};margin-right:5px;vertical-align:middle"></span>
+          ${esc(u)}<span style="font-size:9px;color:var(--dim)">${online?' · Online':' · Offline'}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-xs" onclick="openDM('${esc(u)}')">💬</button>
+        ${online?`<button class="btn btn-xs" onclick="send({type:'inviteFriend',to:'${esc(u)}'})">🎮 Invite</button>`:''}
+        <button class="btn btn-red btn-xs" onclick="if(confirm('Remove ${esc(u)}?'))send({type:'removeFriend',target:'${esc(u)}'})">✕</button>
+      </div>`;
+    fl.appendChild(d);
+  });
 }
 
 // ── Broke timer ────────────────────────────────────────────
@@ -1153,22 +1455,31 @@ document.addEventListener('keydown',e=>{
 
 // Auth
 Q('#btn-login').addEventListener('click',()=>{
-  const u=Q('#li-user').value.trim(),p=Q('#li-pass').value.trim();
+  const u=Q('#li-user').value.trim().toLowerCase(), p=Q('#li-pass').value.trim();
   if(!u||!p){ Q('#li-err').textContent='Fill in both fields.'; return; }
-  Q('#li-err').textContent='';
+  Q('#li-err').textContent='Logging in…';
   send({type:'login',username:u,password:p});
 });
 Q('#btn-reg').addEventListener('click',()=>{
-  const u=Q('#rg-user').value.trim(),p=Q('#rg-pass').value.trim();
+  const u=Q('#rg-user').value.trim().toLowerCase(), p=Q('#rg-pass').value.trim();
   if(!u||!p){ Q('#rg-err').textContent='Fill in both fields.'; return; }
-  Q('#rg-err').textContent='';
+  if(u.length<3){ Q('#rg-err').textContent='Username must be at least 3 characters.'; return; }
+  if(p.length<4){ Q('#rg-err').textContent='Password must be at least 4 characters.'; return; }
+  Q('#rg-err').textContent='Creating account…';
+  // Show the lowercase username so they know what it'll be
+  Q('#rg-user').value=u;
   send({type:'register',username:u,password:p});
 });
+Q('#li-user').addEventListener('keydown',e=>{ if(e.key==='Enter') Q('#li-pass').focus(); });
 Q('#li-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') Q('#btn-login').click(); });
+Q('#rg-user').addEventListener('keydown',e=>{ if(e.key==='Enter') Q('#rg-pass').focus(); });
 Q('#rg-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') Q('#btn-reg').click(); });
+// Live-lowercase the username fields so there's no surprise
+Q('#li-user').addEventListener('input',e=>{ const s=e.target.selectionStart; e.target.value=e.target.value.toLowerCase(); e.target.setSelectionRange(s,s); });
+Q('#rg-user').addEventListener('input',e=>{ const s=e.target.selectionStart; e.target.value=e.target.value.toLowerCase(); e.target.setSelectionRange(s,s); });
 
 // Lobby
-Q('#btn-logout').addEventListener('click',()=>{ myUser=''; myId=null; game=null; curRoom=null; Q('#actbar').classList.remove('vis'); ws?.close(); show('auth'); setTimeout(connect,200); });
+Q('#btn-logout').addEventListener('click',()=>{ myUser=''; myId=null; game=null; curRoom=null; myFriends=[]; pendingRequests=[]; onlineUsers=[]; Q('#actbar').classList.remove('vis'); ws?.close(); show('auth'); setTimeout(connect,200); });
 Q('#btn-refresh').addEventListener('click',()=>send({type:'refreshServers'}));
 Q('#btn-keybinds').addEventListener('click',openKb);
 Q('#btn-create').addEventListener('click',()=>{
@@ -1184,6 +1495,26 @@ Q('#btn-joinid').addEventListener('click',()=>{
   Q('#join-err').textContent='';
   send({type:'joinServer',serverId:id,password:Q('#ji-pw').value});
 });
+
+// Global chat
+Q('#btn-gchat-lobby').addEventListener('click', sendGlobalChat);
+Q('#gchat-lobby-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendGlobalChat(); });
+// Clear chat tab notification when you open it
+Q('#ltab-chat').addEventListener('click',()=>{ Q('#ltab-chat').textContent='Global Chat'; });
+
+// Friends
+Q('#btn-add-friend').addEventListener('click',()=>{
+  const u=Q('#friend-inp').value.trim().toLowerCase();
+  if(!u){ Q('#friend-err').textContent='Enter a username.'; return; }
+  Q('#friend-err').textContent=''; Q('#friend-inp').value='';
+  send({type:'friendRequest',to:u});
+});
+Q('#friend-inp').addEventListener('keydown',e=>{ if(e.key==='Enter') Q('#btn-add-friend').click(); });
+Q('#ltab-friends').addEventListener('click',()=>{ Q('#ltab-friends').textContent='Friends'; });
+
+// DM
+Q('#btn-dm-send').addEventListener('click', sendDM);
+Q('#dm-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendDM(); });
 
 // Room
 Q('#btn-leave-room').addEventListener('click',()=>{ send({type:'leaveServer'}); curRoom=null; show('lobby'); send({type:'refreshServers'}); });
@@ -1210,8 +1541,860 @@ QQ('.kb-key').forEach(el=>el.addEventListener('click',()=>{
   listeningFor=el.dataset.act; el.textContent='Press a key…'; el.classList.add('listening');
 }));
 
-// Boot
 connect();
+</script>
+
+<!-- ════ UNDERTALE BATTLE SCREEN ════ -->
+<div id="sc-ut" class="screen">
+  <div class="ut-bar">
+    <span class="ut-bar-title">* BATTLE MODE</span>
+    <div style="display:flex;gap:8px">
+      <button class="ut-btn" id="ut-btn-shop" style="padding:5px 10px;font-size:11px">🛒 SHOP</button>
+      <button class="ut-btn" id="ut-btn-pvp" style="padding:5px 10px;font-size:11px">⚔️ PvP</button>
+      <button class="ut-btn" id="ut-btn-leave-battle" style="padding:5px 10px;font-size:11px;border-color:#f00;color:#f00">✕ LEAVE</button>
+    </div>
+  </div>
+  <div class="ut-body">
+    <div class="ut-left">
+      <!-- Enemy -->
+      <div class="ut-enemy-box" id="ut-enemy-box">
+        <div id="ut-boss-label" class="ut-boss-label" style="display:none">★ BOSS ★</div>
+        <div class="ut-enemy-icon" id="ut-enemy-icon">?</div>
+        <div class="ut-enemy-name" id="ut-enemy-name">???</div>
+        <div class="ut-enemy-desc" id="ut-enemy-desc"></div>
+        <div class="ut-hp-bar"><div class="ut-hp-fill" id="ut-enemy-hp-fill" style="width:100%"></div></div>
+        <div class="ut-hp-text" id="ut-enemy-hp-text">HP: ?/?</div>
+      </div>
+
+      <!-- Dialogue -->
+      <div class="ut-dialog" id="ut-dialog">* ...</div>
+
+      <!-- Main menu -->
+      <div class="ut-menu" id="ut-main-menu">
+        <button class="ut-btn" id="ut-btn-fight" onclick="utShowFight()"><span class="ut-btn-icon">⚔️</span>FIGHT</button>
+        <button class="ut-btn" id="ut-btn-act"   onclick="utShowActs()"><span class="ut-btn-icon">💬</span>ACT</button>
+        <button class="ut-btn" id="ut-btn-item"  onclick="utShowItems()"><span class="ut-btn-icon">🎒</span>ITEM</button>
+        <button class="ut-btn" id="ut-btn-mercy" onclick="utMercy()"><span class="ut-btn-icon">🕊️</span>MERCY</button>
+      </div>
+
+      <!-- Attack accuracy meter (shown during FIGHT) -->
+      <div id="ut-fight-panel" style="display:none" class="ut-attack-box">
+        <div style="font-size:12px;margin-bottom:8px;letter-spacing:1px">STOP THE SLIDER FOR ACCURACY!</div>
+        <div class="ut-acc-track" id="ut-acc-track">
+          <div class="ut-acc-zone" id="ut-acc-zone"></div>
+          <div class="ut-acc-slider" id="ut-acc-slider"></div>
+        </div>
+        <div style="font-size:11px;color:#aaa" id="ut-acc-pct">0%</div>
+        <button class="ut-btn" id="ut-acc-stop" onclick="utStopSlider()" style="margin-top:8px;width:100%;justify-content:center">▶ ATTACK!</button>
+        <button class="ut-btn" onclick="utShowMenu()" style="margin-top:5px;width:100%;justify-content:center;border-color:#555;color:#555">← BACK</button>
+      </div>
+
+      <!-- ACT submenu -->
+      <div id="ut-act-panel" style="display:none;width:100%;max-width:500px">
+        <div class="ut-acts" id="ut-acts-list"></div>
+        <button class="ut-btn" onclick="utShowMenu()" style="margin-top:8px;justify-content:center">← BACK</button>
+      </div>
+
+      <!-- ITEM submenu -->
+      <div id="ut-item-panel" style="display:none;width:100%;max-width:500px">
+        <div id="ut-item-list"></div>
+        <button class="ut-btn" onclick="utShowMenu()" style="margin-top:8px;justify-content:center">← BACK</button>
+      </div>
+    </div>
+
+    <!-- Right sidebar: stats -->
+    <div class="ut-right">
+      <div class="ut-right-inner">
+        <div class="ut-section">STATS</div>
+        <div class="ut-stat-row"><span>LV</span><span class="ut-stat-val" id="ut-lv">1</span></div>
+        <div class="ut-stat-row"><span>HP</span><span class="ut-stat-val" id="ut-hp">20/20</span></div>
+        <div class="ut-stat-row"><span>ATK</span><span class="ut-stat-val" id="ut-atk">10</span></div>
+        <div class="ut-stat-row"><span>DEF</span><span class="ut-stat-val" id="ut-def">10</span></div>
+        <div class="ut-stat-row"><span>XP</span><span class="ut-stat-val" id="ut-xp">0</span></div>
+        <div class="ut-stat-row"><span>KILLS</span><span class="ut-stat-val" id="ut-kills">0</span></div>
+        <div class="ut-gold" id="ut-gold" style="margin:8px 0">G: 0</div>
+        <div class="ut-section">EQUIPMENT</div>
+        <div style="font-size:10px;font-family:'Courier New',monospace;color:#aaa" id="ut-equip">None</div>
+        <div class="ut-section">INVENTORY</div>
+        <div id="ut-inv" style="font-size:10px;color:#666;font-family:'Courier New',monospace">Empty</div>
+        <div class="ut-section">BATTLE LOG</div>
+        <div id="ut-log" style="font-family:'Courier New',monospace;font-size:10px;color:#aaa;line-height:1.7"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNDERTALE DODGE OVERLAY -->
+<div class="ut-dodge-overlay" id="ut-dodge-overlay">
+  <div class="ut-dodge-title" id="ut-dodge-title">DODGE THE ATTACK!</div>
+  <div class="ut-soul-arena" id="ut-soul-arena">
+    <div class="ut-soul" id="ut-soul">❤️</div>
+  </div>
+  <div class="ut-dodge-hp" id="ut-dodge-hp-text">HP: 20/20</div>
+  <div class="ut-dodge-hp-bar"><div class="ut-dodge-hp-fill" id="ut-dodge-hp-fill" style="width:100%"></div></div>
+  <div style="font-family:'Courier New',monospace;font-size:11px;color:#aaa;margin-top:6px">Arrow keys / WASD to dodge</div>
+</div>
+
+<!-- UNDERTALE SHOP MODAL -->
+<div class="mbg" id="ut-shop-modal">
+  <div class="mbox" style="background:#000;border:2px solid #fff;font-family:'Courier New',monospace;max-width:500px;text-align:left">
+    <h2 style="font-family:'Courier New',monospace;color:#fff;letter-spacing:2px">* SHOP</h2>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span class="ut-gold" id="ut-shop-gold">G: 0</span>
+      <span style="color:#aaa;font-size:10px">|</span>
+      <span style="font-size:11px;color:#aaa">Convert chips:</span>
+      <input type="number" id="ut-convert-chips" min="1" class="ut-inp" placeholder="chips" style="width:60px">
+      <button class="ut-btn" id="ut-btn-convert" style="padding:5px 10px;font-size:11px">Convert (×5G)</button>
+    </div>
+    <div id="ut-shop-list"></div>
+    <button class="btn btn-ghost btn-sm" id="ut-btn-shop-close" style="margin-top:12px;font-family:'Courier New',monospace">CLOSE</button>
+  </div>
+</div>
+
+<!-- UNDERTALE PvP MODAL -->
+<div class="mbg" id="ut-pvp-modal">
+  <div class="mbox" style="background:#000;border:2px solid #fff;font-family:'Courier New',monospace;max-width:500px;text-align:left">
+    <h2 style="font-family:'Courier New',monospace;color:#fff;letter-spacing:2px">⚔️ PvP BATTLE</h2>
+    <div id="ut-pvp-content">
+      <div style="font-size:11px;color:#aaa;margin-bottom:10px">Challenge an online player to a battle.</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        <input type="text" id="ut-pvp-target" placeholder="their username" class="ut-inp" style="flex:1">
+        <button class="ut-btn" id="ut-btn-challenge" style="padding:5px 12px">CHALLENGE</button>
+      </div>
+      <div id="ut-pvp-status" style="font-size:11px;color:#ff0;min-height:20px"></div>
+      <!-- Active PvP battle UI (shown during battle) -->
+      <div id="ut-pvp-battle" style="display:none">
+        <div class="ut-pvp-hp-row">
+          <div><span id="ut-pvp-p1name">P1</span>: <span id="ut-pvp-p1hp" style="color:#ff0">?</span></div>
+          <div><span id="ut-pvp-p2name">P2</span>: <span id="ut-pvp-p2hp" style="color:#ff0">?</span></div>
+        </div>
+        <div id="ut-pvp-log" style="font-size:10px;color:#aaa;height:80px;overflow-y:auto;margin-bottom:10px;border:1px solid #333;padding:6px;"></div>
+        <!-- P1 attack selection -->
+        <div id="ut-pvp-attack-panel" style="display:none">
+          <div style="font-size:11px;color:#aaa;margin-bottom:6px">Choose your attack pattern:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px" id="ut-pvp-attack-btns"></div>
+          <div style="margin-top:8px">
+            <div class="ut-acc-label">AIM (stop the bar):</div>
+            <div class="ut-acc-track" id="ut-pvp-acc-track">
+              <div class="ut-acc-slider" id="ut-pvp-acc-slider"></div>
+            </div>
+            <button class="ut-btn" id="ut-pvp-acc-stop" style="margin-top:6px;width:100%;justify-content:center">▶ SEND ATTACK</button>
+          </div>
+        </div>
+        <div id="ut-pvp-wait" style="display:none;font-size:11px;color:#aaa">Waiting for opponent to attack…</div>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="ut-btn-pvp-close" style="margin-top:12px;font-family:'Courier New',monospace">CLOSE</button>
+  </div>
+</div>
+
+<!-- Boot -->
+<script>
+// ══════════════════════════════════════════════════════════
+//  UNDERTALE BATTLE ENGINE — CLIENT
+// ══════════════════════════════════════════════════════════
+
+// ── State ──────────────────────────────────────────────────
+let utState = null;        // current server state
+let sliderAnim = null;     // requestAnimationFrame id for accuracy slider
+let sliderPos = 0;         // 0–100
+let sliderDir = 1;
+let sliderSpeed = 1.4;     // % per frame
+let sliderStopped = false;
+let dodgeKeys = {};        // active keys for soul movement
+let dodgeAnimId = null;
+let soulX = 140, soulY = 130; // soul position in arena
+let projectiles = [];       // active projectiles
+let dodgeDmg = 0;
+let pvpSliderAnim = null;
+let pvpSliderPos = 0;
+let pvpSliderDir = 1;
+let pvpSliderStopped = false;
+let pvpSelectedPattern = null;
+let pvpRole = null;         // 'p1' | 'p2'
+let pvpBattleId = null;
+
+// Shop items reference (mirrors server)
+const UT_ITEMS = {
+  monster_candy:  {name:'Monster Candy',  icon:'🍬', goldCost:10,  desc:'Restores 20 HP.'},
+  bandage:        {name:'Bandage',         icon:'🩹', goldCost:20,  desc:'Restores 30 HP.'},
+  bisicle:        {name:'Bisicle',         icon:'🧊', goldCost:7,   desc:'Restores 11 HP.'},
+  nice_cream:     {name:'Nice Cream',      icon:'🍦', goldCost:15,  desc:'Restores 15 HP.'},
+  steak:          {name:'Steak',           icon:'🥩', goldCost:100, desc:'Restores 90 HP.'},
+  butterscotch:   {name:'Butterscotch Pie',icon:'🥧', goldCost:150, desc:'Restores 99 HP.'},
+  faded_ribbon:   {name:'Faded Ribbon',    icon:'🎀', goldCost:50,  desc:'+3 Defense.'},
+  manly_bandanna: {name:'Manly Bandanna',  icon:'🏴', goldCost:100, desc:'+7 Defense.'},
+  cloudy_glasses: {name:'Cloudy Glasses',  icon:'🕶️', goldCost:200, desc:'+12 Defense.'},
+  temmie_armor:   {name:'Temmie Armor',    icon:'✨', goldCost:400, desc:'+20 Defense.'},
+  stick:          {name:'Stick',           icon:'🪵', goldCost:0,   desc:'+5 Attack.'},
+  toy_knife:      {name:'Toy Knife',       icon:'🔪', goldCost:50,  desc:'+10 Attack.'},
+  tough_glove:    {name:'Tough Glove',     icon:'🥊', goldCost:120, desc:'+15 Attack.'},
+  ballet_shoes:   {name:'Ballet Shoes',    icon:'🩰', goldCost:200, desc:'+22 Attack.'},
+  empty_gun:      {name:'Empty Gun',       icon:'🔫', goldCost:350, desc:'+35 Attack.'},
+  torn_notebook:  {name:'Torn Notebook',   icon:'📓', goldCost:420, desc:'+40 Attack.'},
+  snowman_piece:  {name:"Snowman's Piece", icon:'⛄', goldCost:0,   desc:'Restores 45 HP.'},
+};
+
+const UT_ATTACK_PATTERNS = [
+  {name:'Bullet Barrage',  type:'bullets', count:8,  speed:3, duration:4000, damage:10},
+  {name:'Rain of Sorrow',  type:'rain',    count:12, speed:3, duration:4000, damage:10},
+  {name:'Wall Crush',      type:'walls',   count:3,  speed:3, duration:3500, damage:12},
+  {name:'Spiral Strike',   type:'spiral',  count:14, speed:4, duration:4500, damage:11},
+  {name:'Cross Beam',      type:'cross',   count:2,  speed:4, duration:3000, damage:14},
+  {name:'Chaos Storm',     type:'random',  count:16, speed:3, duration:5000, damage:9},
+];
+
+// ── Handlers for new server messages ─────────────────────
+function handleUtMessage(msg) {
+  switch(msg.type) {
+    case 'utState':
+      utState = msg;
+      if(Q('#sc-ut.active')) renderUtState();
+      break;
+    case 'utConvertOk':
+      utLog(`💱 Converted ${msg.chipsSpent} chips → ${msg.goldGained}G`);
+      Q('#stat-chips').textContent = msg.newChips;
+      break;
+    case 'utError':
+      utDialog('* ' + (msg.msg||'Something went wrong.'));
+      break;
+    case 'utChallengeSent':
+      Q('#ut-pvp-status').textContent = `Challenge sent to ${msg.to}. Waiting…`;
+      break;
+    case 'utChallengeReceived':
+      // Add to challenge list in lobby Battle tab
+      renderUtChallengeList(msg);
+      // Also show notification
+      log(`⚔️ ${msg.from} challenges you to battle!`, 'good');
+      if(Q('#ltab-ut')) Q('#ltab-ut').textContent = '⚔️ Battle 🔴';
+      break;
+    case 'utPvpStart':
+      pvpRole = msg.role;
+      pvpBattleId = msg.battleId;
+      Q('#ut-pvp-modal').classList.add('open');
+      Q('#ut-pvp-battle').style.display = '';
+      Q('#ut-pvp-status').textContent = `Battle started! You are ${msg.role.toUpperCase()}`;
+      if(msg.role === 'p1') showPvpAttackPanel();
+      else { Q('#ut-pvp-attack-panel').style.display='none'; Q('#ut-pvp-wait').style.display=''; }
+      break;
+    case 'utPvpIncoming':
+      // Defender: show dodge overlay
+      Q('#ut-pvp-modal').classList.remove('open');
+      startDodge(msg.attackPattern, msg.from, true);
+      break;
+    case 'utPvpAttackSent':
+      Q('#ut-pvp-attack-panel').style.display='none';
+      Q('#ut-pvp-wait').style.display='';
+      break;
+    case 'utPvpState':
+      Q('#ut-pvp-p1hp').textContent = msg.p1.hp + '/' + (msg.p1.maxHp||'?');
+      Q('#ut-pvp-p2hp').textContent = msg.p2.hp + '/' + (msg.p2.maxHp||'?');
+      Q('#ut-pvp-p1name').textContent = msg.p1.name;
+      Q('#ut-pvp-p2name').textContent = msg.p2.name;
+      if(Q('#ut-pvp-log')) {
+        Q('#ut-pvp-log').innerHTML = (msg.log||[]).map(l=>`<div>${esc(l)}</div>`).join('');
+        Q('#ut-pvp-log').scrollTop = Q('#ut-pvp-log').scrollHeight;
+      }
+      // After taking damage, if we're P2 it's now our turn to attack
+      if(pvpRole === 'p2' && Q('#ut-pvp-wait').style.display !== 'none') {
+        showPvpAttackPanel();
+      } else if(pvpRole === 'p1' && Q('#ut-pvp-wait').style.display === '') {
+        showPvpAttackPanel();
+      }
+      Q('#ut-pvp-modal').classList.add('open');
+      break;
+    case 'utPvpEnd':
+      Q('#ut-pvp-modal').classList.remove('open');
+      Q('#ut-dodge-overlay').classList.remove('open');
+      stopDodge();
+      alert(msg.result === 'win' ? '🏆 You won the PvP battle!' : '💀 You lost the PvP battle!');
+      pvpRole = null; pvpBattleId = null;
+      break;
+  }
+}
+
+// Patch into main handle() function
+const _origHandle = handle;
+window.handle = function(msg) {
+  if(msg.type.startsWith('ut') || msg.type === 'utState') { handleUtMessage(msg); return; }
+  _origHandle(msg);
+};
+
+// ── Lobby tab extension ────────────────────────────────────
+const _origSwitchLTab = switchLTab;
+window.switchLTab = function(t) {
+  // Handle the ut tab separately
+  ['servers','chat','friends','ut'].forEach(n=>{
+    const tab=Q(`#ltab-${n}`); if(tab) tab.className='tab'+(t===n?' active':'');
+    const pane=Q(`#lpane-${n}`); if(pane){
+      if(n==='chat') pane.style.display=t===n?'flex':'none';
+      else pane.style.display=t===n?'':'none';
+    }
+  });
+  if(t==='friends'){ send({type:'getFriends'}); send({type:'getOnline'}); }
+  if(t==='chat') setTimeout(()=>Q('#gchat-lobby-inp')?.focus(),50);
+  if(t==='ut') Q('#ltab-ut').textContent='⚔️ Battle';
+};
+
+// ── Enter/leave battle ─────────────────────────────────────
+function enterBattle() {
+  show('ut');
+  send({type:'utGetState'});
+}
+
+function leaveBattle() {
+  show('lobby');
+  stopSlider();
+  stopDodge();
+}
+
+// ── Render state ───────────────────────────────────────────
+function renderUtState() {
+  if(!utState) return;
+  const { stats, enemy, log } = utState;
+
+  // Stats sidebar
+  Q('#ut-lv').textContent = stats.level;
+  Q('#ut-hp').textContent = `${stats.hp}/${stats.maxHp}`;
+  Q('#ut-atk').textContent = stats.baseAtk + (UT_ITEMS[stats.weapon]?.attack||0) + (stats.weapon ? ` (+${UT_ITEMS[stats.weapon]?.desc?.match(/\+(\d+)/)?.[1]||0})` : '');
+  Q('#ut-def').textContent = stats.baseDef + (UT_ITEMS[stats.armor]?.defense||0);
+  Q('#ut-xp').textContent = `${stats.xp}/${utState.stats?.xpToNext||'?'}`;
+  Q('#ut-kills').textContent = stats.kills||0;
+  Q('#ut-gold').textContent = `G: ${stats.gold||0}`;
+
+  // Equipment
+  const weaponName = stats.weapon ? (UT_ITEMS[stats.weapon]?.icon+' '+UT_ITEMS[stats.weapon]?.name) : 'None';
+  const armorName  = stats.armor  ? (UT_ITEMS[stats.armor]?.icon +' '+UT_ITEMS[stats.armor]?.name)  : 'None';
+  Q('#ut-equip').innerHTML = `<div>⚔️ ${weaponName}</div><div>🛡️ ${armorName}</div>`;
+
+  // Inventory
+  const invEl = Q('#ut-inv');
+  if(!stats.inventory?.length) { invEl.textContent='Empty'; }
+  else {
+    invEl.innerHTML = stats.inventory.map((id,i)=>{
+      const it=UT_ITEMS[id]||{icon:'?',name:id};
+      const isWeapon=id===stats.weapon, isArmor=id===stats.armor;
+      return `<div class="ut-inv-item${(isWeapon||isArmor)?' equipped':''}" onclick="utUseItem('${id}',${i})">${it.icon} ${it.name}${isWeapon?' [W]':isArmor?' [A]':''}</div>`;
+    }).join('');
+  }
+
+  // Log
+  if(log?.length) {
+    Q('#ut-log').innerHTML = log.map(l=>`<div>* ${esc(l)}</div>`).join('');
+    Q('#ut-log').scrollTop = Q('#ut-log').scrollHeight;
+  }
+
+  // Enemy
+  if(enemy) {
+    Q('#ut-enemy-icon').textContent = enemy.icon||'?';
+    Q('#ut-enemy-name').textContent = enemy.name;
+    Q('#ut-enemy-desc').textContent = enemy.desc||'';
+    Q('#ut-boss-label').style.display = enemy.isBoss ? '' : 'none';
+    const pct = Math.max(0,(enemy.hp/enemy.maxHp)*100);
+    Q('#ut-enemy-hp-fill').style.width = pct+'%';
+    Q('#ut-enemy-hp-fill').className = 'ut-hp-fill'+(enemy.isBoss?' boss':'');
+    Q('#ut-enemy-hp-text').textContent = `HP: ${enemy.hp}/${enemy.maxHp}`;
+    if(enemy.flavorTexts?.length) {
+      const txt = enemy.flavorTexts[Math.floor(Math.random()*enemy.flavorTexts.length)];
+      utDialog('* '+txt);
+    }
+  }
+
+  // Phase handling
+  if(utState.battlePhase === 'dodging' && utState.attackPattern) {
+    startDodge(utState.attackPattern, enemy?.name||'Enemy');
+  } else {
+    utShowMenu();
+  }
+
+  // If attack pattern was in the state, trigger dodge
+  if(utState.attackPattern) {
+    startDodge(utState.attackPattern, enemy?.name||'Enemy');
+  }
+}
+
+function utDialog(text) {
+  const el = Q('#ut-dialog'); if(!el) return;
+  el.textContent = text;
+}
+
+function utLog(msg) {
+  const el = Q('#ut-log'); if(!el) return;
+  el.innerHTML += `<div>* ${esc(msg)}</div>`;
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── Menu navigation ────────────────────────────────────────
+function utShowMenu() {
+  Q('#ut-main-menu').style.display = '';
+  Q('#ut-fight-panel').style.display = 'none';
+  Q('#ut-act-panel').style.display = 'none';
+  Q('#ut-item-panel').style.display = 'none';
+  stopSlider();
+}
+
+function utShowFight() {
+  Q('#ut-main-menu').style.display = 'none';
+  Q('#ut-fight-panel').style.display = '';
+  Q('#ut-act-panel').style.display = 'none';
+  Q('#ut-item-panel').style.display = 'none';
+  startSlider();
+}
+
+function utShowActs() {
+  if(!utState?.enemy) return;
+  Q('#ut-main-menu').style.display = 'none';
+  Q('#ut-act-panel').style.display = '';
+  Q('#ut-fight-panel').style.display = 'none';
+  Q('#ut-item-panel').style.display = 'none';
+  const actsList = Q('#ut-acts-list');
+  actsList.innerHTML = '';
+  const acts = utState.enemy.acts || [];
+  if(utState.enemy._spareable) {
+    const spare = document.createElement('button');
+    spare.className='ut-act-btn';
+    spare.textContent='🕊️ SPARE (ready!)';
+    spare.onclick = ()=>{ send({type:'utSpare'}); utShowMenu(); };
+    actsList.appendChild(spare);
+  }
+  acts.forEach(act=>{
+    const btn = document.createElement('button');
+    btn.className='ut-act-btn';
+    btn.textContent='* '+act;
+    btn.onclick=()=>{ send({type:'utAct',act}); utShowMenu(); };
+    actsList.appendChild(btn);
+  });
+}
+
+function utShowItems() {
+  Q('#ut-main-menu').style.display = 'none';
+  Q('#ut-item-panel').style.display = '';
+  Q('#ut-fight-panel').style.display = 'none';
+  Q('#ut-act-panel').style.display = 'none';
+  const list = Q('#ut-item-list');
+  list.innerHTML = '';
+  const inv = utState?.stats?.inventory||[];
+  if(!inv.length) { list.innerHTML='<div style="font-family:Courier New;font-size:11px;color:#666">Inventory empty.</div>'; return; }
+  inv.forEach((id,i)=>{
+    const it=UT_ITEMS[id]||{icon:'?',name:id,desc:''};
+    const d=document.createElement('div'); d.className='ut-inv-item';
+    d.innerHTML=`${it.icon} ${it.name} <span style="color:#888;font-size:10px">${it.desc||''}</span>`;
+    d.onclick=()=>{ send({type:'utUseItem',itemId:id,index:i}); utShowMenu(); };
+    list.appendChild(d);
+  });
+}
+
+function utMercy() {
+  if(!utState?.enemy) return;
+  if(utState.enemy._spareable) { send({type:'utSpare'}); }
+  else { utDialog('* ...\n* (The enemy isn\'t ready to be spared yet. Try ACT first.)'); }
+}
+
+function utUseItem(id) {
+  send({type:'utUseItem',itemId:id});
+}
+
+// ── Accuracy slider ────────────────────────────────────────
+function startSlider() {
+  stopSlider();
+  sliderPos=0; sliderDir=1; sliderStopped=false;
+  const track=Q('#ut-acc-track');
+  const zone=Q('#ut-acc-zone');
+  const slider=Q('#ut-acc-slider');
+  if(!track||!zone||!slider) return;
+  // Random target zone
+  const zoneStart=20+Math.random()*40;
+  const zoneWidth=10+Math.random()*20;
+  zone.style.left=zoneStart+'%';
+  zone.style.width=zoneWidth+'%';
+  const animate=()=>{
+    if(sliderStopped) return;
+    sliderPos+=sliderDir*sliderSpeed;
+    if(sliderPos>=100){sliderPos=100;sliderDir=-1;}
+    if(sliderPos<=0){sliderPos=0;sliderDir=1;}
+    slider.style.left=sliderPos+'%';
+    const pct=Math.round(sliderPos);
+    Q('#ut-acc-pct').textContent=pct+'%';
+    sliderAnim=requestAnimationFrame(animate);
+  };
+  sliderAnim=requestAnimationFrame(animate);
+}
+
+function stopSlider() {
+  if(sliderAnim) cancelAnimationFrame(sliderAnim); sliderAnim=null;
+}
+
+function utStopSlider() {
+  if(sliderStopped) return;
+  sliderStopped=true; stopSlider();
+  // Calc accuracy based on zone overlap
+  const zone=Q('#ut-acc-zone');
+  const zoneL=parseFloat(zone.style.left)||30;
+  const zoneW=parseFloat(zone.style.width)||15;
+  const zoneR=zoneL+zoneW;
+  let acc=0;
+  if(sliderPos>=zoneL && sliderPos<=zoneR) {
+    // In zone: accuracy based on how centred
+    const centre=zoneL+zoneW/2;
+    const dist=Math.abs(sliderPos-centre)/(zoneW/2);
+    acc=1-dist*0.5; // 0.5–1.0
+  } else {
+    // Out of zone: lower accuracy based on distance
+    const closest=sliderPos<zoneL?zoneL:zoneR;
+    const dist=Math.abs(sliderPos-closest);
+    acc=Math.max(0.05, 0.5-dist*0.02);
+  }
+  Q('#ut-acc-pct').textContent=Math.round(acc*100)+'% accuracy';
+  send({type:'utAttack',accuracy:acc});
+}
+
+// ── Dodge mechanic ─────────────────────────────────────────
+let soulSpeed = 3.5;
+let arenaW=0, arenaH=0;
+let isPvpDodge=false;
+
+function startDodge(pattern, enemyName, isPvp=false) {
+  isPvpDodge = isPvp;
+  const overlay=Q('#ut-dodge-overlay'); if(!overlay) return;
+  overlay.classList.add('open');
+  Q('#ut-dodge-title').textContent = `* ${enemyName} used ${pattern.name}!`;
+  const arena=Q('#ut-soul-arena');
+  arenaW=arena.clientWidth||300; arenaH=arena.clientHeight||280;
+  soulX=arenaW/2; soulY=arenaH/2;
+  dodgeDmg=0; dodgeKeys={};
+  projectiles=[];
+  // Clear old projectiles
+  arena.querySelectorAll('.ut-projectile,.ut-wall,.ut-laser').forEach(el=>el.remove());
+  // Update HP display
+  const hp=utState?.stats?.hp||20, maxHp=utState?.stats?.maxHp||20;
+  Q('#ut-dodge-hp-text').textContent=`HP: ${hp}/${maxHp}`;
+  Q('#ut-dodge-hp-fill').style.width=(hp/maxHp*100)+'%';
+  // Spawn projectiles
+  spawnAttackPattern(pattern, arena);
+  // Start dodge loop
+  stopDodge();
+  dodgeAnimId=requestAnimationFrame(dodgeLoop);
+  // End dodge after duration
+  setTimeout(()=>endDodge(pattern), (pattern.duration||4000)+500);
+}
+
+function stopDodge() {
+  if(dodgeAnimId) cancelAnimationFrame(dodgeAnimId); dodgeAnimId=null;
+}
+
+function endDodge(pattern) {
+  stopDodge();
+  const overlay=Q('#ut-dodge-overlay');
+  if(!overlay?.classList.contains('open')) return;
+  overlay.classList.remove('open');
+  // Clear projectiles
+  const arena=Q('#ut-soul-arena');
+  arena?.querySelectorAll('.ut-projectile,.ut-wall,.ut-laser').forEach(el=>el.remove());
+  projectiles=[];
+  if(isPvpDodge) {
+    send({type:'utPvpDodgeResult', dmgTaken:dodgeDmg});
+    // Now it's our turn to attack
+  } else {
+    const baseDmg = pattern.damage||10;
+    send({type:'utDodgeResult', dmgTaken:dodgeDmg});
+  }
+}
+
+function dodgeLoop() {
+  const soul=Q('#ut-soul');
+  const arena=Q('#ut-soul-arena');
+  if(!soul||!arena) return;
+  // Move soul
+  const spd=soulSpeed;
+  if(dodgeKeys['ArrowLeft']||dodgeKeys['a']) soulX=Math.max(10,soulX-spd);
+  if(dodgeKeys['ArrowRight']||dodgeKeys['d']) soulX=Math.min(arenaW-10,soulX+spd);
+  if(dodgeKeys['ArrowUp']||dodgeKeys['w']) soulY=Math.max(10,soulY-spd);
+  if(dodgeKeys['ArrowDown']||dodgeKeys['s']) soulY=Math.min(arenaH-10,soulY+spd);
+  soul.style.left=soulX+'px';
+  soul.style.top=soulY+'px';
+  // Check collisions
+  projectiles.forEach(p=>{
+    if(!p.el||!p.el.parentNode) return;
+    const px=parseFloat(p.el.style.left)||0;
+    const py=parseFloat(p.el.style.top)||0;
+    const pw=parseFloat(p.el.style.width)||10;
+    const ph=parseFloat(p.el.style.height)||10;
+    if(soulX>px-8&&soulX<px+pw+8&&soulY>py-8&&soulY<py+ph+8&&!p.hit) {
+      p.hit=true;
+      dodgeDmg+=p.damage||5;
+      p.el.style.opacity='0';
+      // Flash soul
+      soul.style.filter='brightness(3)';
+      setTimeout(()=>soul.style.filter='',200);
+      // Update HP display immediately
+      const def=utState?.stats?.baseDef||0;
+      const actualDmg=Math.max(1,p.damage-Math.floor(def/2));
+      const hp=Math.max(0,(utState?.stats?.hp||20)-actualDmg);
+      Q('#ut-dodge-hp-text').textContent=`HP: ${hp}/${utState?.stats?.maxHp||20}`;
+      Q('#ut-dodge-hp-fill').style.width=(hp/(utState?.stats?.maxHp||20)*100)+'%';
+    }
+  });
+  dodgeAnimId=requestAnimationFrame(dodgeLoop);
+}
+
+function spawnAttackPattern(pattern, arena) {
+  const count=pattern.count||8, speed=(pattern.speed||3)*0.8, dmg=pattern.damage||8;
+  const duration=pattern.duration||4000;
+  switch(pattern.type) {
+    case 'bullets':
+      for(let i=0;i<count;i++) {
+        setTimeout(()=>{
+          const el=document.createElement('div'); el.className='ut-projectile';
+          el.style.cssText=`width:10px;height:10px;background:#fff;left:${Math.random()*(arenaW-10)}px;top:-10px;box-shadow:0 0 4px #fff;`;
+          arena.appendChild(el);
+          const vx=(Math.random()-0.5)*speed*2, vy=speed+Math.random()*2;
+          const p={el,vx,vy,damage:dmg,hit:false};
+          projectiles.push(p);
+          const move=()=>{
+            if(!el.parentNode) return;
+            const cy=parseFloat(el.style.top)||0;
+            const cx=parseFloat(el.style.left)||0;
+            el.style.top=(cy+vy)+'px'; el.style.left=(cx+vx)+'px';
+            if(cy>arenaH+20) el.remove(); else requestAnimationFrame(move);
+          };
+          requestAnimationFrame(move);
+        }, i*(duration/count));
+      }
+      break;
+    case 'rain':
+      for(let i=0;i<count;i++) {
+        setTimeout(()=>{
+          const el=document.createElement('div'); el.className='ut-projectile';
+          el.style.cssText=`width:8px;height:14px;background:#ff0;border-radius:50%;left:${Math.random()*(arenaW-8)}px;top:-14px;box-shadow:0 0 5px #ff0;`;
+          arena.appendChild(el);
+          const vy=speed+Math.random()*2;
+          const p={el,vx:0,vy,damage:dmg,hit:false};
+          projectiles.push(p);
+          const move=()=>{
+            if(!el.parentNode) return;
+            const cy=parseFloat(el.style.top)||0;
+            el.style.top=(cy+vy)+'px';
+            if(cy>arenaH+20) el.remove(); else requestAnimationFrame(move);
+          };
+          requestAnimationFrame(move);
+        }, i*(duration/count));
+      }
+      break;
+    case 'walls':
+      for(let i=0;i<count;i++) {
+        setTimeout(()=>{
+          const fromLeft=i%2===0;
+          const el=document.createElement('div'); el.className='ut-wall';
+          const gap=40+Math.random()*40;
+          const gapY=Math.random()*(arenaH-gap);
+          // Two wall pieces with a gap
+          const w1=document.createElement('div'); w1.className='ut-wall';
+          w1.style.cssText=`position:absolute;background:#fff;width:20px;height:${gapY}px;top:0;${fromLeft?'left:-20px':'right:-20px'};`;
+          const w2=document.createElement('div'); w2.className='ut-wall';
+          w2.style.cssText=`position:absolute;background:#fff;width:20px;height:${arenaH-gapY-gap}px;bottom:0;${fromLeft?'left:-20px':'right:-20px'};`;
+          arena.appendChild(w1); arena.appendChild(w2);
+          const vx=(fromLeft?1:-1)*speed;
+          projectiles.push({el:w1,vx,vy:0,damage:dmg,hit:false});
+          projectiles.push({el:w2,vx,vy:0,damage:dmg,hit:false});
+          const move=()=>{
+            if(!w1.parentNode) return;
+            const cx=parseFloat(w1.style.left||w1.style.right)||0;
+            if(fromLeft){ w1.style.left=(parseFloat(w1.style.left||0)+vx)+'px'; w2.style.left=(parseFloat(w2.style.left||0)+vx)+'px'; }
+            else { w1.style.right=(parseFloat(w1.style.right||0)-vx)+'px'; w2.style.right=(parseFloat(w2.style.right||0)-vx)+'px'; }
+            const pos=parseFloat(fromLeft?w1.style.left:w1.style.right)||0;
+            if(pos>arenaW+30||pos<-30){ w1.remove(); w2.remove(); } else requestAnimationFrame(move);
+          };
+          requestAnimationFrame(move);
+        }, i*(duration/count));
+      }
+      break;
+    case 'spiral':
+      let angle=0;
+      for(let i=0;i<count;i++) {
+        setTimeout(()=>{
+          const el=document.createElement('div'); el.className='ut-projectile';
+          el.style.cssText=`width:9px;height:9px;background:#f0f;border-radius:50%;left:${arenaW/2}px;top:${arenaH/2}px;box-shadow:0 0 4px #f0f;`;
+          arena.appendChild(el);
+          const a=angle+i*(Math.PI*2/count);
+          const vx=Math.cos(a)*speed, vy=Math.sin(a)*speed;
+          const p={el,vx,vy,damage:dmg,hit:false};
+          projectiles.push(p);
+          const move=()=>{
+            if(!el.parentNode) return;
+            const cx=parseFloat(el.style.left)||0, cy=parseFloat(el.style.top)||0;
+            el.style.left=(cx+p.vx)+'px'; el.style.top=(cy+p.vy)+'px';
+            if(cx<-20||cx>arenaW+20||cy<-20||cy>arenaH+20) el.remove();
+            else requestAnimationFrame(move);
+          };
+          requestAnimationFrame(move);
+          angle+=0.3;
+        }, i*(duration/(count*1.5)));
+      }
+      break;
+    case 'cross':
+      for(let i=0;i<count;i++) {
+        setTimeout(()=>{
+          // Horizontal laser
+          const el=document.createElement('div'); el.className='ut-laser';
+          const y=20+Math.random()*(arenaH-40);
+          el.style.cssText=`position:absolute;height:12px;width:0px;top:${y}px;left:0;background:rgba(255,255,0,0.9);box-shadow:0 0 8px #ff0;`;
+          arena.appendChild(el);
+          let w=0;
+          const expand=()=>{
+            w+=speed*4; el.style.width=Math.min(w,arenaW)+'px';
+            const p={el,vx:0,vy:0,damage:dmg,hit:false};
+            if(!projectiles.find(x=>x.el===el)) projectiles.push(p);
+            if(w<arenaW) requestAnimationFrame(expand);
+            else setTimeout(()=>{ if(el.parentNode) el.remove(); },500);
+          };
+          requestAnimationFrame(expand);
+        }, i*(duration/count));
+      }
+      break;
+    case 'random':
+    default:
+      for(let i=0;i<count;i++) {
+        setTimeout(()=>{
+          const el=document.createElement('div'); el.className='ut-projectile';
+          const cx=Math.random()*arenaW, cy=Math.random()*arenaH;
+          el.style.cssText=`width:11px;height:11px;background:#0ff;border-radius:50%;left:${cx}px;top:${cy}px;box-shadow:0 0 4px #0ff;`;
+          arena.appendChild(el);
+          const ang=Math.random()*Math.PI*2;
+          const vx=Math.cos(ang)*speed, vy=Math.sin(ang)*speed;
+          const p={el,vx,vy,damage:dmg,hit:false};
+          projectiles.push(p);
+          const move=()=>{
+            if(!el.parentNode) return;
+            const x=parseFloat(el.style.left)||0, y2=parseFloat(el.style.top)||0;
+            el.style.left=(x+p.vx)+'px'; el.style.top=(y2+p.vy)+'px';
+            if(x<-20||x>arenaW+20||y2<-20||y2>arenaH+20) el.remove();
+            else requestAnimationFrame(move);
+          };
+          requestAnimationFrame(move);
+        }, i*(duration/count));
+      }
+  }
+}
+
+// ── Shop ───────────────────────────────────────────────────
+function openUtShop() {
+  const list=Q('#ut-shop-list'); list.innerHTML='';
+  Q('#ut-shop-gold').textContent='G: '+(utState?.stats?.gold||0);
+  const items=[
+    {id:'monster_candy'},{id:'bandage'},{id:'bisicle'},{id:'nice_cream'},{id:'steak'},{id:'butterscotch'},
+    {id:'faded_ribbon'},{id:'manly_bandanna'},{id:'cloudy_glasses'},{id:'temmie_armor'},
+    {id:'toy_knife'},{id:'tough_glove'},{id:'ballet_shoes'},{id:'empty_gun'},{id:'torn_notebook'},
+  ];
+  items.forEach(({id})=>{
+    const it=UT_ITEMS[id]; if(!it) return;
+    const d=document.createElement('div'); d.className='ut-shop-item';
+    d.innerHTML=`${it.icon} <b>${it.name}</b> — ${it.goldCost}G <span style="color:#888;font-size:10px">${it.desc}</span>`;
+    d.onclick=()=>{ send({type:'utShopBuy',itemId:id}); Q('#ut-shop-gold').textContent='G: '+(utState?.stats?.gold||0); };
+    list.appendChild(d);
+  });
+  Q('#ut-shop-modal').classList.add('open');
+}
+
+// ── PvP ────────────────────────────────────────────────────
+function showPvpAttackPanel() {
+  Q('#ut-pvp-wait').style.display='none';
+  Q('#ut-pvp-attack-panel').style.display='';
+  // Populate attack patterns
+  const btns=Q('#ut-pvp-attack-btns'); btns.innerHTML='';
+  UT_ATTACK_PATTERNS.forEach(p=>{
+    const b=document.createElement('button'); b.className='ut-btn';
+    b.style.cssText='padding:5px 10px;font-size:10px;margin-bottom:4px;';
+    b.textContent=p.name;
+    b.onclick=()=>{
+      pvpSelectedPattern={...p};
+      btns.querySelectorAll('.ut-btn').forEach(x=>x.style.background='#000');
+      b.style.background='#333';
+    };
+    btns.appendChild(b);
+  });
+  startPvpSlider();
+}
+
+function startPvpSlider() {
+  if(pvpSliderAnim) cancelAnimationFrame(pvpSliderAnim);
+  pvpSliderPos=0; pvpSliderDir=1; pvpSliderStopped=false;
+  const slider=Q('#ut-pvp-acc-slider');
+  const animate=()=>{
+    if(pvpSliderStopped||!slider) return;
+    pvpSliderPos+=pvpSliderDir*1.6;
+    if(pvpSliderPos>=100){pvpSliderPos=100;pvpSliderDir=-1;}
+    if(pvpSliderPos<=0){pvpSliderPos=0;pvpSliderDir=1;}
+    slider.style.left=pvpSliderPos+'%';
+    pvpSliderAnim=requestAnimationFrame(animate);
+  };
+  pvpSliderAnim=requestAnimationFrame(animate);
+}
+
+function stopPvpSlider() {
+  if(pvpSliderAnim) cancelAnimationFrame(pvpSliderAnim); pvpSliderAnim=null;
+}
+
+// ── Key handlers ───────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  // Soul dodge
+  if(Q('#ut-dodge-overlay.open')) {
+    dodgeKeys[e.key]=true;
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
+    return;
+  }
+});
+document.addEventListener('keyup',e=>{ dodgeKeys[e.key]=false; });
+
+// ── Event listeners ────────────────────────────────────────
+Q('#btn-enter-battle').addEventListener('click', enterBattle);
+Q('#ut-btn-leave-battle').addEventListener('click', leaveBattle);
+Q('#ut-btn-shop').addEventListener('click', openUtShop);
+Q('#ut-btn-shop-close').addEventListener('click',()=>Q('#ut-shop-modal').classList.remove('open'));
+Q('#ut-btn-pvp').addEventListener('click',()=>Q('#ut-pvp-modal').classList.add('open'));
+Q('#ut-btn-pvp-close').addEventListener('click',()=>{ Q('#ut-pvp-modal').classList.remove('open'); stopPvpSlider(); });
+
+Q('#ut-btn-convert').addEventListener('click',()=>{
+  const chips=parseInt(Q('#ut-convert-chips').value)||0;
+  if(chips<1) return;
+  send({type:'utConvertChips',chips});
+  Q('#ut-convert-chips').value='';
+});
+
+Q('#ut-btn-challenge').addEventListener('click',()=>{
+  const target=Q('#ut-pvp-target').value.trim().toLowerCase();
+  if(!target) return;
+  send({type:'utChallenge',target});
+});
+
+Q('#ut-pvp-acc-stop').addEventListener('click',()=>{
+  if(pvpSliderStopped||!pvpSelectedPattern) { Q('#ut-pvp-status').textContent='Select an attack pattern first!'; return; }
+  pvpSliderStopped=true; stopPvpSlider();
+  const acc=pvpSliderPos/100;
+  send({type:'utPvpAttack',accuracy:acc,attackName:pvpSelectedPattern.name,attackPattern:pvpSelectedPattern});
+});
+
+// Render challenge list in lobby UT tab
+function renderUtChallengeList(incoming) {
+  const list=Q('#ut-challenge-list'); if(!list) return;
+  const d=document.createElement('div'); d.className='ut-challenge-item';
+  d.innerHTML=`<span>⚔️ ${esc(incoming.from)} challenges you!</span>
+    <div style="display:flex;gap:5px">
+      <button class="ut-btn" style="padding:3px 8px;font-size:10px" onclick="send({type:'utChallengeAccept',challengeId:'${incoming.challengeId}'});this.closest('.ut-challenge-item').remove()">Accept</button>
+      <button class="ut-btn" style="padding:3px 8px;font-size:10px;border-color:#f00;color:#f00" onclick="send({type:'utChallengeDecline',challengeId:'${incoming.challengeId}'});this.closest('.ut-challenge-item').remove()">Decline</button>
+    </div>`;
+  list.innerHTML='';
+  list.appendChild(d);
+}
+
+// Patch switchLTab to handle 'ut'
+const _sl2=window.switchLTab;
+window.switchLTab=function(t){
+  _sl2(t);
+  if(t==='ut') Q('#ltab-ut').textContent='⚔️ Battle';
+};
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
