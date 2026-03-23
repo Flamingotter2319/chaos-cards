@@ -170,10 +170,13 @@ function handScore(hand, duckLocked) {
 }
 
 function pokerHandRank(hand, community) {
-  const all = [...hand, ...community].filter(c => !c.isSpecial);
-  if (all.length < 2) return 0;
-  const vals = all.map(c => simpleVal(c)).sort((a,b) => b-a);
-  const suits = all.map(c => c.suit);
+  // Include special cards that have a value (wildcard=7, others=0)
+  const all = [...hand, ...community].filter(c => !c.isSpecial || simpleVal(c) > 0);
+  // Map specials to their value as pseudo-cards
+  const allNorm = all.map(c => c.isSpecial ? { rank: String(simpleVal(c)), suit: '♠', isNormal: true } : c);
+  if (allNorm.length < 2) return 0;
+  const vals = allNorm.map(c => simpleVal(c)).sort((a,b) => b-a);
+  const suits = allNorm.map(c => c.suit);
   const vc = {}; vals.forEach(v => vc[v] = (vc[v]||0)+1);
   const counts = Object.values(vc).sort((a,b)=>b-a);
   const sc = {}; suits.forEach(s => sc[s] = (sc[s]||0)+1);
@@ -399,7 +402,14 @@ function startGame(room) {
   };
   room.game=game;
 
-  // Poker blinds
+  // Add dealer for blackjack / lucky21
+  if(settings.mode==='blackjack'||settings.mode==='lucky21'){
+    game.dealer={
+      id:'__dealer__', name:'Dealer', isDealer:true,
+      hand:[], status:'waiting',
+      bustImmune:false, duckLocked:false,
+    };
+  }
   if(settings.mode==='poker'&&settings.pokerBlinds){
     const sb=game.players[0],bb=game.players[1];
     if(sb){const a=Math.min(settings.pokerSmallBlind,sb.chips);sb.chips-=a;sb.bet=a;sb.status='betting';game.pot+=a;}
@@ -456,6 +466,12 @@ function checkAllBet(room){
   } else {
     game.players.forEach((_,i)=>{dealTo(game,i);dealTo(game,i);});
     dealComm(game); dealComm(game);
+    // Deal 2 cards to dealer — second one face-down until dealer's turn
+    if(game.dealer){
+      const c1=drawCard(game); game.dealer.hand.push(c1);
+      const c2=drawCard(game); game.dealer.hand.push({...c2,faceDown:true});
+      game.dealer.status='waiting';
+    }
   }
   game.currentPlayerIdx=0;
   const logs=game._pendingLogs||[];game._pendingLogs=[];
@@ -467,7 +483,21 @@ function dealTo(game,idx){
   const c=drawCard(game);game.players[idx].hand.push(c);
   if(c.isSpecial)game._pendingLogs=(game._pendingLogs||[]).concat(applySpecial(game,idx,c));
 }
-function dealComm(game){game.community.push(drawCard(game));}
+function dealComm(game){
+  // Community cards are always normal cards — no specials in the river
+  // Keep drawing until we get a non-special card
+  let c;
+  let attempts = 0;
+  do {
+    c = drawCard(game);
+    if(c.isSpecial) {
+      // Put it back by pushing to bottom of deck, draw again
+      game.deck.unshift(c);
+      attempts++;
+    }
+  } while(c.isSpecial && attempts < 10);
+  game.community.push(c);
+}
 
 function shouldBust(game,p){
   const mode=game.settings.mode;
@@ -481,7 +511,15 @@ function tickTurn(room){
   while(game.currentPlayerIdx<game.players.length&&
     ['bust','standing','waiting'].includes(game.players[game.currentPlayerIdx].status))
     game.currentPlayerIdx++;
-  if(game.currentPlayerIdx>=game.players.length){endRound(room);return;}
+  if(game.currentPlayerIdx>=game.players.length){
+    // All players done — run dealer turn for blackjack modes
+    if(game.dealer&&(game.settings.mode==='blackjack'||game.settings.mode==='lucky21')){
+      runDealer(room);
+    } else {
+      endRound(room);
+    }
+    return;
+  }
 
   if(game.skipNext){
     game.skipNext=false;const sk=game.players[game.currentPlayerIdx];
@@ -546,19 +584,64 @@ function playerAction(room,playerId,action){
   }
 }
 
+function runDealer(room){
+  const game=room.game;
+  const dealer=game.dealer;
+  // Flip the face-down card
+  dealer.hand.forEach(c=>{delete c.faceDown;});
+  dealer.status='active';
+  broadcastGame(room,[{msg:`🎩 Dealer reveals their hand: ${handScore(dealer.hand,false)}.`,type:'good'}]);
+
+  function dealerStep(){
+    const score=handScore(dealer.hand,false);
+    if(score<=16){
+      // Hit
+      const c=drawCard(game); dealer.hand.push(c);
+      const newScore=handScore(dealer.hand,false);
+      broadcastGame(room,[{msg:`🎩 Dealer hits — ${newScore}.`}]);
+      if(newScore>21){
+        dealer.status='bust';
+        broadcastGame(room,[{msg:`💥 Dealer busts at ${newScore}!`,type:'good'}]);
+        endRound(room);
+      } else {
+        setTimeout(dealerStep,900);
+      }
+    } else {
+      // Stand
+      dealer.status='standing';
+      broadcastGame(room,[{msg:`🎩 Dealer stands at ${score}.`}]);
+      endRound(room);
+    }
+  }
+  setTimeout(dealerStep,1000);
+}
+
 function endRound(room){
   const game=room.game;game.phase='reveal';
   const mode=game.settings.mode;
   let winners=[];
 
   if(mode==='blackjack'||mode==='lucky21'){
-    let best=-1;
+    const dealer=game.dealer;
+    const dealerScore=dealer?handScore(dealer.hand,false):0;
+    const dealerBust=dealer?dealer.status==='bust':false;
+
     game.players.forEach(p=>{
       if(p.status==='bust'){p._finalScore=handScore(p.hand,p.duckLocked);return;}
       const s=p.mirrorScore!=null?p.mirrorScore:handScore(p.hand,p.duckLocked);
-      p._finalScore=s;if(s<=21&&s>best)best=s;
+      p._finalScore=s;
     });
-    winners=game.players.filter(p=>p.status!=='bust'&&p._finalScore===best&&best>=0);
+
+    // Each player wins if: dealer bust OR player score > dealer score (and player not bust)
+    winners=game.players.filter(p=>{
+      if(p.status==='bust') return false;
+      if(dealerBust) return true;
+      return p._finalScore>dealerScore;
+    });
+
+    // Players who tie the dealer push (get bet back, not a win)
+    const pushers=game.players.filter(p=>!p.status==='bust'&&!dealerBust&&p._finalScore===dealerScore);
+
     // BJ bonus payout
     if(mode==='blackjack'){
       winners.forEach(p=>{
@@ -569,6 +652,17 @@ function endRound(room){
         }
       });
     }
+
+    // Handle push — return their bet
+    game.players.forEach(p=>{
+      if(p.status!=='bust'&&!dealerBust&&p._finalScore===dealerScore&&p._finalScore>0){
+        p.chips+=p.bet; // refund bet
+        game.pot-=p.bet;
+        p.status='standing'; // not a winner but not a loser
+      }
+    });
+
+    if(dealer) dealer._finalScore=dealerScore;
   } else if(mode==='poker'){
     let best=-1;
     game.players.forEach(p=>{
@@ -669,6 +763,13 @@ function broadcastGame(room,extraLogs=[]){
       currentPlayerIdx:game.currentPlayerIdx,
       currentPlayerId:game.players[game.currentPlayerIdx]?.id,
       deckSize:game.deck.length,logs:extraLogs,myId:pid,
+      dealer:game.dealer?{
+        name:'Dealer', isDealer:true,
+        hand:game.dealer.hand,
+        status:game.dealer.status,
+        score:handScore(game.dealer.hand.filter(c=>!c.faceDown),false),
+        hasFaceDown:game.dealer.hand.some(c=>c.faceDown),
+      }:null,
     });
   });
 }

@@ -83,7 +83,8 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .lby-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;
   background:rgba(0,0,0,0.72);border-bottom:1px solid var(--gdim);flex-shrink:0;
   position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);}
-.lby-grid{display:grid;grid-template-columns:1fr 300px;gap:13px;padding:14px;max-width:940px;margin:0 auto;}
+.lby-grid{display:grid;grid-template-columns:220px 1fr 300px;gap:13px;padding:14px;max-width:1200px;margin:0 auto;}
+@media(max-width:900px){.lby-grid{grid-template-columns:1fr 280px;}}
 @media(max-width:660px){.lby-grid{grid-template-columns:1fr;}}
 .srv-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;}
 .srv-item{display:flex;align-items:center;justify-content:space-between;
@@ -176,10 +177,10 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 
 /* TABLE CENTER */
 .tcenter{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  display:flex;flex-direction:column;align-items:center;gap:3px;z-index:5;pointer-events:none;text-align:center;}
+  display:flex;flex-direction:column;align-items:center;gap:3px;z-index:5;pointer-events:none;text-align:center;overflow:visible;}
 .tc-mode{font-family:'Special Elite',cursive;font-size:8px;color:rgba(201,168,76,.35);letter-spacing:3px;}
 .tc-pot{font-family:'Cinzel Decorative',serif;color:var(--gold2);font-size:clamp(8px,1.3vw,12px);letter-spacing:2px;text-shadow:0 0 12px rgba(201,168,76,.4);}
-.tc-comm{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;max-width:200px;}
+.tc-comm{display:flex;gap:3px;justify-content:center;flex-wrap:nowrap;overflow:visible;pointer-events:all;}
 .tc-deck{font-family:'Special Elite',cursive;font-size:8px;color:rgba(201,168,76,.28);letter-spacing:2px;}
 
 /* SEATS — minimal name chip + cards float on felt */
@@ -365,83 +366,325 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .eli.good{border-color:#2e7a32;color:#80c880;}
 .eli.bad{border-color:#7a2020;color:#f08080;}
 @keyframes logIn{from{transform:translateX(11px);opacity:0}to{transform:none;opacity:1}}
-/* ══ UNDERTALE MODE ══════════════════════════════════════ */
-#sc-ut{ overflow:hidden; background:#000; font-family:'Courier New',monospace; color:#fff; }
-.ut-bar{ display:flex; align-items:center; justify-content:space-between; padding:6px 14px; background:#111; border-bottom:2px solid #fff; flex-shrink:0; }
-.ut-bar-title{ font-size:14px; font-weight:bold; letter-spacing:2px; }
-.ut-body{ flex:1; display:flex; overflow:hidden; min-height:0; }
-.ut-left{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:16px; overflow-y:auto; gap:12px; }
-.ut-right{ width:240px; border-left:2px solid #333; background:#0a0a0a; display:flex; flex-direction:column; overflow:hidden; }
-.ut-right-inner{ flex:1; overflow-y:auto; padding:12px; }
-@media(max-width:700px){ .ut-right{ width:180px; } }
+/* ══ UNDERTALE MODE — PIXEL ART ══════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* Enemy display */
-.ut-enemy-box{ background:#111; border:2px solid #fff; border-radius:4px; padding:16px 20px; text-align:center; width:100%; max-width:500px; }
-.ut-enemy-icon{ font-size:56px; line-height:1; margin-bottom:8px; }
-.ut-enemy-name{ font-size:18px; font-weight:bold; letter-spacing:2px; margin-bottom:4px; }
-.ut-enemy-desc{ font-size:11px; color:#aaa; margin-bottom:12px; }
-.ut-hp-bar{ height:14px; background:#333; border:1px solid #fff; border-radius:2px; overflow:hidden; margin-bottom:4px; }
-.ut-hp-fill{ height:100%; background:#ff0; transition:width .4s; }
-.ut-hp-fill.boss{ background:#f00; }
-.ut-hp-text{ font-size:11px; color:#aaa; text-align:right; }
-.ut-boss-label{ color:#f00; font-size:11px; letter-spacing:3px; font-weight:bold; margin-bottom:4px; }
+:root {
+  --ut-font: 'Press Start 2P', monospace;
+  --ut-yellow: #ffff00;
+  --ut-white: #ffffff;
+  --ut-bg: #000000;
+  --ut-dialog-border: 3px solid #fff;
+}
 
-/* Battle menu */
-.ut-menu{ display:grid; grid-template-columns:1fr 1fr; gap:6px; width:100%; max-width:500px; }
-.ut-btn{ background:#000; border:2px solid #fff; color:#fff; padding:10px 8px; font-family:'Courier New',monospace; font-size:13px; font-weight:bold; cursor:pointer; text-align:left; transition:all .1s; letter-spacing:1px; display:flex; align-items:center; gap:8px; }
-.ut-btn:hover{ background:#fff; color:#000; }
-.ut-btn:disabled{ opacity:.4; cursor:not-allowed; }
-.ut-btn .ut-btn-icon{ font-size:18px; }
+#sc-ut {
+  overflow: hidden;
+  background: var(--ut-bg);
+  font-family: var(--ut-font);
+  color: var(--ut-white);
+  image-rendering: pixelated;
+}
+
+.ut-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 14px; background: #000;
+  border-bottom: 3px solid #fff; flex-shrink: 0;
+}
+.ut-bar-title { font-family: var(--ut-font); font-size: 11px; color: #fff; letter-spacing: 1px; }
+.ut-body { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+
+/* LEFT BATTLE AREA */
+.ut-left {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-start;
+  padding: 14px 10px; overflow-y: auto; gap: 10px;
+  background: #000;
+}
+
+/* RIGHT STATS PANEL */
+.ut-right {
+  width: 220px; border-left: 3px solid #fff;
+  background: #000; display: flex; flex-direction: column; overflow: hidden;
+}
+.ut-right-inner { flex: 1; overflow-y: auto; padding: 10px; }
+@media(max-width:700px){ .ut-right{ display:none; } }
+
+/* ── PIXEL ART ENEMY DISPLAY ── */
+.ut-enemy-box {
+  background: #000; border: 3px solid #fff;
+  padding: 14px 18px; text-align: center;
+  width: 100%; max-width: 480px;
+  image-rendering: pixelated;
+}
+
+/* Pixel sprite canvas */
+.ut-sprite-canvas {
+  display: block; margin: 0 auto 8px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.ut-enemy-name {
+  font-family: var(--ut-font); font-size: 10px;
+  color: #fff; letter-spacing: 1px; margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.ut-enemy-desc { font-family: var(--ut-font); font-size: 7px; color: #aaa; margin-bottom: 10px; line-height: 1.8; }
+.ut-boss-label { color: #f00; font-family: var(--ut-font); font-size: 8px; letter-spacing: 2px; margin-bottom: 4px; }
+
+/* Pixel HP bar */
+.ut-hp-bar {
+  height: 16px; background: #000;
+  border: 3px solid #fff; margin-bottom: 3px;
+  position: relative; overflow: hidden;
+}
+.ut-hp-fill {
+  height: 100%; background: #ff0;
+  transition: width 0.3s steps(20);
+  image-rendering: pixelated;
+}
+.ut-hp-fill.boss { background: #f00; }
+/* Pixel notches on hp bar */
+.ut-hp-fill::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0px, transparent 7px, rgba(0,0,0,0.3) 7px, rgba(0,0,0,0.3) 8px);
+}
+.ut-hp-text { font-family: var(--ut-font); font-size: 7px; color: #aaa; text-align: right; }
+
+/* ── PIXEL DIALOGUE BOX ── */
+.ut-dialog {
+  background: #000; border: 3px solid #fff;
+  padding: 10px 14px; width: 100%; max-width: 480px;
+  min-height: 56px; font-family: var(--ut-font);
+  font-size: 8px; line-height: 2; color: #fff;
+  position: relative;
+}
+/* Arrow indicator */
+.ut-dialog::after {
+  content: '▼';
+  position: absolute; bottom: 4px; right: 8px;
+  font-size: 8px; color: #fff;
+  animation: ut-blink 0.8s step-end infinite;
+}
+@keyframes ut-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── PIXEL BATTLE MENU ── */
+.ut-menu {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3px; width: 100%; max-width: 480px;
+  border: 3px solid #fff; background: #000;
+  padding: 6px;
+}
+.ut-btn {
+  background: #000; border: 2px solid #555;
+  color: #fff; padding: 8px 6px;
+  font-family: var(--ut-font); font-size: 9px;
+  cursor: pointer; text-align: left;
+  transition: all 0s; display: flex;
+  align-items: center; gap: 6px;
+  letter-spacing: 0px;
+  image-rendering: pixelated;
+  position: relative;
+}
+/* Undertale selection heart */
+.ut-btn.selected::before,
+.ut-btn:focus::before {
+  content: '❤';
+  position: absolute; left: -2px;
+  color: #ff0; font-size: 8px;
+}
+.ut-btn.selected, .ut-btn:focus {
+  background: #000; border-color: #fff;
+  color: #ff0; outline: none;
+  padding-left: 14px;
+}
+.ut-btn:hover { background: #000; border-color: #fff; color: #ff0; padding-left: 14px; }
+.ut-btn:hover::before { content: '❤'; position:absolute; left:-2px; color:#ff0; font-size:8px; }
+.ut-btn:disabled { opacity: .35; cursor: not-allowed; }
+.ut-btn-icon { font-size: 14px; flex-shrink: 0; }
 
 /* ACT submenu */
-.ut-acts{ display:flex; flex-direction:column; gap:5px; width:100%; max-width:500px; }
-.ut-act-btn{ background:#000; border:1px solid #555; color:#fff; padding:8px 12px; font-family:'Courier New',monospace; font-size:12px; cursor:pointer; text-align:left; transition:all .1s; }
-.ut-act-btn:hover{ border-color:#fff; background:#1a1a1a; }
+.ut-acts { display: flex; flex-direction: column; gap: 2px; width: 100%; max-width: 480px; }
+.ut-act-btn {
+  background: #000; border: 2px solid #555;
+  color: #fff; padding: 7px 12px;
+  font-family: var(--ut-font); font-size: 8px;
+  cursor: pointer; text-align: left;
+  transition: all 0s;
+}
+.ut-act-btn:hover, .ut-act-btn.selected { border-color: #fff; color: #ff0; }
 
-/* ATTACK accuracy bar */
-.ut-attack-box{ width:100%; max-width:500px; background:#111; border:2px solid #fff; padding:16px; text-align:center; }
-.ut-acc-track{ position:relative; height:24px; background:#333; border:1px solid #fff; margin:10px 0; overflow:hidden; cursor:pointer; }
-.ut-acc-slider{ position:absolute; top:0; width:6px; height:100%; background:#ff0; transition:left .05s linear; }
-.ut-acc-zone{ position:absolute; top:0; height:100%; background:rgba(255,255,0,0.15); }
+/* ── PIXEL ACCURACY / ATTACK BAR ── */
+.ut-attack-box {
+  width: 100%; max-width: 480px;
+  background: #000; border: 3px solid #fff;
+  padding: 14px 16px; text-align: center;
+}
+.ut-attack-title {
+  font-family: var(--ut-font); font-size: 8px;
+  color: #aaa; margin-bottom: 12px; letter-spacing: 1px;
+}
+/* Centered accuracy track */
+.ut-acc-outer {
+  position: relative; height: 48px;
+  background: #000; border: 3px solid #fff;
+  margin: 8px 0; overflow: visible;
+}
+/* Damage zones colored on track */
+.ut-acc-track-fill {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg,
+    #550000 0%, #aa0000 20%,
+    #ffaa00 35%, #ffff00 45%,
+    #ffffff 50%,
+    #ffff00 55%, #ffaa00 65%,
+    #aa0000 80%, #550000 100%
+  );
+}
+/* Center target zone marker */
+.ut-acc-center-line {
+  position: absolute; top: -4px; bottom: -4px;
+  left: 50%; width: 3px;
+  background: #fff; transform: translateX(-50%);
+  z-index: 3;
+}
+/* The moving slider */
+.ut-acc-slider {
+  position: absolute; top: -6px; bottom: -6px;
+  width: 6px; background: #fff;
+  transform: translateX(-50%); z-index: 5;
+  box-shadow: 0 0 0 2px #000, 0 0 0 4px #fff;
+  transition: left 0.03s linear;
+}
+/* Damage preview below track */
+.ut-dmg-preview {
+  font-family: var(--ut-font); font-size: 14px;
+  color: #fff; margin-top: 10px; min-height: 24px;
+  text-shadow: 2px 2px #f00;
+}
 
-/* DODGE box — THE SOUL BOX */
-.ut-dodge-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.95); z-index:500; display:none; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
-.ut-dodge-overlay.open{ display:flex; }
-.ut-dodge-title{ font-family:'Courier New',monospace; font-size:14px; color:#fff; letter-spacing:2px; }
-.ut-soul-arena{ position:relative; width:300px; height:280px; border:3px solid #fff; background:#000; overflow:hidden; flex-shrink:0; }
-.ut-soul{ position:absolute; width:16px; height:16px; font-size:16px; line-height:1; z-index:10; pointer-events:none; transform:translate(-50%,-50%); transition:left .04s, top .04s; }
-.ut-projectile{ position:absolute; pointer-events:none; border-radius:50%; }
-.ut-wall{ position:absolute; pointer-events:none; background:#fff; }
-.ut-laser{ position:absolute; pointer-events:none; background:rgba(255,255,0,0.85); }
-.ut-dodge-hp{ font-family:'Courier New',monospace; font-size:12px; color:#fff; }
-.ut-dodge-hp-bar{ width:300px; height:12px; background:#333; border:1px solid #fff; }
-.ut-dodge-hp-fill{ height:100%; background:#ff0; transition:width .3s; }
+/* ── DODGE BOX — THE SOUL BOX ── */
+.ut-dodge-overlay {
+  position: fixed; inset: 0;
+  background: #000; z-index: 500;
+  display: none; align-items: center;
+  justify-content: center; flex-direction: column; gap: 10px;
+}
+.ut-dodge-overlay.open { display: flex; }
+.ut-dodge-title {
+  font-family: var(--ut-font); font-size: 8px;
+  color: #fff; letter-spacing: 1px; text-align: center;
+  max-width: 320px; line-height: 2;
+}
+.ut-soul-arena {
+  position: relative; width: 220px; height: 190px;
+  border: 4px solid #fff; background: #000;
+  overflow: hidden; flex-shrink: 0;
+  image-rendering: pixelated;
+  box-shadow: 0 0 0 4px #000, 0 0 0 8px #fff;
+}
+/* Pixel soul — drawn as a heart shape via CSS */
+.ut-soul {
+  position: absolute;
+  width: 16px; height: 16px;
+  z-index: 10; pointer-events: none;
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+}
+/* CSS pixel art heart */
+.ut-soul::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    /* pixel heart: 5x4 grid */
+    linear-gradient(#000 0px,#000 2px,transparent 2px) 0 0/2px 16px no-repeat,
+    linear-gradient(#000 0px,#000 2px,transparent 2px) 14px 0/2px 16px no-repeat,
+    linear-gradient(#000 0px,#000 12px,transparent 12px) 0 0/2px 12px no-repeat,
+    linear-gradient(#000 0px,#000 12px,transparent 12px) 14px 0/2px 12px no-repeat;
+}
+.ut-soul-inner {
+  position: absolute; inset: 0;
+  /* Heart shape via box-shadow pixel art */
+  font-size: 0;
+}
+/* Simpler: just a red square with rounded pixel feel */
+.ut-soul { background: #f00; clip-path: polygon(4px 0,12px 0,16px 4px,16px 8px,8px 16px,0 8px,0 4px); }
 
-/* Dialogue box */
-.ut-dialog{ background:#000; border:2px solid #fff; padding:10px 14px; width:100%; max-width:500px; min-height:50px; font-family:'Courier New',monospace; font-size:13px; line-height:1.6; }
+.ut-projectile {
+  position: absolute; pointer-events: none;
+  image-rendering: pixelated;
+}
+.ut-wall { position: absolute; pointer-events: none; background: #fff; }
+.ut-laser { position: absolute; pointer-events: none; background: #ff0; }
 
-/* Stats panel */
-.ut-stat-row{ display:flex; justify-content:space-between; font-family:'Courier New',monospace; font-size:11px; padding:3px 0; border-bottom:1px solid #222; color:#ccc; }
-.ut-stat-val{ color:#ff0; font-weight:bold; }
-.ut-section{ font-size:10px; color:#888; letter-spacing:2px; margin:10px 0 5px; }
-.ut-inv-item{ display:flex; justify-content:space-between; align-items:center; padding:4px 6px; border:1px solid #333; margin-bottom:4px; font-family:'Courier New',monospace; font-size:11px; cursor:pointer; }
-.ut-inv-item:hover{ border-color:#fff; background:#111; }
-.ut-inv-item.equipped{ border-color:#ff0; }
-.ut-gold{ color:#ffd700; font-family:'Courier New',monospace; font-size:12px; }
+.ut-dodge-hp-bar-wrap {
+  display: flex; align-items: center; gap: 8px;
+}
+.ut-dodge-hp-label { font-family: var(--ut-font); font-size: 7px; color: #fff; white-space: nowrap; }
+.ut-dodge-hp-bar {
+  width: 220px; height: 14px;
+  background: #000; border: 3px solid #fff;
+  image-rendering: pixelated;
+}
+.ut-dodge-hp-fill { height: 100%; background: #ff0; transition: width 0.2s steps(10); }
+.ut-dodge-hint { font-family: var(--ut-font); font-size: 7px; color: #555; }
 
-/* Shop */
-.ut-shop-item{ padding:6px 8px; border:1px solid #333; margin-bottom:5px; cursor:pointer; font-family:'Courier New',monospace; font-size:11px; }
-.ut-shop-item:hover{ border-color:#ff0; background:#111; }
-.ut-convert-row{ display:flex; gap:6px; align-items:center; margin-bottom:10px; }
-.ut-inp{ background:#000; border:1px solid #fff; color:#fff; padding:5px 8px; font-family:'Courier New',monospace; font-size:12px; width:70px; }
+/* ── STATS PANEL ── */
+.ut-stat-row {
+  display: flex; justify-content: space-between;
+  font-family: var(--ut-font); font-size: 7px;
+  padding: 4px 0; border-bottom: 1px solid #1a1a1a; color: #ccc;
+}
+.ut-stat-val { color: #ff0; }
+.ut-section {
+  font-family: var(--ut-font); font-size: 7px;
+  color: #555; letter-spacing: 2px; margin: 10px 0 5px;
+  text-transform: uppercase;
+}
+.ut-inv-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 6px; border: 2px solid #333; margin-bottom: 3px;
+  font-family: var(--ut-font); font-size: 7px; cursor: pointer;
+  background: #000;
+}
+.ut-inv-item:hover, .ut-inv-item.selected { border-color: #fff; color: #ff0; }
+.ut-inv-item.equipped { border-color: #ff0; }
+.ut-gold { color: #ffd700; font-family: var(--ut-font); font-size: 8px; }
 
-/* PvP */
-.ut-pvp-arena{ position:relative; width:100%; max-width:500px; }
-.ut-pvp-hp-row{ display:flex; justify-content:space-between; margin-bottom:10px; font-family:'Courier New',monospace; font-size:12px; }
-.ut-challenge-item{ padding:8px 10px; border:1px solid #555; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center; font-family:'Courier New',monospace; font-size:12px; }
+/* ── SHOP ── */
+.ut-shop-item {
+  padding: 7px 8px; border: 2px solid #333;
+  margin-bottom: 4px; cursor: pointer;
+  font-family: var(--ut-font); font-size: 7px;
+  background: #000; color: #fff;
+}
+.ut-shop-item:hover { border-color: #ff0; color: #ff0; }
+.ut-inp {
+  background: #000; border: 2px solid #fff;
+  color: #fff; padding: 5px 8px;
+  font-family: var(--ut-font); font-size: 9px; width: 70px;
+}
 
-/* Accuracy meter in PvP */
-.ut-acc-label{ font-family:'Courier New',monospace; font-size:11px; color:#aaa; margin-bottom:4px; }
+/* ── PVP ── */
+.ut-pvp-hp-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-family: var(--ut-font); font-size: 8px; }
+.ut-challenge-item {
+  padding: 7px 8px; border: 2px solid #555; margin-bottom: 4px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--ut-font); font-size: 8px;
+}
+.ut-acc-label { font-family: var(--ut-font); font-size: 7px; color: #aaa; margin-bottom: 4px; }
+
+/* Pixel button in UT shop/pvp */
+.ut-px-btn {
+  background: #000; border: 2px solid #fff; color: #fff;
+  padding: 6px 10px; font-family: var(--ut-font); font-size: 8px;
+  cursor: pointer; letter-spacing: 0;
+}
+.ut-px-btn:hover { background: #fff; color: #000; }
+
+/* ── PIXEL ART SPRITES (canvas-based, defined in JS) ── */
+
 
 </style>
 </head>
@@ -486,76 +729,36 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
     </div>
   </div>
   <div class="lby-grid">
-    <!-- LEFT: tabbed panel -->
-    <div class="panel" style="display:flex;flex-direction:column;min-height:0;">
-      <div class="tabs" style="margin-bottom:12px">
-        <div class="tab active" id="ltab-servers" onclick="switchLTab('servers')">Servers</div>
-        <div class="tab" id="ltab-chat" onclick="switchLTab('chat')">Global Chat</div>
-        <div class="tab" id="ltab-friends" onclick="switchLTab('friends')">Friends</div>
-        <div class="tab" id="ltab-ut" onclick="switchLTab('ut')">⚔️ Battle</div>
+    <!-- FAR LEFT: Battle panel -->
+    <div class="panel" style="background:#000;border:3px solid #fff;border-radius:0;display:flex;flex-direction:column;gap:10px;font-family:'Courier New',monospace;">
+      <div style="font-size:13px;font-weight:bold;letter-spacing:2px;color:#fff;text-align:center;padding:6px 0;border-bottom:2px solid #fff;">* BATTLE</div>
+      <div style="font-size:10px;color:#aaa;line-height:1.7;padding:0 4px">
+        Fight monsters.<br>Level up. Find items.<br>Die and lose everything.
       </div>
-
-      <!-- SERVERS pane -->
-      <div id="lpane-servers">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <div class="ptitle" style="margin-bottom:0">⬡ SERVERS ⬡</div>
-          <button class="btn btn-ghost btn-sm" id="btn-refresh">↻ Refresh</button>
-        </div>
-        <div class="srv-list" id="srv-list"><div class="empty">No servers yet — create one!</div></div>
+      <button id="btn-enter-battle" style="background:#000;border:2px solid #fff;color:#fff;padding:8px;font-family:'Courier New',monospace;font-size:12px;font-weight:bold;letter-spacing:1px;cursor:pointer;width:100%;transition:all .1s;" onmouseover="this.style.background='#fff';this.style.color='#000'" onmouseout="this.style.background='#000';this.style.color='#fff'">&#9654; ENTER</button>
+      <div style="border-top:1px solid #333;padding-top:8px;">
+        <div style="font-size:9px;color:#555;letter-spacing:2px;margin-bottom:6px">PvP CHALLENGES</div>
+        <div id="ut-challenge-list" style="font-size:10px;color:#555">No challenges.</div>
       </div>
-
-      <!-- GLOBAL CHAT pane -->
-      <div id="lpane-chat" style="display:none;flex-direction:column;flex:1;min-height:0;">
-        <div class="ptitle">⬡ GLOBAL CHAT ⬡</div>
-        <div id="global-chat-msgs" style="flex:1;min-height:200px;max-height:380px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:7px;padding:8px;font-size:12px;margin-bottom:8px;"></div>
-        <div style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);margin-bottom:5px">Type @username to mention someone · @username message to DM</div>
-        <div style="display:flex;gap:6px">
-          <input type="text" id="gchat-lobby-inp" placeholder="Message everyone…" maxlength="300" style="flex:1;font-size:12px;padding:7px 10px;">
-          <button class="btn btn-ghost btn-sm" id="btn-gchat-lobby" style="margin-top:0">→</button>
-        </div>
-      </div>
-
-      <!-- FRIENDS pane -->
-      <div id="lpane-friends" style="display:none;">
-        <div class="ptitle">⬡ FRIENDS ⬡</div>
-        <!-- Add friend -->
-        <div style="display:flex;gap:6px;margin-bottom:12px">
-          <input type="text" id="friend-inp" placeholder="Add friend by username…" maxlength="20" style="flex:1;font-size:12px;padding:7px 10px;">
-          <button class="btn btn-ghost btn-sm" id="btn-add-friend" style="margin-top:0">+ Add</button>
-        </div>
-        <div id="friend-err" class="err"></div>
-        <!-- Incoming requests -->
-        <div id="friend-requests-section" style="display:none">
-          <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">INCOMING REQUESTS</div>
-          <div id="friend-requests-list"></div>
-          <hr class="g">
-        </div>
-        <!-- Friends list -->
-        <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">YOUR FRIENDS</div>
-        <div id="friends-list"><div class="empty" style="padding:14px">No friends yet. Add someone!</div></div>
-        <!-- DM panel -->
-        <div id="dm-panel" style="display:none;margin-top:12px">
-          <hr class="g">
-          <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">DM: <span id="dm-with"></span></div>
-          <div id="dm-msgs" style="height:160px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:6px;padding:7px;font-size:11px;margin-bottom:6px;"></div>
-          <div style="display:flex;gap:5px">
-            <input type="text" id="dm-inp" placeholder="Direct message…" maxlength="300" style="flex:1;font-size:11px;padding:6px 9px;">
-            <button class="btn btn-ghost btn-sm" id="btn-dm-send" style="margin-top:0">→</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- BATTLE pane (Undertale) -->
-      <div id="lpane-ut" style="display:none">
-        <div class="ptitle">⚔️ BATTLE MODE</div>
-        <p style="font-family:'Courier New',monospace;font-size:11px;color:#aaa;margin-bottom:12px;line-height:1.6">Fight monsters, level up, collect items.<br>Die and lose everything.</p>
-        <button class="btn" id="btn-enter-battle" style="background:linear-gradient(135deg,#3a0000,#8a0000);border:1px solid #f00;color:#fff;font-family:'Courier New',monospace;letter-spacing:2px">▶ ENTER BATTLE</button>
-        <hr class="g">
-        <div class="ptitle" style="font-size:10px;margin-top:8px">PvP CHALLENGES</div>
-        <div id="ut-challenge-list"><div class="empty" style="font-family:'Courier New',monospace;font-size:11px">No challenges.</div></div>
+      <div style="border-top:1px solid #333;padding-top:8px;">
+        <div style="font-size:9px;color:#555;letter-spacing:2px;margin-bottom:6px">YOUR STATS</div>
+        <div id="ut-lobby-lv" style="font-size:10px;color:#ff0">LV 1</div>
+        <div id="ut-lobby-hp" style="font-size:10px;color:#ff0">HP 20/20</div>
+        <div id="ut-lobby-kills" style="font-size:10px;color:#aaa">Kills: 0</div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px">
+
+    <!-- MIDDLE: Servers only -->
+    <div class="panel" style="display:flex;flex-direction:column;min-height:0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="ptitle" style="margin-bottom:0">⬡ SERVERS ⬡</div>
+        <button class="btn btn-ghost btn-sm" id="btn-refresh">↻ Refresh</button>
+      </div>
+      <div class="srv-list" id="srv-list"><div class="empty">No servers yet — create one!</div></div>
+    </div>
+
+    <!-- RIGHT: Account + Create + Join + Chat + Friends -->
+    <div style="display:flex;flex-direction:column;gap:12px;overflow-y:auto;">
       <!-- Stats -->
       <div class="panel" id="stats-panel">
         <div class="ptitle">⬡ YOUR ACCOUNT ⬡</div>
@@ -576,6 +779,46 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
         <label>Password</label><input type="password" id="ji-pw" placeholder="Password (if needed)">
         <div id="join-err" class="err"></div>
         <button class="btn btn-ghost" id="btn-joinid">Join</button>
+      </div>
+      <!-- Chat + Friends as tabs below -->
+      <div class="panel" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+        <div class="tabs" style="margin-bottom:10px">
+          <div class="tab active" id="ltab-chat" onclick="switchLTab('chat')">Global Chat</div>
+          <div class="tab" id="ltab-friends" onclick="switchLTab('friends')">Friends</div>
+        </div>
+        <!-- GLOBAL CHAT pane -->
+        <div id="lpane-chat" style="display:flex;flex-direction:column;flex:1;min-height:0;">
+          <div id="global-chat-msgs" style="flex:1;min-height:160px;max-height:260px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:7px;padding:8px;font-size:12px;margin-bottom:8px;"></div>
+          <div style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);margin-bottom:5px">@username message to DM</div>
+          <div style="display:flex;gap:6px">
+            <input type="text" id="gchat-lobby-inp" placeholder="Message everyone…" maxlength="300" style="flex:1;font-size:12px;padding:7px 10px;">
+            <button class="btn btn-ghost btn-sm" id="btn-gchat-lobby" style="margin-top:0">→</button>
+          </div>
+        </div>
+        <!-- FRIENDS pane -->
+        <div id="lpane-friends" style="display:none;">
+          <div style="display:flex;gap:6px;margin-bottom:10px">
+            <input type="text" id="friend-inp" placeholder="Add friend by username…" maxlength="20" style="flex:1;font-size:12px;padding:7px 10px;">
+            <button class="btn btn-ghost btn-sm" id="btn-add-friend" style="margin-top:0">+ Add</button>
+          </div>
+          <div id="friend-err" class="err"></div>
+          <div id="friend-requests-section" style="display:none">
+            <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">INCOMING REQUESTS</div>
+            <div id="friend-requests-list"></div>
+            <hr class="g">
+          </div>
+          <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">YOUR FRIENDS</div>
+          <div id="friends-list"><div class="empty" style="padding:14px">No friends yet.</div></div>
+          <div id="dm-panel" style="display:none;margin-top:10px">
+            <hr class="g">
+            <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">DM: <span id="dm-with"></span></div>
+            <div id="dm-msgs" style="height:130px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:6px;padding:6px;font-size:11px;margin-bottom:5px;"></div>
+            <div style="display:flex;gap:5px">
+              <input type="text" id="dm-inp" placeholder="Direct message…" maxlength="300" style="flex:1;font-size:11px;padding:6px 9px;">
+              <button class="btn btn-ghost btn-sm" id="btn-dm-send" style="margin-top:0">→</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -985,7 +1228,7 @@ function switchTab(t){
 
 // ── Lobby tabs ──────────────────────────────────────────────
 function switchLTab(t){
-  ['servers','chat','friends'].forEach(n=>{
+  ['chat','friends'].forEach(n=>{
     const tab=Q(`#ltab-${n}`); if(tab) tab.className='tab'+(t===n?' active':'');
     const pane=Q(`#lpane-${n}`); if(pane) pane.style.display=t===n?(n==='chat'?'flex':''):'none';
   });
@@ -1227,6 +1470,8 @@ window.addEventListener('resize',sizeTable);
 
 // ── Seat positions ─────────────────────────────────────────
 const SPOS=[[50,88],[22,76],[5,50],[22,24],[50,10],[78,24],[95,50],[78,76]];
+// Dealer always sits at the very top — use this fixed position
+const DEALER_POS=[50,8];
 
 // ── Game render ────────────────────────────────────────────
 function renderGame(){
@@ -1249,12 +1494,25 @@ function renderGame(){
   // Remove old seats
   Q('#felt-oval').querySelectorAll('.seat').forEach(s=>s.remove());
 
+  // ── Render DEALER ─────────────────────────────────────────
+  const hasDealer = !!g.dealer;
+  if(hasDealer) renderDealerSeat(g);
+
+  // ── Render PLAYERS ────────────────────────────────────────
   const myIdx=g.players.findIndex(p=>p.id===myId), n=g.players.length;
   const myP=g.players[myIdx];
 
+  // Player positions: if dealer present, skip position index 4 (top-center) so players wrap around
+  function playerPos(pi){
+    if(!hasDealer) return SPOS[Math.min(pi, SPOS.length-1)];
+    // Use all positions except index 4 (top center — that's the dealer)
+    const playerSlots=[0,1,2,3,5,6,7]; // skip index 4
+    return SPOS[playerSlots[Math.min(pi, playerSlots.length-1)]];
+  }
+
   g.players.forEach((p,ri)=>{
     const pi=myIdx>=0?(ri-myIdx+n)%n:ri;
-    const pos=SPOS[Math.min(pi,SPOS.length-1)];
+    const pos=playerPos(pi);
     const isTurn=g.currentPlayerId===p.id&&g.phase==='play';
     const isMe=p.id===myId;
     const score=p.score||0;
@@ -1264,20 +1522,18 @@ function renderGame(){
 
     // Status badge
     let badge='';
-    if(isTurn)                           badge=`<div class="sbadge sb-turn">${isMe?'YOUR TURN':'PLAYING'}</div>`;
-    else if(p.status==='bust')           badge='<div class="sbadge sb-bust">BUST</div>';
+    if(isTurn)                              badge=`<div class="sbadge sb-turn">${isMe?'YOUR TURN':'PLAYING'}</div>`;
+    else if(p.status==='bust')              badge='<div class="sbadge sb-bust">BUST</div>';
     else if(score===21&&p.hand?.length===2) badge='<div class="sbadge sb-bj">BLACKJACK!</div>';
-    else if(p.status==='standing')       badge='<div class="sbadge sb-stand">STANDING</div>';
-    else if(p.status==='winner')         badge='<div class="sbadge sb-win">🏆 WIN</div>';
-    else if(amSpec&&isMe)                badge='<div class="sbadge sb-spec">SPECTATING</div>';
+    else if(p.status==='standing')          badge='<div class="sbadge sb-stand">STANDING</div>';
+    else if(p.status==='winner')            badge='<div class="sbadge sb-win">🏆 WIN</div>';
+    else if(amSpec&&isMe)                   badge='<div class="sbadge sb-spec">SPECTATING</div>';
 
-    // Score / hand label
     let sc=''; if(score>21) sc='ss-bust'; else if(score===21) sc='ss-bj'; else if(score>=17) sc='ss-ok';
     const scoreStr = g.mode==='poker'
       ? (p.pokerLabel||'')
       : ((p.duckLocked?'🦆':'')+((p.hand?.filter(c=>!c.isSpecial).length||score)?score:''));
 
-    // Plate status classes
     let plateCls='splate';
     if(isTurn&&isMe) plateCls+=' my-turn';
     if(p.status==='bust') plateCls+=' busted';
@@ -1303,6 +1559,57 @@ function renderGame(){
   });
 
   renderActBar(g,myP);
+}
+
+function renderDealerSeat(g){
+  const d=g.dealer;
+  const pos=DEALER_POS;
+  const seat=document.createElement('div'); seat.className='seat';
+  seat.style.left=pos[0]+'%'; seat.style.top=pos[1]+'%';
+
+  // Dealer score — only show visible cards' value (hide face-down contribution)
+  const visibleCards=d.hand.filter(c=>!c.faceDown);
+  const visScore=visibleCards.length?handScore(visibleCards,false):0;
+  const totalScore=handScore(d.hand.filter(c=>!c.faceDown&&!c.isSpecial),false);
+
+  let sc=''; if(totalScore>21) sc='ss-bust'; else if(totalScore===21) sc='ss-bj'; else if(totalScore>=17) sc='ss-ok';
+
+  // Badge
+  let badge='';
+  if(d.status==='active')   badge='<div class="sbadge sb-turn">DEALING</div>';
+  else if(d.status==='bust') badge='<div class="sbadge sb-bust">BUST</div>';
+  else if(d.status==='standing') badge='<div class="sbadge sb-stand">STANDING</div>';
+
+  let plateCls='splate';
+  if(d.status==='active') plateCls+=' my-turn';
+  if(d.status==='bust') plateCls+=' busted';
+
+  // Show score: if face-down card exists show visible score + "?"
+  const scoreDisplay = d.hasFaceDown
+    ? `${visScore}<span style="font-size:10px;color:var(--dim)">+?</span>`
+    : `<span class="${sc}">${totalScore||''}</span>`;
+
+  seat.innerHTML=`
+    ${badge}
+    <div class="${plateCls}">
+      <div class="sname">🎩 Dealer</div>
+      <div class="sscore">${scoreDisplay}</div>
+    </div>
+    <div class="shand" id="sh-__dealer__"></div>
+  `;
+  Q('#felt-oval').appendChild(seat);
+
+  const hel=document.getElementById('sh-__dealer__');
+  if(d.hand&&d.hand.length){
+    d.hand.forEach(c=>{
+      if(c.faceDown) hel.appendChild(mkFaceDown());
+      else hel.appendChild(mkCard(c));
+    });
+  }
+}
+
+function mkFaceDown(){
+  const d=document.createElement('div'); d.className='card face-down'; return d;
 }
 
 function renderActBar(g,p){
@@ -1547,62 +1854,65 @@ connect();
 <!-- ════ UNDERTALE BATTLE SCREEN ════ -->
 <div id="sc-ut" class="screen">
   <div class="ut-bar">
-    <span class="ut-bar-title">* BATTLE MODE</span>
-    <div style="display:flex;gap:8px">
-      <button class="ut-btn" id="ut-btn-shop" style="padding:5px 10px;font-size:11px">🛒 SHOP</button>
-      <button class="ut-btn" id="ut-btn-pvp" style="padding:5px 10px;font-size:11px">⚔️ PvP</button>
-      <button class="ut-btn" id="ut-btn-leave-battle" style="padding:5px 10px;font-size:11px;border-color:#f00;color:#f00">✕ LEAVE</button>
+    <span class="ut-bar-title">* UNDERTALE</span>
+    <div style="display:flex;gap:6px">
+      <button class="ut-px-btn" id="ut-btn-shop">SHOP</button>
+      <button class="ut-px-btn" id="ut-btn-pvp">PvP</button>
+      <button class="ut-px-btn" id="ut-btn-leave-battle" style="border-color:#f00;color:#f00">LEAVE</button>
     </div>
   </div>
   <div class="ut-body">
     <div class="ut-left">
-      <!-- Enemy -->
+
+      <!-- Enemy area -->
       <div class="ut-enemy-box" id="ut-enemy-box">
-        <div id="ut-boss-label" class="ut-boss-label" style="display:none">★ BOSS ★</div>
-        <div class="ut-enemy-icon" id="ut-enemy-icon">?</div>
+        <div id="ut-boss-label" class="ut-boss-label" style="display:none">* BOSS ENCOUNTER *</div>
+        <!-- Pixel sprite canvas -->
+        <canvas id="ut-sprite-canvas" class="ut-sprite-canvas" width="80" height="80"></canvas>
         <div class="ut-enemy-name" id="ut-enemy-name">???</div>
         <div class="ut-enemy-desc" id="ut-enemy-desc"></div>
         <div class="ut-hp-bar"><div class="ut-hp-fill" id="ut-enemy-hp-fill" style="width:100%"></div></div>
         <div class="ut-hp-text" id="ut-enemy-hp-text">HP: ?/?</div>
       </div>
 
-      <!-- Dialogue -->
+      <!-- Dialogue box -->
       <div class="ut-dialog" id="ut-dialog">* ...</div>
 
-      <!-- Main menu -->
+      <!-- Main battle menu -->
       <div class="ut-menu" id="ut-main-menu">
-        <button class="ut-btn" id="ut-btn-fight" onclick="utShowFight()"><span class="ut-btn-icon">⚔️</span>FIGHT</button>
-        <button class="ut-btn" id="ut-btn-act"   onclick="utShowActs()"><span class="ut-btn-icon">💬</span>ACT</button>
-        <button class="ut-btn" id="ut-btn-item"  onclick="utShowItems()"><span class="ut-btn-icon">🎒</span>ITEM</button>
-        <button class="ut-btn" id="ut-btn-mercy" onclick="utMercy()"><span class="ut-btn-icon">🕊️</span>MERCY</button>
+        <button class="ut-btn" id="ut-btn-fight" data-menu="0"><span class="ut-btn-icon">*</span>FIGHT</button>
+        <button class="ut-btn" id="ut-btn-act"   data-menu="1"><span class="ut-btn-icon">*</span>ACT</button>
+        <button class="ut-btn" id="ut-btn-item"  data-menu="2"><span class="ut-btn-icon">*</span>ITEM</button>
+        <button class="ut-btn" id="ut-btn-mercy" data-menu="3"><span class="ut-btn-icon">*</span>MERCY</button>
       </div>
 
-      <!-- Attack accuracy meter (shown during FIGHT) -->
+      <!-- FIGHT panel — centered color gradient accuracy bar -->
       <div id="ut-fight-panel" style="display:none" class="ut-attack-box">
-        <div style="font-size:12px;margin-bottom:8px;letter-spacing:1px">STOP THE SLIDER FOR ACCURACY!</div>
-        <div class="ut-acc-track" id="ut-acc-track">
-          <div class="ut-acc-zone" id="ut-acc-zone"></div>
-          <div class="ut-acc-slider" id="ut-acc-slider"></div>
+        <div class="ut-attack-title">STOP THE MARKER!</div>
+        <div class="ut-acc-outer" id="ut-acc-outer">
+          <div class="ut-acc-track-fill"></div>
+          <div class="ut-acc-center-line"></div>
+          <div class="ut-acc-slider" id="ut-acc-slider" style="left:0%"></div>
         </div>
-        <div style="font-size:11px;color:#aaa" id="ut-acc-pct">0%</div>
-        <button class="ut-btn" id="ut-acc-stop" onclick="utStopSlider()" style="margin-top:8px;width:100%;justify-content:center">▶ ATTACK!</button>
-        <button class="ut-btn" onclick="utShowMenu()" style="margin-top:5px;width:100%;justify-content:center;border-color:#555;color:#555">← BACK</button>
+        <div class="ut-dmg-preview" id="ut-dmg-preview">—</div>
+        <button class="ut-px-btn" id="ut-acc-stop" style="margin-top:10px;width:100%">ATTACK</button>
+        <button class="ut-px-btn" onclick="utShowMenu()" style="margin-top:4px;width:100%;border-color:#333;color:#555">BACK</button>
       </div>
 
       <!-- ACT submenu -->
-      <div id="ut-act-panel" style="display:none;width:100%;max-width:500px">
+      <div id="ut-act-panel" style="display:none;width:100%;max-width:480px">
         <div class="ut-acts" id="ut-acts-list"></div>
-        <button class="ut-btn" onclick="utShowMenu()" style="margin-top:8px;justify-content:center">← BACK</button>
+        <button class="ut-px-btn" onclick="utShowMenu()" style="margin-top:6px;width:100%">BACK</button>
       </div>
 
       <!-- ITEM submenu -->
-      <div id="ut-item-panel" style="display:none;width:100%;max-width:500px">
+      <div id="ut-item-panel" style="display:none;width:100%;max-width:480px">
         <div id="ut-item-list"></div>
-        <button class="ut-btn" onclick="utShowMenu()" style="margin-top:8px;justify-content:center">← BACK</button>
+        <button class="ut-px-btn" onclick="utShowMenu()" style="margin-top:6px;width:100%">BACK</button>
       </div>
     </div>
 
-    <!-- Right sidebar: stats -->
+    <!-- Stats sidebar -->
     <div class="ut-right">
       <div class="ut-right-inner">
         <div class="ut-section">STATS</div>
@@ -1613,12 +1923,12 @@ connect();
         <div class="ut-stat-row"><span>XP</span><span class="ut-stat-val" id="ut-xp">0</span></div>
         <div class="ut-stat-row"><span>KILLS</span><span class="ut-stat-val" id="ut-kills">0</span></div>
         <div class="ut-gold" id="ut-gold" style="margin:8px 0">G: 0</div>
-        <div class="ut-section">EQUIPMENT</div>
-        <div style="font-size:10px;font-family:'Courier New',monospace;color:#aaa" id="ut-equip">None</div>
-        <div class="ut-section">INVENTORY</div>
-        <div id="ut-inv" style="font-size:10px;color:#666;font-family:'Courier New',monospace">Empty</div>
-        <div class="ut-section">BATTLE LOG</div>
-        <div id="ut-log" style="font-family:'Courier New',monospace;font-size:10px;color:#aaa;line-height:1.7"></div>
+        <div class="ut-section">EQUIP</div>
+        <div style="font-size:7px;font-family:var(--ut-font);color:#aaa;line-height:2" id="ut-equip">None</div>
+        <div class="ut-section">ITEMS</div>
+        <div id="ut-inv" style="font-size:7px;color:#555;font-family:var(--ut-font)">Empty</div>
+        <div class="ut-section">LOG</div>
+        <div id="ut-log" style="font-family:var(--ut-font);font-size:7px;color:#aaa;line-height:2;overflow-y:auto;max-height:200px"></div>
       </div>
     </div>
   </div>
@@ -1626,65 +1936,67 @@ connect();
 
 <!-- UNDERTALE DODGE OVERLAY -->
 <div class="ut-dodge-overlay" id="ut-dodge-overlay">
-  <div class="ut-dodge-title" id="ut-dodge-title">DODGE THE ATTACK!</div>
+  <div class="ut-dodge-title" id="ut-dodge-title">DODGE!</div>
   <div class="ut-soul-arena" id="ut-soul-arena">
-    <div class="ut-soul" id="ut-soul">❤️</div>
+    <div class="ut-soul" id="ut-soul"></div>
   </div>
-  <div class="ut-dodge-hp" id="ut-dodge-hp-text">HP: 20/20</div>
-  <div class="ut-dodge-hp-bar"><div class="ut-dodge-hp-fill" id="ut-dodge-hp-fill" style="width:100%"></div></div>
-  <div style="font-family:'Courier New',monospace;font-size:11px;color:#aaa;margin-top:6px">Arrow keys / WASD to dodge</div>
+  <div class="ut-dodge-hp-bar-wrap">
+    <span class="ut-dodge-hp-label" id="ut-dodge-hp-text">HP 20</span>
+    <div class="ut-dodge-hp-bar"><div class="ut-dodge-hp-fill" id="ut-dodge-hp-fill" style="width:100%"></div></div>
+  </div>
+  <div class="ut-dodge-hint">ARROW KEYS / WASD TO DODGE</div>
 </div>
 
 <!-- UNDERTALE SHOP MODAL -->
 <div class="mbg" id="ut-shop-modal">
-  <div class="mbox" style="background:#000;border:2px solid #fff;font-family:'Courier New',monospace;max-width:500px;text-align:left">
-    <h2 style="font-family:'Courier New',monospace;color:#fff;letter-spacing:2px">* SHOP</h2>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+  <div class="mbox" style="background:#000;border:3px solid #fff;font-family:var(--ut-font);max-width:480px;text-align:left;border-radius:0">
+    <div style="font-size:10px;color:#fff;margin-bottom:12px;letter-spacing:1px">* SHOP</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
       <span class="ut-gold" id="ut-shop-gold">G: 0</span>
-      <span style="color:#aaa;font-size:10px">|</span>
-      <span style="font-size:11px;color:#aaa">Convert chips:</span>
-      <input type="number" id="ut-convert-chips" min="1" class="ut-inp" placeholder="chips" style="width:60px">
-      <button class="ut-btn" id="ut-btn-convert" style="padding:5px 10px;font-size:11px">Convert (×5G)</button>
+      <span style="font-size:7px;color:#555">CONVERT CHIPS:</span>
+      <input type="number" id="ut-convert-chips" min="1" class="ut-inp" placeholder="chips">
+      <button class="ut-px-btn" id="ut-btn-convert">x5G</button>
     </div>
     <div id="ut-shop-list"></div>
-    <button class="btn btn-ghost btn-sm" id="ut-btn-shop-close" style="margin-top:12px;font-family:'Courier New',monospace">CLOSE</button>
+    <button class="ut-px-btn" id="ut-btn-shop-close" style="margin-top:10px;width:100%">CLOSE</button>
   </div>
 </div>
 
 <!-- UNDERTALE PvP MODAL -->
 <div class="mbg" id="ut-pvp-modal">
-  <div class="mbox" style="background:#000;border:2px solid #fff;font-family:'Courier New',monospace;max-width:500px;text-align:left">
-    <h2 style="font-family:'Courier New',monospace;color:#fff;letter-spacing:2px">⚔️ PvP BATTLE</h2>
+  <div class="mbox" style="background:#000;border:3px solid #fff;font-family:var(--ut-font);max-width:480px;text-align:left;border-radius:0">
+    <div style="font-size:10px;color:#fff;margin-bottom:12px">* PvP BATTLE</div>
     <div id="ut-pvp-content">
-      <div style="font-size:11px;color:#aaa;margin-bottom:10px">Challenge an online player to a battle.</div>
-      <div style="display:flex;gap:6px;margin-bottom:10px">
-        <input type="text" id="ut-pvp-target" placeholder="their username" class="ut-inp" style="flex:1">
-        <button class="ut-btn" id="ut-btn-challenge" style="padding:5px 12px">CHALLENGE</button>
+      <div style="font-size:7px;color:#aaa;margin-bottom:10px;line-height:2">CHALLENGE AN ONLINE PLAYER.</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <input type="text" id="ut-pvp-target" placeholder="username" class="ut-inp" style="flex:1">
+        <button class="ut-px-btn" id="ut-btn-challenge">CHALLENGE</button>
       </div>
-      <div id="ut-pvp-status" style="font-size:11px;color:#ff0;min-height:20px"></div>
-      <!-- Active PvP battle UI (shown during battle) -->
+      <div id="ut-pvp-status" style="font-size:8px;color:#ff0;min-height:18px"></div>
       <div id="ut-pvp-battle" style="display:none">
         <div class="ut-pvp-hp-row">
           <div><span id="ut-pvp-p1name">P1</span>: <span id="ut-pvp-p1hp" style="color:#ff0">?</span></div>
           <div><span id="ut-pvp-p2name">P2</span>: <span id="ut-pvp-p2hp" style="color:#ff0">?</span></div>
         </div>
-        <div id="ut-pvp-log" style="font-size:10px;color:#aaa;height:80px;overflow-y:auto;margin-bottom:10px;border:1px solid #333;padding:6px;"></div>
-        <!-- P1 attack selection -->
+        <div id="ut-pvp-log" style="font-size:7px;color:#aaa;height:70px;overflow-y:auto;margin-bottom:10px;border:2px solid #333;padding:5px;line-height:2"></div>
         <div id="ut-pvp-attack-panel" style="display:none">
-          <div style="font-size:11px;color:#aaa;margin-bottom:6px">Choose your attack pattern:</div>
-          <div style="display:flex;flex-wrap:wrap;gap:5px" id="ut-pvp-attack-btns"></div>
+          <div style="font-size:7px;color:#aaa;margin-bottom:6px;line-height:2">CHOOSE ATTACK:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px" id="ut-pvp-attack-btns"></div>
           <div style="margin-top:8px">
-            <div class="ut-acc-label">AIM (stop the bar):</div>
-            <div class="ut-acc-track" id="ut-pvp-acc-track">
-              <div class="ut-acc-slider" id="ut-pvp-acc-slider"></div>
+            <div class="ut-acc-label">AIM:</div>
+            <div class="ut-acc-outer" id="ut-pvp-acc-outer" style="margin:6px 0">
+              <div class="ut-acc-track-fill"></div>
+              <div class="ut-acc-center-line"></div>
+              <div class="ut-acc-slider" id="ut-pvp-acc-slider" style="left:0%"></div>
             </div>
-            <button class="ut-btn" id="ut-pvp-acc-stop" style="margin-top:6px;width:100%;justify-content:center">▶ SEND ATTACK</button>
+            <div class="ut-dmg-preview" id="ut-pvp-dmg-preview">—</div>
+            <button class="ut-px-btn" id="ut-pvp-acc-stop" style="margin-top:6px;width:100%">ATTACK</button>
           </div>
         </div>
-        <div id="ut-pvp-wait" style="display:none;font-size:11px;color:#aaa">Waiting for opponent to attack…</div>
+        <div id="ut-pvp-wait" style="display:none;font-size:8px;color:#aaa;line-height:2">WAITING FOR OPPONENT...</div>
       </div>
     </div>
-    <button class="btn btn-ghost btn-sm" id="ut-btn-pvp-close" style="margin-top:12px;font-family:'Courier New',monospace">CLOSE</button>
+    <button class="ut-px-btn" id="ut-btn-pvp-close" style="margin-top:10px;width:100%">CLOSE</button>
   </div>
 </div>
 
@@ -1820,21 +2132,8 @@ window.handle = function(msg) {
   _origHandle(msg);
 };
 
-// ── Lobby tab extension ────────────────────────────────────
-const _origSwitchLTab = switchLTab;
-window.switchLTab = function(t) {
-  // Handle the ut tab separately
-  ['servers','chat','friends','ut'].forEach(n=>{
-    const tab=Q(`#ltab-${n}`); if(tab) tab.className='tab'+(t===n?' active':'');
-    const pane=Q(`#lpane-${n}`); if(pane){
-      if(n==='chat') pane.style.display=t===n?'flex':'none';
-      else pane.style.display=t===n?'':'none';
-    }
-  });
-  if(t==='friends'){ send({type:'getFriends'}); send({type:'getOnline'}); }
-  if(t==='chat') setTimeout(()=>Q('#gchat-lobby-inp')?.focus(),50);
-  if(t==='ut') Q('#ltab-ut').textContent='⚔️ Battle';
-};
+// ── Lobby tab extension — 'ut' tab removed, Battle is now its own panel ──
+// switchLTab only handles servers/chat/friends now
 
 // ── Enter/leave battle ─────────────────────────────────────
 function enterBattle() {
@@ -1886,19 +2185,24 @@ function renderUtState() {
 
   // Enemy
   if(enemy) {
-    Q('#ut-enemy-icon').textContent = enemy.icon||'?';
+    drawSprite('ut-sprite-canvas', enemy.id, !!enemy.isBoss);
     Q('#ut-enemy-name').textContent = enemy.name;
     Q('#ut-enemy-desc').textContent = enemy.desc||'';
     Q('#ut-boss-label').style.display = enemy.isBoss ? '' : 'none';
     const pct = Math.max(0,(enemy.hp/enemy.maxHp)*100);
     Q('#ut-enemy-hp-fill').style.width = pct+'%';
     Q('#ut-enemy-hp-fill').className = 'ut-hp-fill'+(enemy.isBoss?' boss':'');
-    Q('#ut-enemy-hp-text').textContent = `HP: ${enemy.hp}/${enemy.maxHp}`;
+    Q('#ut-enemy-hp-text').textContent = `HP: ${enemy.hp} / ${enemy.maxHp}`;
     if(enemy.flavorTexts?.length) {
       const txt = enemy.flavorTexts[Math.floor(Math.random()*enemy.flavorTexts.length)];
       utDialog('* '+txt);
     }
   }
+
+  // Update lobby mini-stats
+  const lobbyLv = Q('#ut-lobby-lv'); if(lobbyLv) lobbyLv.textContent = `LV ${stats.level}`;
+  const lobbyHp = Q('#ut-lobby-hp'); if(lobbyHp) lobbyHp.textContent = `HP ${stats.hp}/${stats.maxHp}`;
+  const lobbyK  = Q('#ut-lobby-kills'); if(lobbyK) lobbyK.textContent = `Kills: ${stats.kills||0}`;
 
   // Phase handling
   if(utState.battlePhase === 'dodging' && utState.attackPattern) {
@@ -1926,14 +2230,17 @@ function utLog(msg) {
 
 // ── Menu navigation ────────────────────────────────────────
 function utShowMenu() {
+  utCurrentPanel = 'menu';
   Q('#ut-main-menu').style.display = '';
   Q('#ut-fight-panel').style.display = 'none';
   Q('#ut-act-panel').style.display = 'none';
   Q('#ut-item-panel').style.display = 'none';
   stopSlider();
+  utUpdateMenuSelection();
 }
 
 function utShowFight() {
+  utCurrentPanel = 'fight';
   Q('#ut-main-menu').style.display = 'none';
   Q('#ut-fight-panel').style.display = '';
   Q('#ut-act-panel').style.display = 'none';
@@ -1943,6 +2250,8 @@ function utShowFight() {
 
 function utShowActs() {
   if(!utState?.enemy) return;
+  utCurrentPanel = 'act';
+  utActIdx = 0;
   Q('#ut-main-menu').style.display = 'none';
   Q('#ut-act-panel').style.display = '';
   Q('#ut-fight-panel').style.display = 'none';
@@ -1953,7 +2262,7 @@ function utShowActs() {
   if(utState.enemy._spareable) {
     const spare = document.createElement('button');
     spare.className='ut-act-btn';
-    spare.textContent='🕊️ SPARE (ready!)';
+    spare.textContent='* SPARE (ready!)';
     spare.onclick = ()=>{ send({type:'utSpare'}); utShowMenu(); };
     actsList.appendChild(spare);
   }
@@ -1964,9 +2273,12 @@ function utShowActs() {
     btn.onclick=()=>{ send({type:'utAct',act}); utShowMenu(); };
     actsList.appendChild(btn);
   });
+  utUpdateActSelection();
 }
 
 function utShowItems() {
+  utCurrentPanel = 'item';
+  utItemIdx = 0;
   Q('#ut-main-menu').style.display = 'none';
   Q('#ut-item-panel').style.display = '';
   Q('#ut-fight-panel').style.display = 'none';
@@ -1974,82 +2286,236 @@ function utShowItems() {
   const list = Q('#ut-item-list');
   list.innerHTML = '';
   const inv = utState?.stats?.inventory||[];
-  if(!inv.length) { list.innerHTML='<div style="font-family:Courier New;font-size:11px;color:#666">Inventory empty.</div>'; return; }
+  if(!inv.length) { list.innerHTML='<div style="font-family:var(--ut-font);font-size:8px;color:#666;padding:8px">* (Nothing)</div>'; return; }
   inv.forEach((id,i)=>{
-    const it=UT_ITEMS[id]||{icon:'?',name:id,desc:''};
+    const it=UT_ITEMS[id]||{name:id,desc:''};
     const d=document.createElement('div'); d.className='ut-inv-item';
-    d.innerHTML=`${it.icon} ${it.name} <span style="color:#888;font-size:10px">${it.desc||''}</span>`;
+    d.innerHTML=`${it.name}<span style="color:#555;font-size:7px">${it.desc||''}</span>`;
     d.onclick=()=>{ send({type:'utUseItem',itemId:id,index:i}); utShowMenu(); };
     list.appendChild(d);
   });
+  utUpdateItemSelection();
 }
 
 function utMercy() {
   if(!utState?.enemy) return;
   if(utState.enemy._spareable) { send({type:'utSpare'}); }
-  else { utDialog('* ...\n* (The enemy isn\'t ready to be spared yet. Try ACT first.)'); }
+  else { utDialog('* ...\n* (Use ACT first to make them\n  willing to be spared.)'); }
 }
 
 function utUseItem(id) {
   send({type:'utUseItem',itemId:id});
 }
 
-// ── Accuracy slider ────────────────────────────────────────
+// ── Pixel sprite renderer ──────────────────────────────────
+// Each enemy has a unique pixel art sprite drawn on canvas
+const SPRITES = {
+  froggit:    [[0,1,0,1,0],[1,1,1,1,1],[1,0,1,0,1],[0,1,1,1,0],[1,0,0,0,1]],
+  whimsun:    [[0,1,0,1,0],[0,1,1,1,0],[1,1,1,1,1],[0,1,1,1,0],[1,0,0,0,1]],
+  moldsmal:   [[0,1,1,1,0],[1,1,1,1,1],[1,1,0,1,1],[1,1,1,1,1],[0,1,1,1,0]],
+  loox:       [[0,1,1,1,0],[1,0,1,0,1],[1,1,1,1,1],[0,1,0,1,0],[0,1,1,1,0]],
+  vegetoid:   [[1,1,0,1,1],[0,1,1,1,0],[0,1,1,1,0],[1,1,1,1,1],[0,0,1,0,0]],
+  snowdrake:  [[1,0,0,0,1],[1,1,0,1,1],[0,1,1,1,0],[0,0,1,0,0],[0,1,0,1,0]],
+  chilldrake: [[1,1,0,1,1],[1,1,1,1,1],[0,1,1,1,0],[0,1,0,1,0],[0,1,1,1,0]],
+  icecap:     [[1,1,1,1,1],[0,1,1,1,0],[1,0,1,0,1],[0,1,1,1,0],[1,0,0,0,1]],
+  gyftrot:    [[0,1,0,1,0],[1,1,1,1,1],[0,1,1,1,0],[1,1,1,1,1],[1,0,0,0,1]],
+  doggo:      [[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0],[0,1,0,1,0],[0,1,1,1,0]],
+  lesser_dog: [[1,1,0,1,1],[1,1,1,1,1],[0,0,1,0,0],[0,1,1,1,0],[1,1,0,1,1]],
+  greater_dog:[[1,0,1,0,1],[1,1,1,1,1],[0,1,1,1,0],[1,1,1,1,1],[1,0,0,0,1]],
+  royal_guard1:[[1,1,1,1,1],[1,0,1,0,1],[1,1,1,1,1],[0,1,0,1,0],[1,0,1,0,1]],
+  royal_guard2:[[1,1,1,1,1],[0,1,1,1,0],[1,1,0,1,1],[0,1,1,1,0],[1,1,1,1,1]],
+  vulkin:     [[0,1,1,1,0],[1,1,1,1,1],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0]],
+  tsunderplane:[[1,0,0,0,1],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0],[1,0,1,0,1]],
+  mad_dummy:  [[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]],
+  knight_knight:[[1,1,1,1,1],[1,1,0,1,1],[1,0,0,0,1],[1,1,0,1,1],[0,1,1,1,0]],
+  madjick:    [[0,1,1,1,0],[1,1,0,1,1],[0,1,1,1,0],[1,0,1,0,1],[0,1,0,1,0]],
+  final_froggit:[[1,0,1,0,1],[0,1,1,1,0],[1,1,1,1,1],[0,1,0,1,0],[1,0,1,0,1]],
+  // Bosses — bigger feel via color
+  toriel:     [[0,1,1,1,0],[1,1,1,1,1],[1,0,1,0,1],[1,1,1,1,1],[0,1,0,1,0]],
+  papyrus:    [[1,0,1,0,1],[1,1,1,1,1],[0,1,1,1,0],[1,0,1,0,1],[1,1,1,1,1]],
+  undyne:     [[0,1,0,1,0],[1,1,1,1,1],[1,1,1,1,1],[0,1,1,1,0],[1,0,0,0,1]],
+  mettaton:   [[1,1,1,1,1],[1,1,1,1,1],[1,1,0,1,1],[1,1,1,1,1],[0,1,1,1,0]],
+  asgore:     [[1,0,1,0,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,0,1,1],[1,0,1,0,1]],
+};
+
+const SPRITE_COLORS = {
+  froggit:'#4a8c4a',whimsun:'#e0a0ff',moldsmal:'#40a040',loox:'#ff4040',
+  vegetoid:'#40c040',snowdrake:'#80c0ff',chilldrake:'#a0e0ff',icecap:'#c0e0ff',
+  gyftrot:'#c08040',doggo:'#c0a060',lesser_dog:'#e0c080',greater_dog:'#ffd080',
+  royal_guard1:'#8080c0',royal_guard2:'#a0a0e0',vulkin:'#ff6020',tsunderplane:'#a0a0a0',
+  mad_dummy:'#808080',knight_knight:'#8080ff',madjick:'#c040c0',final_froggit:'#60c060',
+  toriel:'#c06060',papyrus:'#f0f0a0',undyne:'#4040c0',mettaton:'#f0f0f0',asgore:'#c0a020',
+};
+
+function drawSprite(canvasId, enemyId, isBoss) {
+  const canvas = document.getElementById(canvasId); if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const size = isBoss ? 96 : 80;
+  canvas.width = size; canvas.height = size;
+  ctx.clearRect(0, 0, size, size);
+  const pattern = SPRITES[enemyId] || SPRITES.froggit;
+  const color = SPRITE_COLORS[enemyId] || '#ffffff';
+  const pixelSize = isBoss ? Math.floor(size / 5) : Math.floor(size / 5);
+  const rows = pattern.length, cols = pattern[0].length;
+  const offX = Math.floor((size - cols * pixelSize) / 2);
+  const offY = Math.floor((size - rows * pixelSize) / 2);
+  // Shadow/glow for bosses
+  if(isBoss) { ctx.shadowColor = color; ctx.shadowBlur = 8; }
+  for(let r = 0; r < rows; r++) {
+    for(let c = 0; c < cols; c++) {
+      if(pattern[r][c]) {
+        ctx.fillStyle = color;
+        ctx.fillRect(offX + c * pixelSize, offY + r * pixelSize, pixelSize, pixelSize);
+        // Pixel highlight
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(offX + c * pixelSize, offY + r * pixelSize, 2, 2);
+      }
+    }
+  }
+  ctx.shadowBlur = 0;
+}
+
+// ── Keyboard navigation for battle menu ───────────────────
+let utMenuIdx = 0; // 0=FIGHT 1=ACT 2=ITEM 3=MERCY
+let utCurrentPanel = 'menu'; // 'menu'|'fight'|'act'|'item'
+let utActIdx = 0;
+let utItemIdx = 0;
+
+function utUpdateMenuSelection() {
+  QQ('#ut-main-menu .ut-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === utMenuIdx);
+  });
+}
+
+function utUpdateActSelection() {
+  QQ('#ut-acts-list .ut-act-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === utActIdx);
+  });
+}
+
+function utUpdateItemSelection() {
+  QQ('#ut-item-list .ut-inv-item').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === utItemIdx);
+  });
+}
+
+document.addEventListener('keydown', e => {
+  // Only handle UT keys when in the battle screen
+  if(!Q('#sc-ut.active')) return;
+
+  // Dodge overlay takes priority
+  if(Q('#ut-dodge-overlay.open')) {
+    dodgeKeys[e.key] = true;
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
+    return;
+  }
+
+  // Fight slider — space to stop
+  if(utCurrentPanel === 'fight') {
+    if(e.key === ' ' || e.key === 'z' || e.key === 'Z') { e.preventDefault(); utStopSlider(); }
+    if(e.key === 'Escape' || e.key === 'x' || e.key === 'X') { e.preventDefault(); utShowMenu(); }
+    return;
+  }
+
+  // Main menu navigation
+  if(utCurrentPanel === 'menu') {
+    if(e.key === 'ArrowRight' || e.key === 'd') { utMenuIdx = (utMenuIdx+1)%4; utUpdateMenuSelection(); e.preventDefault(); }
+    if(e.key === 'ArrowLeft'  || e.key === 'a') { utMenuIdx = (utMenuIdx+3)%4; utUpdateMenuSelection(); e.preventDefault(); }
+    if(e.key === 'ArrowDown'  || e.key === 's') { utMenuIdx = (utMenuIdx+2)%4; utUpdateMenuSelection(); e.preventDefault(); }
+    if(e.key === 'ArrowUp'    || e.key === 'w') { utMenuIdx = (utMenuIdx+2)%4; utUpdateMenuSelection(); e.preventDefault(); }
+    if(e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
+      e.preventDefault();
+      if(utMenuIdx===0) utShowFight();
+      else if(utMenuIdx===1) utShowActs();
+      else if(utMenuIdx===2) utShowItems();
+      else if(utMenuIdx===3) utMercy();
+    }
+    return;
+  }
+
+  // ACT submenu navigation
+  if(utCurrentPanel === 'act') {
+    const acts = QQ('#ut-acts-list .ut-act-btn');
+    if(e.key === 'ArrowDown' || e.key === 's') { utActIdx = Math.min(utActIdx+1, acts.length-1); utUpdateActSelection(); e.preventDefault(); }
+    if(e.key === 'ArrowUp'   || e.key === 'w') { utActIdx = Math.max(utActIdx-1, 0); utUpdateActSelection(); e.preventDefault(); }
+    if(e.key === 'z' || e.key === 'Z' || e.key === 'Enter') { e.preventDefault(); acts[utActIdx]?.click(); }
+    if(e.key === 'Escape' || e.key === 'x' || e.key === 'X') { e.preventDefault(); utShowMenu(); }
+    return;
+  }
+
+  // ITEM submenu navigation
+  if(utCurrentPanel === 'item') {
+    const items = QQ('#ut-item-list .ut-inv-item');
+    if(e.key === 'ArrowDown' || e.key === 's') { utItemIdx = Math.min(utItemIdx+1, items.length-1); utUpdateItemSelection(); e.preventDefault(); }
+    if(e.key === 'ArrowUp'   || e.key === 'w') { utItemIdx = Math.max(utItemIdx-1, 0); utUpdateItemSelection(); e.preventDefault(); }
+    if(e.key === 'z' || e.key === 'Z' || e.key === 'Enter') { e.preventDefault(); items[utItemIdx]?.click(); }
+    if(e.key === 'Escape' || e.key === 'x' || e.key === 'X') { e.preventDefault(); utShowMenu(); }
+    return;
+  }
+});
+
+document.addEventListener('keyup', e => { dodgeKeys[e.key] = false; });
+
+// ── Accuracy slider — centered gradient, shows damage ──────
+let sliderAnim = null;
+let sliderPos = 0;
+let sliderDir = 1;
+let sliderSpeed = 1.4;
+let sliderStopped = false;
+let currentEnemyAtk = 10; // used to calc damage preview
+
+function calcPreviewDamage(pos) {
+  // pos 0–100, centre=50 is best
+  const dist = Math.abs(pos - 50); // 0=perfect, 50=worst
+  const acc = Math.max(0, 1 - dist/50);
+  const stats = utState?.stats;
+  if(!stats) return 0;
+  const atkStat = (stats.baseAtk||10) + (UT_ITEMS[stats.weapon]?.attack||0);
+  const defStat = utState?.enemy?.def||0;
+  const base = Math.max(1, atkStat - Math.floor(defStat/2));
+  return Math.max(1, Math.round(base * (0.5 + acc * 0.8)));
+}
+
 function startSlider() {
   stopSlider();
-  sliderPos=0; sliderDir=1; sliderStopped=false;
-  const track=Q('#ut-acc-track');
-  const zone=Q('#ut-acc-zone');
-  const slider=Q('#ut-acc-slider');
-  if(!track||!zone||!slider) return;
-  // Random target zone
-  const zoneStart=20+Math.random()*40;
-  const zoneWidth=10+Math.random()*20;
-  zone.style.left=zoneStart+'%';
-  zone.style.width=zoneWidth+'%';
-  const animate=()=>{
+  sliderPos = 0; sliderDir = 1; sliderStopped = false;
+  const slider = Q('#ut-acc-slider');
+  const preview = Q('#ut-dmg-preview');
+  const animate = () => {
     if(sliderStopped) return;
-    sliderPos+=sliderDir*sliderSpeed;
-    if(sliderPos>=100){sliderPos=100;sliderDir=-1;}
-    if(sliderPos<=0){sliderPos=0;sliderDir=1;}
-    slider.style.left=sliderPos+'%';
-    const pct=Math.round(sliderPos);
-    Q('#ut-acc-pct').textContent=pct+'%';
-    sliderAnim=requestAnimationFrame(animate);
+    sliderPos += sliderDir * sliderSpeed;
+    if(sliderPos >= 100) { sliderPos = 100; sliderDir = -1; }
+    if(sliderPos <= 0)   { sliderPos = 0;   sliderDir =  1; }
+    if(slider) slider.style.left = sliderPos + '%';
+    if(preview) {
+      const dmg = calcPreviewDamage(sliderPos);
+      // Color the preview based on how good it is
+      const dist = Math.abs(sliderPos - 50);
+      const col = dist < 10 ? '#fff' : dist < 25 ? '#ffff00' : dist < 38 ? '#ff8800' : '#ff3300';
+      preview.style.color = col;
+      preview.textContent = dmg + ' DMG';
+    }
+    sliderAnim = requestAnimationFrame(animate);
   };
-  sliderAnim=requestAnimationFrame(animate);
+  sliderAnim = requestAnimationFrame(animate);
 }
 
 function stopSlider() {
-  if(sliderAnim) cancelAnimationFrame(sliderAnim); sliderAnim=null;
+  if(sliderAnim) cancelAnimationFrame(sliderAnim); sliderAnim = null;
 }
 
 function utStopSlider() {
   if(sliderStopped) return;
-  sliderStopped=true; stopSlider();
-  // Calc accuracy based on zone overlap
-  const zone=Q('#ut-acc-zone');
-  const zoneL=parseFloat(zone.style.left)||30;
-  const zoneW=parseFloat(zone.style.width)||15;
-  const zoneR=zoneL+zoneW;
-  let acc=0;
-  if(sliderPos>=zoneL && sliderPos<=zoneR) {
-    // In zone: accuracy based on how centred
-    const centre=zoneL+zoneW/2;
-    const dist=Math.abs(sliderPos-centre)/(zoneW/2);
-    acc=1-dist*0.5; // 0.5–1.0
-  } else {
-    // Out of zone: lower accuracy based on distance
-    const closest=sliderPos<zoneL?zoneL:zoneR;
-    const dist=Math.abs(sliderPos-closest);
-    acc=Math.max(0.05, 0.5-dist*0.02);
-  }
-  Q('#ut-acc-pct').textContent=Math.round(acc*100)+'% accuracy';
-  send({type:'utAttack',accuracy:acc});
+  sliderStopped = true; stopSlider();
+  const dist = Math.abs(sliderPos - 50);
+  const acc = Math.max(0, 1 - dist/50);
+  const dmg = calcPreviewDamage(sliderPos);
+  Q('#ut-dmg-preview').textContent = dmg + ' DMG!';
+  send({ type: 'utAttack', accuracy: acc });
 }
 
 // ── Dodge mechanic ─────────────────────────────────────────
-let soulSpeed = 3.5;
+let soulSpeed = 2.8; // slightly slower so dodging in smaller box is harder
 let arenaW=0, arenaH=0;
 let isPvpDodge=false;
 
@@ -2059,7 +2525,7 @@ function startDodge(pattern, enemyName, isPvp=false) {
   overlay.classList.add('open');
   Q('#ut-dodge-title').textContent = `* ${enemyName} used ${pattern.name}!`;
   const arena=Q('#ut-soul-arena');
-  arenaW=arena.clientWidth||300; arenaH=arena.clientHeight||280;
+  arenaW=arena.clientWidth||220; arenaH=arena.clientHeight||190;
   soulX=arenaW/2; soulY=arenaH/2;
   dodgeDmg=0; dodgeKeys={};
   projectiles=[];
@@ -2137,142 +2603,180 @@ function dodgeLoop() {
   dodgeAnimId=requestAnimationFrame(dodgeLoop);
 }
 
+// ── Pixel projectile factory ───────────────────────────────
+// Draws a unique pixel art sprite on a small canvas for each attack type
+function makeProjectileSprite(type) {
+  const c = document.createElement('canvas');
+  c.width = 12; c.height = 12;
+  c.style.cssText = 'position:absolute;pointer-events:none;image-rendering:pixelated;';
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, 12, 12);
+  const px = (x, y, col) => { ctx.fillStyle = col; ctx.fillRect(x*2, y*2, 2, 2); };
+  switch(type) {
+    case 'bullets': // white diamond
+      px(2,0,'#fff'); px(1,1,'#fff'); px(2,1,'#fff'); px(3,1,'#fff');
+      px(0,2,'#aaa'); px(1,2,'#fff'); px(2,2,'#fff'); px(3,2,'#fff'); px(4,2,'#aaa');
+      px(1,3,'#fff'); px(2,3,'#fff'); px(3,3,'#fff');
+      px(2,4,'#fff');
+      break;
+    case 'rain': // yellow teardrop / bone
+      px(2,0,'#ff0'); px(1,1,'#ff0'); px(2,1,'#ff0'); px(3,1,'#ff0');
+      px(1,2,'#ff0'); px(2,2,'#ff0'); px(3,2,'#ff0');
+      px(2,3,'#ff0'); px(2,4,'#ff0');
+      break;
+    case 'spiral': // purple star
+      px(2,0,'#f0f'); px(2,1,'#f0f');
+      px(0,2,'#f0f'); px(1,2,'#f0f'); px(2,2,'#f0f'); px(3,2,'#f0f'); px(4,2,'#f0f');
+      px(1,1,'#c0c'); px(3,1,'#c0c'); px(1,3,'#c0c'); px(3,3,'#c0c');
+      px(2,3,'#f0f'); px(2,4,'#f0f');
+      break;
+    case 'random': // cyan chaos orb
+      px(1,0,'#0ff'); px(2,0,'#0ff'); px(3,0,'#0ff');
+      px(0,1,'#0ff'); px(1,1,'#fff'); px(2,1,'#fff'); px(3,1,'#fff'); px(4,1,'#0ff');
+      px(0,2,'#0ff'); px(1,2,'#fff'); px(2,2,'#0ff'); px(3,2,'#fff'); px(4,2,'#0ff');
+      px(0,3,'#0ff'); px(1,3,'#fff'); px(2,3,'#fff'); px(3,3,'#fff'); px(4,3,'#0ff');
+      px(1,4,'#0ff'); px(2,4,'#0ff'); px(3,4,'#0ff');
+      break;
+    case 'cross': // orange slash/blade
+      px(0,0,'#f80'); px(1,1,'#f80'); px(2,2,'#f80'); px(3,3,'#f80'); px(4,4,'#f80');
+      px(4,0,'#f80'); px(3,1,'#f80'); px(1,3,'#f80'); px(0,4,'#f80');
+      px(2,1,'#ff0'); px(1,2,'#ff0'); px(2,3,'#ff0'); px(3,2,'#ff0');
+      break;
+    default: // plain white square
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(2, 2, 8, 8);
+  }
+  return c;
+}
+
+function spawnProjectile(arena, x, y, vx, vy, dmg, type) {
+  const el = makeProjectileSprite(type);
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  arena.appendChild(el);
+  const p = { el, vx, vy, damage: dmg, hit: false };
+  projectiles.push(p);
+  const move = () => {
+    if (!el.parentNode) return;
+    const cx = parseFloat(el.style.left) || 0;
+    const cy = parseFloat(el.style.top)  || 0;
+    el.style.left = (cx + p.vx) + 'px';
+    el.style.top  = (cy + p.vy) + 'px';
+    if (cx < -20 || cx > arenaW + 20 || cy < -20 || cy > arenaH + 20) el.remove();
+    else requestAnimationFrame(move);
+  };
+  requestAnimationFrame(move);
+}
+
 function spawnAttackPattern(pattern, arena) {
-  const count=pattern.count||8, speed=(pattern.speed||3)*0.8, dmg=pattern.damage||8;
-  const duration=pattern.duration||4000;
-  switch(pattern.type) {
+  const count = pattern.count || 8;
+  const spd   = (pattern.speed || 3) * 0.85;
+  const dmg   = pattern.damage || 8;
+  const dur   = pattern.duration || 4000;
+  const type  = pattern.type || 'bullets';
+
+  switch (type) {
     case 'bullets':
-      for(let i=0;i<count;i++) {
-        setTimeout(()=>{
-          const el=document.createElement('div'); el.className='ut-projectile';
-          el.style.cssText=`width:10px;height:10px;background:#fff;left:${Math.random()*(arenaW-10)}px;top:-10px;box-shadow:0 0 4px #fff;`;
-          arena.appendChild(el);
-          const vx=(Math.random()-0.5)*speed*2, vy=speed+Math.random()*2;
-          const p={el,vx,vy,damage:dmg,hit:false};
-          projectiles.push(p);
-          const move=()=>{
-            if(!el.parentNode) return;
-            const cy=parseFloat(el.style.top)||0;
-            const cx=parseFloat(el.style.left)||0;
-            el.style.top=(cy+vy)+'px'; el.style.left=(cx+vx)+'px';
-            if(cy>arenaH+20) el.remove(); else requestAnimationFrame(move);
-          };
-          requestAnimationFrame(move);
-        }, i*(duration/count));
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const x = Math.random() * (arenaW - 12);
+          const vx = (Math.random() - 0.5) * spd * 1.8;
+          const vy = spd + Math.random() * 1.5;
+          spawnProjectile(arena, x, -12, vx, vy, dmg, 'bullets');
+        }, i * (dur / count));
       }
       break;
+
     case 'rain':
-      for(let i=0;i<count;i++) {
-        setTimeout(()=>{
-          const el=document.createElement('div'); el.className='ut-projectile';
-          el.style.cssText=`width:8px;height:14px;background:#ff0;border-radius:50%;left:${Math.random()*(arenaW-8)}px;top:-14px;box-shadow:0 0 5px #ff0;`;
-          arena.appendChild(el);
-          const vy=speed+Math.random()*2;
-          const p={el,vx:0,vy,damage:dmg,hit:false};
-          projectiles.push(p);
-          const move=()=>{
-            if(!el.parentNode) return;
-            const cy=parseFloat(el.style.top)||0;
-            el.style.top=(cy+vy)+'px';
-            if(cy>arenaH+20) el.remove(); else requestAnimationFrame(move);
-          };
-          requestAnimationFrame(move);
-        }, i*(duration/count));
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const x = Math.random() * (arenaW - 12);
+          spawnProjectile(arena, x, -12, 0, spd + Math.random() * 1.5, dmg, 'rain');
+        }, i * (dur / count));
       }
       break;
+
     case 'walls':
-      for(let i=0;i<count;i++) {
-        setTimeout(()=>{
-          const fromLeft=i%2===0;
-          const el=document.createElement('div'); el.className='ut-wall';
-          const gap=40+Math.random()*40;
-          const gapY=Math.random()*(arenaH-gap);
-          // Two wall pieces with a gap
-          const w1=document.createElement('div'); w1.className='ut-wall';
-          w1.style.cssText=`position:absolute;background:#fff;width:20px;height:${gapY}px;top:0;${fromLeft?'left:-20px':'right:-20px'};`;
-          const w2=document.createElement('div'); w2.className='ut-wall';
-          w2.style.cssText=`position:absolute;background:#fff;width:20px;height:${arenaH-gapY-gap}px;bottom:0;${fromLeft?'left:-20px':'right:-20px'};`;
-          arena.appendChild(w1); arena.appendChild(w2);
-          const vx=(fromLeft?1:-1)*speed;
-          projectiles.push({el:w1,vx,vy:0,damage:dmg,hit:false});
-          projectiles.push({el:w2,vx,vy:0,damage:dmg,hit:false});
-          const move=()=>{
-            if(!w1.parentNode) return;
-            const cx=parseFloat(w1.style.left||w1.style.right)||0;
-            if(fromLeft){ w1.style.left=(parseFloat(w1.style.left||0)+vx)+'px'; w2.style.left=(parseFloat(w2.style.left||0)+vx)+'px'; }
-            else { w1.style.right=(parseFloat(w1.style.right||0)-vx)+'px'; w2.style.right=(parseFloat(w2.style.right||0)-vx)+'px'; }
-            const pos=parseFloat(fromLeft?w1.style.left:w1.style.right)||0;
-            if(pos>arenaW+30||pos<-30){ w1.remove(); w2.remove(); } else requestAnimationFrame(move);
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const fromLeft = i % 2 === 0;
+          const gap = 36 + Math.random() * 28;
+          const gapY = Math.random() * (arenaH - gap);
+
+          const makeWall = (h, top, bot) => {
+            const w = document.createElement('div');
+            w.style.cssText = `position:absolute;background:#fff;width:16px;height:${h}px;top:${bot?'auto':'0'};bottom:${bot?'0':'auto'};${fromLeft ? 'left:-16px' : 'right:-16px'};image-rendering:pixelated;`;
+            arena.appendChild(w);
+            const vx = (fromLeft ? 1 : -1) * spd;
+            projectiles.push({ el: w, vx, vy: 0, damage: dmg, hit: false });
+            const move = () => {
+              if (!w.parentNode) return;
+              const side = fromLeft ? 'left' : 'right';
+              w.style[side] = (parseFloat(w.style[side] || 0) + vx) + 'px';
+              const pos = parseFloat(w.style[side] || 0);
+              if (pos > arenaW + 30 || pos < -30) w.remove();
+              else requestAnimationFrame(move);
+            };
+            requestAnimationFrame(move);
           };
-          requestAnimationFrame(move);
-        }, i*(duration/count));
+          makeWall(gapY, true, false);
+          makeWall(arenaH - gapY - gap, false, true);
+        }, i * (dur / count));
       }
       break;
-    case 'spiral':
-      let angle=0;
-      for(let i=0;i<count;i++) {
-        setTimeout(()=>{
-          const el=document.createElement('div'); el.className='ut-projectile';
-          el.style.cssText=`width:9px;height:9px;background:#f0f;border-radius:50%;left:${arenaW/2}px;top:${arenaH/2}px;box-shadow:0 0 4px #f0f;`;
-          arena.appendChild(el);
-          const a=angle+i*(Math.PI*2/count);
-          const vx=Math.cos(a)*speed, vy=Math.sin(a)*speed;
-          const p={el,vx,vy,damage:dmg,hit:false};
-          projectiles.push(p);
-          const move=()=>{
-            if(!el.parentNode) return;
-            const cx=parseFloat(el.style.left)||0, cy=parseFloat(el.style.top)||0;
-            el.style.left=(cx+p.vx)+'px'; el.style.top=(cy+p.vy)+'px';
-            if(cx<-20||cx>arenaW+20||cy<-20||cy>arenaH+20) el.remove();
-            else requestAnimationFrame(move);
-          };
-          requestAnimationFrame(move);
-          angle+=0.3;
-        }, i*(duration/(count*1.5)));
+
+    case 'spiral': {
+      let angle = 0;
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const a = angle + i * (Math.PI * 2 / Math.min(count, 8));
+          const vx = Math.cos(a) * spd;
+          const vy = Math.sin(a) * spd;
+          spawnProjectile(arena, arenaW / 2 - 6, arenaH / 2 - 6, vx, vy, dmg, 'spiral');
+          angle += 0.25;
+        }, i * (dur / (count * 1.4)));
       }
       break;
+    }
+
     case 'cross':
-      for(let i=0;i<count;i++) {
-        setTimeout(()=>{
-          // Horizontal laser
-          const el=document.createElement('div'); el.className='ut-laser';
-          const y=20+Math.random()*(arenaH-40);
-          el.style.cssText=`position:absolute;height:12px;width:0px;top:${y}px;left:0;background:rgba(255,255,0,0.9);box-shadow:0 0 8px #ff0;`;
+      // Sweeping horizontal laser bars
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          const y = 16 + Math.random() * (arenaH - 32);
+          el.style.cssText = `position:absolute;height:10px;width:0;top:${y}px;left:0;background:#ff0;box-shadow:0 0 6px #ff0;image-rendering:pixelated;`;
           arena.appendChild(el);
-          let w=0;
-          const expand=()=>{
-            w+=speed*4; el.style.width=Math.min(w,arenaW)+'px';
-            const p={el,vx:0,vy:0,damage:dmg,hit:false};
-            if(!projectiles.find(x=>x.el===el)) projectiles.push(p);
-            if(w<arenaW) requestAnimationFrame(expand);
-            else setTimeout(()=>{ if(el.parentNode) el.remove(); },500);
+          let w = 0;
+          const p = { el, vx: 0, vy: 0, damage: dmg, hit: false };
+          projectiles.push(p);
+          const expand = () => {
+            if (!el.parentNode) return;
+            w += spd * 5;
+            el.style.width = Math.min(w, arenaW) + 'px';
+            if (w < arenaW) requestAnimationFrame(expand);
+            else setTimeout(() => { if (el.parentNode) el.remove(); }, 400);
           };
-          requestAnimationFrame(expand);
-        }, i*(duration/count));
+          // Brief warning flash before expanding
+          el.style.background = '#f80';
+          setTimeout(() => { el.style.background = '#ff0'; requestAnimationFrame(expand); }, 300);
+        }, i * (dur / count));
       }
       break;
+
     case 'random':
     default:
-      for(let i=0;i<count;i++) {
-        setTimeout(()=>{
-          const el=document.createElement('div'); el.className='ut-projectile';
-          const cx=Math.random()*arenaW, cy=Math.random()*arenaH;
-          el.style.cssText=`width:11px;height:11px;background:#0ff;border-radius:50%;left:${cx}px;top:${cy}px;box-shadow:0 0 4px #0ff;`;
-          arena.appendChild(el);
-          const ang=Math.random()*Math.PI*2;
-          const vx=Math.cos(ang)*speed, vy=Math.sin(ang)*speed;
-          const p={el,vx,vy,damage:dmg,hit:false};
-          projectiles.push(p);
-          const move=()=>{
-            if(!el.parentNode) return;
-            const x=parseFloat(el.style.left)||0, y2=parseFloat(el.style.top)||0;
-            el.style.left=(x+p.vx)+'px'; el.style.top=(y2+p.vy)+'px';
-            if(x<-20||x>arenaW+20||y2<-20||y2>arenaH+20) el.remove();
-            else requestAnimationFrame(move);
-          };
-          requestAnimationFrame(move);
-        }, i*(duration/count));
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const cx = Math.random() * (arenaW - 12);
+          const cy = Math.random() * (arenaH - 12);
+          const ang = Math.random() * Math.PI * 2;
+          const vx = Math.cos(ang) * spd;
+          const vy = Math.sin(ang) * spd;
+          spawnProjectile(arena, cx, cy, vx, vy, dmg, 'random');
+        }, i * (dur / count));
       }
+      break;
   }
 }
 
@@ -2334,24 +2838,18 @@ function stopPvpSlider() {
   if(pvpSliderAnim) cancelAnimationFrame(pvpSliderAnim); pvpSliderAnim=null;
 }
 
-// ── Key handlers ───────────────────────────────────────────
-document.addEventListener('keydown',e=>{
-  // Soul dodge
-  if(Q('#ut-dodge-overlay.open')) {
-    dodgeKeys[e.key]=true;
-    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
-    return;
-  }
-});
-document.addEventListener('keyup',e=>{ dodgeKeys[e.key]=false; });
-
-// ── Event listeners ────────────────────────────────────────
+// ── Event listeners for UT ──────────────────────────────────
 Q('#btn-enter-battle').addEventListener('click', enterBattle);
 Q('#ut-btn-leave-battle').addEventListener('click', leaveBattle);
 Q('#ut-btn-shop').addEventListener('click', openUtShop);
 Q('#ut-btn-shop-close').addEventListener('click',()=>Q('#ut-shop-modal').classList.remove('open'));
 Q('#ut-btn-pvp').addEventListener('click',()=>Q('#ut-pvp-modal').classList.add('open'));
 Q('#ut-btn-pvp-close').addEventListener('click',()=>{ Q('#ut-pvp-modal').classList.remove('open'); stopPvpSlider(); });
+Q('#ut-btn-fight').addEventListener('click', utShowFight);
+Q('#ut-btn-act').addEventListener('click', utShowActs);
+Q('#ut-btn-item').addEventListener('click', utShowItems);
+Q('#ut-btn-mercy').addEventListener('click', utMercy);
+Q('#ut-acc-stop').addEventListener('click', utStopSlider);
 
 Q('#ut-btn-convert').addEventListener('click',()=>{
   const chips=parseInt(Q('#ut-convert-chips').value)||0;
@@ -2367,34 +2865,26 @@ Q('#ut-btn-challenge').addEventListener('click',()=>{
 });
 
 Q('#ut-pvp-acc-stop').addEventListener('click',()=>{
-  if(pvpSliderStopped||!pvpSelectedPattern) { Q('#ut-pvp-status').textContent='Select an attack pattern first!'; return; }
+  if(pvpSliderStopped||!pvpSelectedPattern) { Q('#ut-pvp-status').textContent='SELECT AN ATTACK FIRST'; return; }
   pvpSliderStopped=true; stopPvpSlider();
-  const acc=pvpSliderPos/100;
+  const dist=Math.abs(pvpSliderPos-50);
+  const acc=Math.max(0,1-dist/50);
   send({type:'utPvpAttack',accuracy:acc,attackName:pvpSelectedPattern.name,attackPattern:pvpSelectedPattern});
 });
 
-// Render challenge list in lobby UT tab
+// Render challenge list in lobby
 function renderUtChallengeList(incoming) {
   const list=Q('#ut-challenge-list'); if(!list) return;
-  const d=document.createElement('div'); d.className='ut-challenge-item';
-  d.innerHTML=`<span>⚔️ ${esc(incoming.from)} challenges you!</span>
-    <div style="display:flex;gap:5px">
-      <button class="ut-btn" style="padding:3px 8px;font-size:10px" onclick="send({type:'utChallengeAccept',challengeId:'${incoming.challengeId}'});this.closest('.ut-challenge-item').remove()">Accept</button>
-      <button class="ut-btn" style="padding:3px 8px;font-size:10px;border-color:#f00;color:#f00" onclick="send({type:'utChallengeDecline',challengeId:'${incoming.challengeId}'});this.closest('.ut-challenge-item').remove()">Decline</button>
+  const d=document.createElement('div');
+  d.style.cssText='font-family:var(--ut-font);font-size:8px;margin-bottom:6px;border:1px solid #555;padding:5px;';
+  d.innerHTML=`<div style="color:#fff;margin-bottom:4px">${esc(incoming.from)} challenges you</div>
+    <div style="display:flex;gap:4px">
+      <button class="ut-px-btn" onclick="send({type:'utChallengeAccept',challengeId:'${incoming.challengeId}'});this.closest('div').parentElement.remove()">ACCEPT</button>
+      <button class="ut-px-btn" style="border-color:#f00;color:#f00" onclick="send({type:'utChallengeDecline',challengeId:'${incoming.challengeId}'});this.closest('div').parentElement.remove()">DECLINE</button>
     </div>`;
   list.innerHTML='';
   list.appendChild(d);
 }
-
-// Patch switchLTab to handle 'ut'
-const _sl2=window.switchLTab;
-window.switchLTab=function(t){
-  _sl2(t);
-  if(t==='ut') Q('#ltab-ut').textContent='⚔️ Battle';
-};
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>
