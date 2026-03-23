@@ -156,7 +156,7 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
   background:linear-gradient(135deg,var(--gold3),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .g-round{font-family:'Special Elite',cursive;color:var(--dim);font-size:10px;letter-spacing:2px;}
 .gbody{flex:1;display:flex;overflow:hidden;min-height:0;}
-.table-outer{flex:1;display:flex;align-items:center;justify-content:center;padding:8px;min-height:0;overflow:hidden;}
+.table-outer{flex:1;display:flex;align-items:center;justify-content:center;padding:8px;min-height:0;overflow:visible;}
 
 /* OVAL FELT */
 .felt-oval{position:relative;border-radius:50%;
@@ -164,7 +164,10 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
   border:5px solid var(--frim);
   box-shadow:0 0 0 2px #152e18,0 0 0 7px #0a1a0c,0 0 0 9px #1e3c20,
     0 0 50px rgba(0,0,0,.96),inset 0 0 60px rgba(0,0,0,.35),
-    inset 0 0 0 12px rgba(14,34,17,.55);flex-shrink:0;}
+    inset 0 0 0 12px rgba(14,34,17,.55);
+  flex-shrink:0;
+  overflow:visible; /* allow zoomed cards to escape the oval boundary */
+}
 .felt-oval::before{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,.007) 2px,rgba(255,255,255,.007) 3px);}
 .felt-oval::after{content:'';position:absolute;inset:7%;border-radius:50%;border:1px solid rgba(201,168,76,.09);pointer-events:none;}
@@ -177,41 +180,66 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .tc-comm{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;max-width:200px;}
 .tc-deck{font-family:'Special Elite',cursive;font-size:8px;color:rgba(201,168,76,.28);letter-spacing:2px;}
 
-/* SEATS */
-.seat{position:absolute;transform:translate(-50%,-50%);z-index:10;}
-.sbox{background:rgba(4,2,7,.92);border:1px solid rgba(201,168,76,.13);border-radius:9px;
-  padding:5px 7px;min-width:100px;max-width:136px;
-  transition:border-color .22s,box-shadow .22s;position:relative;backdrop-filter:blur(4px);}
-.sbox.my-turn{border-color:var(--gold);box-shadow:0 0 13px rgba(201,168,76,.24),inset 0 0 9px rgba(201,168,76,.04);}
-.sbox.busted{border-color:rgba(139,26,26,.44);opacity:.6;}
-.sbox.winner{border-color:#4caf50;box-shadow:0 0 15px rgba(76,175,80,.26);}
-.sbox.stand{border-color:rgba(201,168,76,.26);}
-.sbadge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);
-  font-family:'Special Elite',cursive;font-size:8px;white-space:nowrap;
-  padding:1px 7px;border-radius:20px;letter-spacing:1px;z-index:2;}
-.sb-turn{background:var(--gold);color:#050305;animation:blink 1s ease-in-out infinite;}
-.sb-bust{background:#7a1212;color:#ffd0d0;}
-.sb-stand{background:rgba(201,168,76,.17);color:var(--gold);border:1px solid var(--gold);}
-.sb-bj{background:linear-gradient(135deg,#9a7000,#e8c200);color:#1a0e00;}
-.sb-win{background:linear-gradient(135deg,#0e3d12,#2e8b34);color:#d0ffd4;}
-.sb-spec{background:rgba(33,150,243,.2);color:#90caf9;border:1px solid rgba(33,150,243,.28);}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.55}}
-.shdr{display:flex;justify-content:space-between;align-items:flex-start;gap:3px;margin-bottom:2px;}
-.sname{font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:76px;}
-.sscore{font-family:'Cinzel Decorative',serif;font-size:14px;font-weight:700;line-height:1;}
+/* SEATS — minimal name chip + cards float on felt */
+.seat{position:absolute;transform:translate(-50%,-50%);z-index:10;
+  display:flex;flex-direction:column;align-items:center;gap:5px;}
+
+/* Name plate — compact, no clipping */
+.splate{
+  background:rgba(4,2,7,.88);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:20px;
+  padding:3px 10px;
+  display:flex;align-items:center;gap:6px;
+  white-space:nowrap;
+  backdrop-filter:blur(6px);
+  transition:border-color .22s,box-shadow .22s;
+  position:relative;
+}
+.splate.my-turn{border-color:var(--gold);box-shadow:0 0 12px rgba(201,168,76,.3);}
+.splate.busted{border-color:rgba(139,26,26,.5);opacity:.65;}
+.splate.winner{border-color:#4caf50;box-shadow:0 0 12px rgba(76,175,80,.3);}
+.sname{font-family:'Special Elite',cursive;font-size:10px;color:var(--cream);}
+.sscore{font-family:'Cinzel Decorative',serif;font-size:13px;font-weight:700;line-height:1;}
 .ss-bust{color:var(--red2);} .ss-bj{color:#ffd700;} .ss-ok{color:#81c784;}
 .schips{font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);}
-.poker-label{font-family:'Special Elite',cursive;font-size:8px;color:#ce93d8;margin-top:1px;}
+.poker-label{font-family:'Special Elite',cursive;font-size:8px;color:#ce93d8;}
 
-/* HAND — overflow-x scroll, overflow-y VISIBLE for zoom */
-.shand{display:flex;gap:2px;
-  overflow-x:auto;overflow-y:visible;
-  scrollbar-width:none;
-  /* Push cards down enough so zoom goes UP not into the badge */
-  margin-top:4px;padding-bottom:2px;
-  /* clip is on a parent, not here */
-  position:relative;z-index:1;}
-.shand::-webkit-scrollbar{display:none;}
+/* Status badge floats above plate */
+.sbadge{
+  font-family:'Special Elite',cursive;font-size:8px;white-space:nowrap;
+  padding:1px 8px;border-radius:20px;letter-spacing:1px;
+}
+.sb-turn{background:var(--gold);color:#050305;animation:blink 1s ease-in-out infinite;}
+.sb-bust{background:#7a1212;color:#ffd0d0;}
+.sb-stand{background:rgba(201,168,76,.17);color:var(--gold);border:1px solid rgba(201,168,76,.4);}
+.sb-bj{background:linear-gradient(135deg,#9a7000,#e8c200);color:#1a0e00;}
+.sb-win{background:linear-gradient(135deg,#0e3d12,#2e8b34);color:#d0ffd4;}
+.sb-spec{background:rgba(33,150,243,.2);color:#90caf9;border:1px solid rgba(33,150,243,.3);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* Card fan — NO overflow clipping anywhere, cards zoom freely */
+.shand{
+  display:flex;
+  /* Fan cards by overlapping */
+  padding:0 4px;
+  position:relative;
+  /* No overflow restrictions — zoom escapes freely */
+  overflow:visible;
+}
+/* Each card in a hand offsets slightly for fan effect */
+.shand .card{
+  margin-left:-10px;
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s,margin .18s,z-index 0s .18s;
+}
+.shand .card:first-child{ margin-left:0; }
+.shand .card:hover{
+  transform:translateY(-32px) scale(1.7) !important;
+  z-index:9999 !important;
+  margin-left:4px !important;
+  box-shadow:0 28px 56px rgba(0,0,0,.9),0 0 0 1px rgba(201,168,76,.3) !important;
+  transition:transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s,margin .16s,z-index 0s;
+}
 
 /* ACTION BAR */
 .actbar{position:fixed;bottom:0;left:0;right:0;
@@ -702,6 +730,7 @@ function handle(msg){
       chat('rchat',msg.from,msg.text); chat('gchat',msg.from,msg.text); break;
     case 'serverClosed':
       log('⚠ '+msg.reason,'bad'); curRoom=null; game=null;
+      Q('#actbar').classList.remove('vis');
       setTimeout(()=>show('lobby'),1400); break;
     case 'error':
       log('⚠ '+msg.message,'bad');
@@ -902,39 +931,40 @@ function renderGame(){
     const seat=document.createElement('div'); seat.className='seat';
     seat.style.left=pos[0]+'%'; seat.style.top=pos[1]+'%';
 
-    let bc='sbox';
-    if(isTurn&&isMe) bc+=' my-turn';
-    if(p.status==='bust') bc+=' busted';
-    if(p.status==='winner') bc+=' winner';
-    if(p.status==='standing') bc+=' stand';
-
-    let sc=''; if(score>21) sc='ss-bust'; else if(score===21) sc='ss-bj'; else if(score>=17) sc='ss-ok';
-
+    // Status badge
     let badge='';
-    if(isTurn) badge=`<div class="sbadge sb-turn">${isMe?'YOUR TURN':'PLAYING'}</div>`;
-    else if(p.status==='bust') badge='<div class="sbadge sb-bust">BUST</div>';
+    if(isTurn)                           badge=`<div class="sbadge sb-turn">${isMe?'YOUR TURN':'PLAYING'}</div>`;
+    else if(p.status==='bust')           badge='<div class="sbadge sb-bust">BUST</div>';
     else if(score===21&&p.hand?.length===2) badge='<div class="sbadge sb-bj">BLACKJACK!</div>';
-    else if(p.status==='standing') badge='<div class="sbadge sb-stand">STANDING</div>';
-    else if(p.status==='winner') badge='<div class="sbadge sb-win">🏆 WIN</div>';
-    else if(amSpec&&isMe) badge='<div class="sbadge sb-spec">SPECTATING</div>';
+    else if(p.status==='standing')       badge='<div class="sbadge sb-stand">STANDING</div>';
+    else if(p.status==='winner')         badge='<div class="sbadge sb-win">🏆 WIN</div>';
+    else if(amSpec&&isMe)                badge='<div class="sbadge sb-spec">SPECTATING</div>';
 
-    const blindTag=(p.isSmallBlind?'<span class="tag t-spec" style="font-size:7px">SB</span>':'')+(p.isBigBlind?'<span class="tag t-spec" style="font-size:7px">BB</span>':'');
-    const pokerRow=g.mode==='poker'&&p.pokerLabel?`<div class="poker-label">${p.pokerLabel}</div>`:'';
-    const scoreDisplay=g.mode==='poker'?'':((p.duckLocked?'🦆':'')+((p.hand?.filter(c=>!c.isSpecial).length||score)?score:''));
+    // Score / hand label
+    let sc=''; if(score>21) sc='ss-bust'; else if(score===21) sc='ss-bj'; else if(score>=17) sc='ss-ok';
+    const scoreStr = g.mode==='poker'
+      ? (p.pokerLabel||'')
+      : ((p.duckLocked?'🦆':'')+((p.hand?.filter(c=>!c.isSpecial).length||score)?score:''));
+
+    // Plate status classes
+    let plateCls='splate';
+    if(isTurn&&isMe) plateCls+=' my-turn';
+    if(p.status==='bust') plateCls+=' busted';
+    if(p.status==='winner') plateCls+=' winner';
+    if(p.status==='standing') plateCls+=' stand';
+
+    const blindTag=(p.isSmallBlind?'<span class="tag t-spec" style="font-size:7px;margin-left:3px">SB</span>':'')
+                  +(p.isBigBlind?'<span class="tag t-spec" style="font-size:7px;margin-left:3px">BB</span>':'');
 
     seat.innerHTML=`
-      <div class="${bc}" id="sb-${p.id}">
-        ${badge}
-        <div class="shdr">
-          <div style="min-width:0">
-            <div class="sname">${esc(p.name)}${blindTag}${p.isBot?' 🤖':''}${isMe?'<span style="font-size:7px;color:#81c784"> (you)</span>':''}</div>
-            <div class="schips">${p.chips}🪙${p.bet?' · bet '+p.bet:''}${p.debt?' · owes '+p.debt:''}</div>
-            ${pokerRow}
-          </div>
-          ${g.mode==='blackjack'?`<div class="sscore ${sc}">${scoreDisplay}</div>`:''}
-        </div>
-        <div class="shand" id="sh-${p.id}"></div>
-      </div>`;
+      ${badge}
+      <div class="${plateCls}">
+        <div class="sname">${esc(p.name)}${blindTag}${p.isBot?' 🤖':''}${isMe?' <span style="color:#81c784;font-size:8px">(you)</span>':''}</div>
+        <div class="sscore ${sc}">${scoreStr}</div>
+        <div class="schips">${p.chips}🪙${p.bet?' ·bet'+p.bet:''}${p.debt?' owes'+p.debt:''}</div>
+      </div>
+      <div class="shand" id="sh-${p.id}"></div>
+    `;
     Q('#felt-oval').appendChild(seat);
 
     const hel=document.getElementById('sh-'+p.id);
@@ -1080,7 +1110,7 @@ Q('#li-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') Q('#btn-login'
 Q('#rg-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') Q('#btn-reg').click(); });
 
 // Lobby
-Q('#btn-logout').addEventListener('click',()=>{ myUser=''; myId=null; ws?.close(); show('auth'); setTimeout(connect,200); });
+Q('#btn-logout').addEventListener('click',()=>{ myUser=''; myId=null; game=null; curRoom=null; Q('#actbar').classList.remove('vis'); ws?.close(); show('auth'); setTimeout(connect,200); });
 Q('#btn-refresh').addEventListener('click',()=>send({type:'refreshServers'}));
 Q('#btn-keybinds').addEventListener('click',openKb);
 Q('#btn-create').addEventListener('click',()=>{
@@ -1107,7 +1137,7 @@ Q('#btn-rchat').addEventListener('click',()=>sendChat('rchat-inp'));
 Q('#rchat-inp').addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat('rchat-inp'); });
 
 // Game
-Q('#btn-leave-game').addEventListener('click',()=>{ if(confirm('Leave game?')){ send({type:'leaveServer'}); game=null; curRoom=null; show('lobby'); send({type:'refreshServers'}); } });
+Q('#btn-leave-game').addEventListener('click',()=>{ if(confirm('Leave game?')){ send({type:'leaveServer'}); game=null; curRoom=null; Q('#actbar').classList.remove('vis'); show('lobby'); send({type:'refreshServers'}); } });
 Q('#btn-gchat').addEventListener('click',()=>sendChat('gchat-inp'));
 Q('#gchat-inp').addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat('gchat-inp'); });
 Q('#btn-game-kb').addEventListener('click',openKb);
