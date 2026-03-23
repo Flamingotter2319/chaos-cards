@@ -125,14 +125,16 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .set-g{display:grid;grid-template-columns:1fr 1fr;gap:0 11px;}
 
 /* Special card toggles */
-.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px;}
-.sc-toggle{display:flex;align-items:center;gap:5px;padding:5px 7px;
+.sc-grid{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
+.sc-toggle{display:flex;align-items:flex-start;gap:7px;padding:6px 8px;
   background:rgba(0,0,0,0.25);border:1px solid rgba(201,168,76,0.1);border-radius:6px;
   cursor:pointer;transition:all .15s;user-select:none;}
 .sc-toggle.on{background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.28);}
-.sc-toggle.off{opacity:.45;}
-.sc-toggle .sct-icon{font-size:13px;flex-shrink:0;}
-.sc-toggle .sct-name{font-family:'Special Elite',cursive;font-size:9px;color:var(--cream);line-height:1.2;}
+.sc-toggle.off{opacity:.4;}
+.sc-toggle .sct-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.sc-toggle .sct-text{display:flex;flex-direction:column;gap:1px;min-width:0;}
+.sc-toggle .sct-name{font-family:'Special Elite',cursive;font-size:10px;color:var(--cream);line-height:1.2;}
+.sc-toggle .sct-desc{font-family:'Special Elite',cursive;font-size:8px;color:var(--dim);line-height:1.3;}
 .chaos-presets{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;}
 .cp-btn{background:rgba(0,0,0,0.3);border:1px solid rgba(201,168,76,0.15);color:var(--dim);
   padding:4px 10px;border-radius:5px;font-family:'Special Elite',cursive;font-size:9px;
@@ -241,37 +243,36 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
   transition:transform .16s cubic-bezier(.34,1.56,.64,1),box-shadow .16s,margin .16s,z-index 0s;
 }
 
-/* ACTION BAR */
+/* ACTION BAR — mobile only (desktop uses sidebar panel) */
 .actbar{position:fixed;bottom:0;left:0;right:0;
   background:rgba(4,2,7,.97);border-top:1px solid var(--gdim);
-  padding:7px 14px 9px;display:flex;align-items:center;justify-content:center;
-  gap:9px;z-index:50;flex-wrap:wrap;backdrop-filter:blur(14px);
-  transform:translateY(100%);transition:transform .2s cubic-bezier(.34,1.56,.64,1);}
-.actbar.vis{transform:translateY(0);}
-.abh{font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);letter-spacing:1px;width:100%;text-align:center;}
+  padding:7px 14px 10px;display:none;align-items:center;justify-content:center;
+  gap:9px;z-index:50;flex-wrap:wrap;backdrop-filter:blur(14px);}
+@media(max-width:780px){
+  .actbar.vis{display:flex;}
+  #sc-game .gbody{ padding-bottom: 70px; }
+}
+/* Shared action button styles (used in sidebar + mobile bar) */
 .abt{font-family:'Cinzel Decorative',serif;font-size:11px;font-weight:700;letter-spacing:2px;
-  padding:9px 24px;border-radius:7px;border:none;cursor:pointer;min-width:90px;transition:all .16s;}
+  padding:9px 24px;border-radius:7px;border:none;cursor:pointer;transition:all .16s;}
 .abt-hit{background:linear-gradient(135deg,#7a3a0a,#c9621a);color:#fff5e0;box-shadow:0 3px 14px rgba(201,98,26,.28);}
 .abt-hit:hover{filter:brightness(1.15);transform:translateY(-2px);}
 .abt-stand{background:linear-gradient(135deg,var(--gold3),var(--gold));color:#08060a;box-shadow:0 3px 14px rgba(201,168,76,.18);}
 .abt-stand:hover{filter:brightness(1.12);transform:translateY(-2px);}
-.bet-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:center;}
-.bet-lbl{font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);}
-.bet-inp{width:58px;background:rgba(0,0,0,.6);border:1px solid var(--gdim);color:var(--cream);
-  padding:5px 7px;border-radius:5px;font-size:13px;text-align:center;outline:none;font-family:'IM Fell English',serif;}
+.bet-inp{background:rgba(0,0,0,.6);border:1px solid var(--gdim);color:var(--cream);
+  padding:6px 8px;border-radius:5px;font-size:13px;text-align:center;outline:none;font-family:'IM Fell English',serif;}
 .bet-inp:focus{border-color:var(--gold);}
-.qbs{display:flex;gap:3px;}
 .qb{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);color:var(--gold);
-  padding:4px 8px;border-radius:5px;font-size:9px;cursor:pointer;font-family:'Special Elite',cursive;transition:all .13s;}
+  padding:5px 8px;border-radius:5px;font-size:10px;cursor:pointer;font-family:'Special Elite',cursive;transition:all .13s;}
 .qb:hover{background:rgba(201,168,76,.2);}
 .kb-pill{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:1px 4px;font-size:8px;
   font-family:'Special Elite',cursive;color:rgba(255,255,255,.45);margin-left:3px;min-width:14px;}
 
-/* GAME SIDEBAR */
-.gside{width:190px;border-left:1px solid var(--gdim);background:rgba(0,0,0,.22);
+/* GAME SIDEBAR — always shown */
+.gside{width:210px;border-left:1px solid var(--gdim);background:rgba(0,0,0,.28);
   display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
-@media(max-width:780px){.gside{display:none;}}
+@media(max-width:600px){.gside{width:160px;}}
 .gsi{flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:11px;}
 
 /* ══ CARDS ══ */
@@ -469,11 +470,15 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
         <div id="host-err" class="err"></div>
         <hr class="g">
         <div class="ptitle" style="text-align:left;margin-top:5px">GAME SETTINGS</div>
-        <!-- Mode tabs -->
-        <div class="tabs" style="margin-bottom:10px" id="mode-tabs">
-          <div class="tab active" id="mt-bj" onclick="setMode('blackjack')">Blackjack</div>
-          <div class="tab" id="mt-pk" onclick="setMode('poker')">Poker</div>
-        </div>
+        <label>Game Mode</label>
+        <select id="set-mode" onchange="setMode(this.value)">
+          <option value="blackjack">♠ Blackjack — closest to 21 wins</option>
+          <option value="poker">🃏 Poker — best 5-card hand wins</option>
+          <option value="highorlow">⚖️ High or Low — closest to 7 wins</option>
+          <option value="lucky21">🍀 Lucky 21 — must hit until 17+</option>
+          <option value="bust">💀 Last Standing — survive or highest bust wins</option>
+          <option value="shootout">🔫 Shootout — 1 card each, highest wins</option>
+        </select>
         <!-- Shared settings -->
         <div class="set-g">
           <div><label>Decks</label><select id="set-decks"><option>1</option><option>2</option><option>4</option><option>6</option></select></div>
@@ -557,9 +562,11 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
     </div>
     <div class="gside">
       <div class="gsi">
+        <!-- ACTION PANEL — bet/hit/stand lives here, not in a bottom bar -->
+        <div id="g-action-panel"></div>
         <div>
           <div class="ptitle">CHAT</div>
-          <div id="gchat" style="height:150px;overflow-y:auto;background:rgba(0,0,0,.2);border:1px solid rgba(201,168,76,.07);border-radius:6px;padding:6px;font-size:10px;"></div>
+          <div id="gchat" style="height:120px;overflow-y:auto;background:rgba(0,0,0,.2);border:1px solid rgba(201,168,76,.07);border-radius:6px;padding:6px;font-size:10px;"></div>
           <div style="display:flex;gap:5px;margin-top:5px">
             <input type="text" id="gchat-inp" placeholder="Chat…" maxlength="120" style="font-size:10px;padding:5px 8px;">
             <button class="btn btn-ghost btn-sm" id="btn-gchat" style="margin-top:0;font-size:9px">→</button>
@@ -574,10 +581,9 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
   </div>
 </div>
 
-<!-- ACTION BAR -->
-<div class="actbar" id="actbar"></div>
-
 <!-- ROUND SUMMARY MODAL -->
+<!-- Mobile action bar — only shows when sidebar is hidden on small screens -->
+<div class="actbar" id="actbar"></div>
 <div class="mbg" id="m-summary">
   <div class="mbox">
     <h2 id="ms-title">Round Over</h2>
@@ -647,16 +653,32 @@ const BACKS = [
 ];
 let selBack = 'classic';
 
-// Special cards list (mirrors server)
+// Special cards list (mirrors server) — includes effect descriptions
 const ALL_SC = [
-  { id:'credit',name:'Credit Card',icon:'💳' },{ id:'license',name:"Driver's Licence",icon:'🪪' },
-  { id:'shopping',name:'Shopping List',icon:'🛒' },{ id:'blackhole',name:'Black Hole',icon:'🕳️' },
-  { id:'lucky8',name:'Lucky 8-Ball',icon:'🎱' },{ id:'irs',name:'IRS Notice',icon:'📋' },
-  { id:'receipt',name:'Receipt',icon:'🧾' },{ id:'rubber',name:'Rubber Duck',icon:'🦆' },
-  { id:'swap',name:'Identity Swap',icon:'🔄' },{ id:'double',name:'Double Down',icon:'⚡' },
-  { id:'freeze',name:'Deep Freeze',icon:'🧊' },{ id:'mirror',name:'Magic Mirror',icon:'🪞' },
-  { id:'timebomb',name:'Time Bomb',icon:'💣' },{ id:'wildcard',name:'Wild Card',icon:'🃏' },
-  { id:'taxreturn',name:'Tax Return',icon:'💰' },{ id:'amnesia',name:'Amnesia',icon:'🌀' },
+  { id:'credit',    name:'Credit Card',      icon:'💳', effect:'Draw 2 free cards — owe 5 chips next round.' },
+  { id:'license',   name:"Driver's Licence", icon:'🪪', effect:'Bust immunity — survive over 21 this round.' },
+  { id:'shopping',  name:'Shopping List',    icon:'🛒', effect:'A random 2–10 card added to your hand.' },
+  { id:'blackhole', name:'Black Hole',       icon:'🕳️', effect:"Removes everyone else's highest card." },
+  { id:'lucky8',    name:'Lucky 8-Ball',     icon:'🎱', effect:'3 extra community cards revealed instantly.' },
+  { id:'irs',       name:'IRS Notice',       icon:'📋', effect:'All players pay 3 chips to the pot.' },
+  { id:'receipt',   name:'Receipt',          icon:'🧾', effect:"Peek at a random opponent's full hand." },
+  { id:'rubber',    name:'Rubber Duck',      icon:'🦆', effect:'Your score locks at exactly 17.' },
+  { id:'swap',      name:'Identity Swap',    icon:'🔄', effect:'Swap your entire hand with a random opponent.' },
+  { id:'double',    name:'Double Down',      icon:'⚡', effect:'Double your bet, draw one card, then stand.' },
+  { id:'freeze',    name:'Deep Freeze',      icon:'🧊', effect:"Skip the next player's turn entirely." },
+  { id:'mirror',    name:'Magic Mirror',     icon:'🪞', effect:'Copy the highest score at the table as yours.' },
+  { id:'timebomb',  name:'Time Bomb',        icon:'💣', effect:'Everyone else must take one extra card.' },
+  { id:'wildcard',  name:'Wild Card',        icon:'🃏', effect:'Counts as exactly 7 in your hand.' },
+  { id:'taxreturn', name:'Tax Return',       icon:'💰', effect:'Collect 4 chips from every other player.' },
+  { id:'amnesia',   name:'Amnesia',          icon:'🌀', effect:'Community cards wiped and two new ones dealt.' },
+  { id:'cloner',    name:'Card Cloner',      icon:'🖨️', effect:'Your highest card is duplicated and added to your hand.' },
+  { id:'banker',    name:'The Banker',       icon:'🏦', effect:'Immediately collect half the current pot.' },
+  { id:'sniper',    name:'Card Sniper',      icon:'🎯', effect:"Discard the lowest card from a random opponent's hand." },
+  { id:'reverse',   name:'Reverse Card',    icon:'🔃', effect:'Turn order is reversed for the rest of the round.' },
+  { id:'jackpot',   name:'Jackpot',         icon:'🎰', effect:'Roll a dice (1–6) and win that × 10 chips from the pot.' },
+  { id:'plague',    name:'The Plague',      icon:'☠️', effect:"Everyone loses their lowest card; you gain an extra one." },
+  { id:'shield',    name:'Holy Shield',     icon:'🛡️', effect:'Blocks the next special card effect that targets you.' },
+  { id:'telescope', name:'Telescope',       icon:'🔭', effect:'Peek at the top 3 cards in the deck.' },
 ];
 let enabledSC = ALL_SC.map(s=>s.id);
 let currentMode = 'blackjack';
@@ -730,7 +752,8 @@ function handle(msg){
       chat('rchat',msg.from,msg.text); chat('gchat',msg.from,msg.text); break;
     case 'serverClosed':
       log('⚠ '+msg.reason,'bad'); curRoom=null; game=null;
-      Q('#actbar').classList.remove('vis');
+      {const ab=Q('#actbar');if(ab){ab.classList.remove('vis');ab.innerHTML='';}}
+      {const ap=Q('#g-action-panel');if(ap)ap.innerHTML='';}
       setTimeout(()=>show('lobby'),1400); break;
     case 'error':
       log('⚠ '+msg.message,'bad');
@@ -808,9 +831,8 @@ function renderRoom(){
 
 function setMode(m){
   currentMode=m;
-  Q('#mt-bj').className='tab'+(m==='blackjack'?' active':'');
-  Q('#mt-pk').className='tab'+(m==='poker'?' active':'');
-  Q('#bj-rules').style.display=m==='blackjack'?'':'none';
+  const sel=Q('#set-mode'); if(sel) sel.value=m;
+  Q('#bj-rules').style.display=(m==='blackjack'||m==='lucky21')?'':'none';
   Q('#pk-rules').style.display=m==='poker'?'':'none';
 }
 
@@ -824,15 +846,16 @@ function applySetDisplay(s){
   if(Q('#pk-blinds')) Q('#pk-blinds').checked=s.pokerBlinds!==false;
   sv('#pk-sb',s.pokerSmallBlind||5); sv('#pk-bb',s.pokerBigBlind||10); sv('#pk-ante',s.pokerAnte||0);
   if(s.enabledSpecials) enabledSC=[...s.enabledSpecials];
+  renderScGrid();
 }
 
 function collectSettings(){
   return {
-    mode:currentMode,
+    mode:Q('#set-mode')?.value||currentMode,
     deckCount:parseInt(Q('#set-decks').value)||1,
     minBet:parseInt(Q('#set-minbet').value)||5,
     maxBet:parseInt(Q('#set-maxbet').value)||100,
-    bjBlackjackPays:Q('#bj-pays').value||'3:2',
+    bjBlackjackPays:Q('#bj-pays')?.value||'3:2',
     bjSoft17:Q('#bj-soft17')?.checked!==false,
     bjDoubleAllowed:Q('#bj-double')?.checked!==false,
     pokerBlinds:Q('#pk-blinds')?.checked!==false,
@@ -858,14 +881,20 @@ function renderBackGrid(){
   });
 }
 
-// Special card grid
+// Special card grid — shows icon, name AND effect description
 function renderScGrid(){
   const el=Q('#sc-grid'); if(!el) return;
   el.innerHTML='';
   ALL_SC.forEach(sc=>{
     const on=enabledSC.includes(sc.id);
     const d=document.createElement('div'); d.className='sc-toggle'+(on?' on':' off');
-    d.innerHTML=`<span class="sct-icon">${sc.icon}</span><span class="sct-name">${sc.name}</span>`;
+    d.innerHTML=`
+      <span class="sct-icon">${sc.icon}</span>
+      <div class="sct-text">
+        <span class="sct-name">${sc.name}</span>
+        <span class="sct-desc">${sc.effect}</span>
+      </div>
+    `;
     d.onclick=()=>{ if(enabledSC.includes(sc.id)) enabledSC=enabledSC.filter(x=>x!==sc.id); else enabledSC.push(sc.id); renderScGrid(); };
     el.appendChild(d);
   });
@@ -975,35 +1004,64 @@ function renderGame(){
 }
 
 function renderActBar(g,p){
-  const bar=Q('#actbar'); bar.innerHTML='';
-  if(!p||amSpec){ bar.classList.remove('vis'); return; }
+  const panel=Q('#g-action-panel');
+  const mobileBar=Q('#actbar');
+  if(panel) panel.innerHTML='';
+  if(mobileBar) { mobileBar.innerHTML=''; mobileBar.classList.remove('vis'); }
+  if(!p||amSpec) return;
+
+  let html='';
 
   if(g.phase==='betting'&&(p.status==='waiting'||p.status==='betting')){
     const mn=g.minBet||5, mx=Math.min(g.maxBet||100,p.chips);
     const cur=Math.min(mn*2,mx);
-    bar.innerHTML=`
-      <div class="abh">PLACE YOUR BET &nbsp;
-        <span class="kb-pill">${fmtKey(KB.betup)}</span>/<span class="kb-pill">${fmtKey(KB.betdn)}</span> adjust
-        <span class="kb-pill">${fmtKey(KB.bet)}</span> confirm
-      </div>
-      <div class="bet-bar">
-        <span class="bet-lbl">BET:</span>
-        <input class="bet-inp" type="number" id="bet-val" min="${mn}" max="${mx}" value="${cur}">
-        <div class="qbs">
-          <span class="qb" onclick="setbet(${mn})">MIN</span>
-          <span class="qb" onclick="setbet(${Math.floor((mn+mx)/2)})">½</span>
-          <span class="qb" onclick="setbet(${mx})">MAX</span>
+    html=`
+      <div class="ptitle">YOUR BET</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;gap:5px;align-items:center">
+          <input class="bet-inp" type="number" id="bet-val" min="${mn}" max="${mx}" value="${cur}" style="flex:1">
+          <span style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim)">${mn}–${mx}</span>
         </div>
-        <button class="abt abt-stand" onclick="placeBet()">BET <span class="kb-pill">${fmtKey(KB.bet)}</span></button>
-      </div>`;
-    bar.classList.add('vis');
+        <div style="display:flex;gap:4px">
+          <button class="qb" style="flex:1" onclick="setbet(${mn})">MIN</button>
+          <button class="qb" style="flex:1" onclick="setbet(${Math.floor((mn+mx)/2)})">HALF</button>
+          <button class="qb" style="flex:1" onclick="setbet(${mx})">MAX</button>
+        </div>
+        <button class="abt abt-stand" onclick="placeBet()" style="width:100%;padding:10px">
+          CONFIRM BET <span class="kb-pill">${fmtKey(KB.bet)}</span>
+        </button>
+        <div style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);text-align:center">
+          <span class="kb-pill">${fmtKey(KB.betup)}</span>/<span class="kb-pill">${fmtKey(KB.betdn)}</span> to adjust
+        </div>
+      </div>
+    `;
   } else if(g.phase==='play'&&g.currentPlayerId===myId&&p.status==='active'){
-    bar.innerHTML=`
-      <div class="abh">YOUR TURN</div>
-      <button class="abt abt-hit" onclick="send({type:'hit'})">HIT <span class="kb-pill">${fmtKey(KB.hit)}</span></button>
-      <button class="abt abt-stand" onclick="send({type:'stand'})">STAND <span class="kb-pill">${fmtKey(KB.stand)}</span></button>`;
-    bar.classList.add('vis');
-  } else { bar.classList.remove('vis'); }
+    html=`
+      <div class="ptitle" style="color:var(--gold2)">YOUR TURN</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <button class="abt abt-hit" onclick="send({type:'hit'})" style="width:100%;padding:10px">
+          HIT <span class="kb-pill">${fmtKey(KB.hit)}</span>
+        </button>
+        <button class="abt abt-stand" onclick="send({type:'stand'})" style="width:100%;padding:10px">
+          STAND <span class="kb-pill">${fmtKey(KB.stand)}</span>
+        </button>
+      </div>
+    `;
+  } else if(g.phase==='betting'&&(p.status==='waiting'||p.status==='betting')){
+    html=`<div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);text-align:center;padding:8px">WAITING FOR OTHER PLAYERS TO BET…</div>`;
+  } else if(g.phase==='play'&&p.status==='active'){
+    html=`<div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);text-align:center;padding:8px">WAITING FOR YOUR TURN…</div>`;
+  } else if(g.phase==='reveal'){
+    html=`<div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);text-align:center;padding:8px">SHOWDOWN</div>`;
+  }
+
+  if(panel) panel.innerHTML=html;
+
+  // Also populate mobile bar for small screens (hidden on desktop via CSS)
+  if(mobileBar && html){
+    mobileBar.innerHTML=html;
+    mobileBar.classList.add('vis');
+  }
 }
 
 function setbet(v){ const el=Q('#bet-val'); if(el) el.value=v; }
@@ -1137,7 +1195,7 @@ Q('#btn-rchat').addEventListener('click',()=>sendChat('rchat-inp'));
 Q('#rchat-inp').addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat('rchat-inp'); });
 
 // Game
-Q('#btn-leave-game').addEventListener('click',()=>{ if(confirm('Leave game?')){ send({type:'leaveServer'}); game=null; curRoom=null; Q('#actbar').classList.remove('vis'); show('lobby'); send({type:'refreshServers'}); } });
+Q('#btn-leave-game').addEventListener('click',()=>{ if(confirm('Leave game?')){ send({type:'leaveServer'}); game=null; curRoom=null; const ab=Q('#actbar'); if(ab){ab.classList.remove('vis');ab.innerHTML='';} const ap=Q('#g-action-panel'); if(ap) ap.innerHTML=''; show('lobby'); send({type:'refreshServers'}); } });
 Q('#btn-gchat').addEventListener('click',()=>sendChat('gchat-inp'));
 Q('#gchat-inp').addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat('gchat-inp'); });
 Q('#btn-game-kb').addEventListener('click',openKb);
