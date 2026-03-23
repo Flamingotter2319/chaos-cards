@@ -1,80 +1,79 @@
-# 🃏 Chaos Cards v2 — Multiplayer Setup
+# 🃏 Chaos Cards v4
 
-## Deploy to Render (Completely Free)
-
-> ⚠️ **Cold starts:** Render's free tier sleeps after 15 min of inactivity.
-> First visitor waits ~50s for it to wake. After that, everyone connects instantly.
-> No credit card needed.
-
-### Step 1 — GitHub repo
-1. Go to [github.com](https://github.com) → **New repository** → name it `chaos-cards`
-2. Upload `server.js`, `index.html`, `package.json`
-
-### Step 2 — Deploy on Render
-1. Go to [render.com](https://render.com) → sign in with GitHub
-2. **New → Web Service** → select your repo
-3. Settings:
-   - **Runtime:** Node
-   - **Build Command:** `npm install`
-   - **Start Command:** `node server.js`
-   - **Instance Type:** Free
-4. Click **Create Web Service** — deploys in ~2 min
-5. Your URL: `https://chaos-cards.onrender.com`
-
-### Step 3 — Share
-Send the URL to friends. They open it, enter a name, done.
-
-> 💡 Open the URL yourself ~1 min before friends join to warm it up.
+## IMPORTANT — File structure
+```
+chaos-cards/
+  server.js       ← game server (overwrite to update)
+  index.html      ← frontend   (overwrite to update)
+  package.json    ← dependencies (overwrite to update)
+  accounts.json   ← ⚠️ DO NOT OVERWRITE — player accounts & chips live here
+```
+**`accounts.json` is created automatically on first run. Never include it in updates.**
 
 ---
 
-## Files
+## Deploy to Render (Free)
 
-| File | Purpose |
-|------|---------|
-| `server.js` | Node.js WebSocket server — all game logic |
-| `index.html` | Frontend — served by the server |
-| `package.json` | Dependencies (just `ws`) |
+### Step 1 — GitHub
+1. [github.com](https://github.com) → New repo → `chaos-cards`
+2. Upload `server.js`, `index.html`, `package.json` only
 
-## Features (v2)
+### Step 2 — Render
+1. [render.com](https://render.com) → sign in with GitHub
+2. **New → Web Service** → select repo
+3. Settings: Runtime: Node · Build: `npm install` · Start: `node server.js` · Instance: **Free**
+4. Deploy → get your URL
 
-- ✅ Players see each other around an oval felt table
-- ✅ Cards zoom on hover
-- ✅ Chat works in both lobby and in-game
-- ✅ All players auto-navigate to game when host starts
-- ✅ Betting works correctly — bots auto-bet, round starts when all bets placed
-- ✅ Server closes when host leaves
-- ✅ Rounds auto-continue without going back to lobby
-- ✅ Join mid-game as spectator, play from next round
-- ✅ Game settings: Blackjack / Poker mode, deck count, chips, bet limits
-- ✅ 16 special cards
-- ✅ Mix of Simple / Smart / Chaotic bots
+> Open your URL ~1 min before friends join to wake the server from sleep.
 
-## Special Cards (16)
+---
+
+## Updating the game
+1. Replace `server.js` and/or `index.html` on GitHub
+2. Render auto-redeploys in ~90 seconds
+3. `accounts.json` is **not in GitHub** — it lives on Render's disk and is untouched
+
+---
+
+## Features
+
+### Accounts
+- Register/login with username + password
+- Chips persist across sessions in `accounts.json`
+- Start with **500 chips**
+- Go broke → wait **1 hour** → get **100 free chips**
+- Stats tracked: chips, rounds won, games played
+
+### Game Modes
+| Mode | Rules |
+|------|-------|
+| **Blackjack** | Target 21, bust on >21, 3:2/6:5/1:1 BJ pays, soft 17 toggle, double down toggle |
+| **Poker** | Best 5-card hand from hole cards + 5 community cards, blinds, ante, no bust rule |
+
+### Special Cards (16, all toggleable)
+Chaos presets: None / Mild / Wild / All
 
 | Card | Effect |
 |------|--------|
-| 💳 Credit Card | Draw 2 free cards, owe 5 chips next round |
+| 💳 Credit Card | Draw 2 free, owe 5 chips next round |
 | 🪪 Driver's Licence | Bust immunity this round |
-| 🛒 Shopping List | Random 2–10 card added to hand |
-| 🕳️ Black Hole | Removes highest card from all other hands |
-| 🎱 Lucky 8-Ball | Reveals 3 community cards instantly |
-| 📋 IRS Notice | Everyone pays 3 chips to pot |
+| 🛒 Shopping List | Random 2–10 card added |
+| 🕳️ Black Hole | Removes highest card from all opponents |
+| 🎱 Lucky 8-Ball | 3 community cards revealed |
+| 📋 IRS Notice | All pay 3 chips to pot |
 | 🧾 Receipt | Peek at a random opponent's hand |
-| 🦆 Rubber Duck | Score locked at 17 this round |
-| 🔄 Identity Swap | Swap hands with a random opponent |
-| ⚡ Double Down | Double your bet, draw one card, stand |
-| 🧊 Deep Freeze | Skip next player's turn |
-| 🪞 Magic Mirror | Copy the highest score at the table |
-| 💣 Time Bomb | Everyone else must take one card |
+| 🦆 Rubber Duck | Score locks at 17 |
+| 🔄 Identity Swap | Swap hands with random opponent |
+| ⚡ Double Down | Double bet, one more card, stand |
+| 🧊 Deep Freeze | Next player's turn skipped |
+| 🪞 Magic Mirror | Copy highest score at table |
+| 💣 Time Bomb | Everyone else takes a card |
 | 🃏 Wild Card | Counts as 7 |
-| 💰 Tax Return | Collect 4 chips from every other player |
+| 💰 Tax Return | Collect 4 chips from everyone |
 | 🌀 Amnesia | Community cards wiped and re-dealt |
 
-## Bot Types
+### Card Backs
+6 designs: Classic, Navy, Forest, Midnight, Crimson, Gold
 
-| Bot | Strategy |
-|-----|---------|
-| 🤖 SimpleBot | Hits below 16, stands otherwise |
-| 🧠 SmartBot | Uses community card values to decide |
-| 🎲 ChaosBot | Mostly random — unpredictable |
+### Keybindings
+H=Hit · S=Stand · B=Bet · ↑/↓=Adjust bet · All rebindable
