@@ -1090,8 +1090,10 @@ function connect(){
 }
 
 function handle(msg){
-  // Route Undertale messages to the UT handler (defined below in second script)
-  if(typeof handleUtMessage==='function' && (msg.type.startsWith('ut'))) { handleUtMessage(msg); return; }
+  // Route Undertale messages to the UT handler (defined in second script block)
+  if(msg.type && msg.type.startsWith('ut')) {
+    if(typeof handleUtMessage==='function') { handleUtMessage(msg); return; }
+  }
   switch(msg.type){
     case 'hello': myId=msg.playerId; break;
     case 'authOk':
@@ -2125,12 +2127,7 @@ function handleUtMessage(msg) {
   }
 }
 
-// Patch into main handle() function
-const _origHandle = handle;
-window.handle = function(msg) {
-  if(msg.type.startsWith('ut') || msg.type === 'utState') { handleUtMessage(msg); return; }
-  _origHandle(msg);
-};
+// UT message routing is handled in the main handle() function above via handleUtMessage check
 
 // ── Lobby tab extension — 'ut' tab removed, Battle is now its own panel ──
 // switchLTab only handles servers/chat/friends now
@@ -2457,11 +2454,8 @@ document.addEventListener('keydown', e => {
 document.addEventListener('keyup', e => { dodgeKeys[e.key] = false; });
 
 // ── Accuracy slider — centered gradient, shows damage ──────
-let sliderAnim = null;
-let sliderPos = 0;
-let sliderDir = 1;
-let sliderSpeed = 1.4;
-let sliderStopped = false;
+// Slider state (vars declared above in first script block, reused here)
+// sliderAnim, sliderPos, sliderDir, sliderSpeed, sliderStopped are already declared
 let currentEnemyAtk = 10; // used to calc damage preview
 
 function calcPreviewDamage(pos) {
