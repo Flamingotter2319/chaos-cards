@@ -624,7 +624,7 @@ function parseSettings(s) {
 wss.on('connection', ws => {
   const playerId=nextId();
   clients.set(ws,{ playerId,serverId:null,username:null });
-  sendTo(ws,{ type:'hello' });
+  sendTo(ws,{ type:'hello', playerId });
 
   ws.on('message', async raw => {
     let msg; try{ msg=JSON.parse(raw); }catch{ return; }
@@ -642,7 +642,7 @@ wss.on('connection', ws => {
       if (existing) { sendTo(ws,{ type:'authError',message:'Username already taken.' }); return; }
       const acc=await createAccount(u,hashPass(p));
       loggedIn.set(u,playerId); meta.username=u;
-      sendTo(ws,{ type:'authOk',username:u,chips:acc.chips,totalWon:0,gamesPlayed:0,servers:srvList() });
+      sendTo(ws,{ type:'authOk',playerId,username:u,chips:acc.chips,totalWon:0,gamesPlayed:0,servers:srvList() });
       return;
     }
 
@@ -663,11 +663,11 @@ wss.on('connection', ws => {
       }
 
       loggedIn.set(u,playerId); meta.username=u;
-      sendTo(ws,{ type:'authOk',username:u,chips:acc.chips,totalWon:acc.totalWon||0,gamesPlayed:acc.gamesPlayed||0,servers:srvList() });
+      sendTo(ws,{ type:'authOk',playerId,username:u,chips:acc.chips,totalWon:acc.totalWon||0,gamesPlayed:acc.gamesPlayed||0,servers:srvList() });
       return;
     }
 
-    if (!meta.username) { sendTo(ws,{ type:'authError',message:'Not logged in.' }); return; }
+    if (!meta.username) { sendTo(ws,{ type:'authError',message:'Session expired — please log in again.' }); return; }
     const acc=await getAccount(meta.username);
 
     // ── ROOM MANAGEMENT ────────────────────────────────────

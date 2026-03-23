@@ -103,13 +103,13 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .stat-val{font-family:'Cinzel Decorative',serif;color:var(--gold2);font-size:14px;}
 
 /* ══ ROOM ══ */
-#sc-room{overflow-y:auto;}
+#sc-room{overflow:hidden;}
 .room-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;
   background:rgba(0,0,0,0.72);border-bottom:1px solid var(--gdim);flex-shrink:0;backdrop-filter:blur(10px);}
-.room-layout{display:grid;grid-template-columns:1fr 240px;min-height:0;overflow:hidden;}
+.room-layout{display:grid;grid-template-columns:1fr 240px;flex:1;min-height:0;overflow:hidden;}
 @media(max-width:620px){.room-layout{grid-template-columns:1fr;}}
-.room-main{padding:14px;overflow-y:auto;}
-.room-side{border-left:1px solid var(--gdim);background:rgba(0,0,0,0.18);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+.room-main{padding:14px;overflow-y:auto;min-height:0;}
+.room-side{border-left:1px solid var(--gdim);background:rgba(0,0,0,0.18);padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;min-height:0;}
 .pr-row{display:flex;align-items:center;justify-content:space-between;padding:8px 11px;
   background:rgba(0,0,0,0.24);border:1px solid rgba(201,168,76,0.09);border-radius:7px;margin-bottom:5px;}
 .pr-row.me{border-color:rgba(201,168,76,0.28);}
@@ -427,7 +427,7 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
       <button class="btn btn-ghost btn-sm" id="btn-leave-room">Leave</button>
     </div>
   </div>
-  <div class="room-layout">
+  <div class="room-layout" style="flex:1;min-height:0;overflow:hidden">
     <div class="room-main">
       <div class="ptitle" style="text-align:left">PLAYERS</div>
       <div id="room-players"></div>
@@ -661,9 +661,10 @@ function connect(){
 
 function handle(msg){
   switch(msg.type){
-    case 'hello': break;
+    case 'hello': myId=msg.playerId; break;
     case 'authOk':
       myUser=msg.username; myChips=msg.chips;
+      if(msg.playerId) myId=msg.playerId; // extra safety
       Q('#lby-user').textContent=msg.username;
       Q('#stat-chips').textContent=msg.chips;
       Q('#stat-won').textContent=msg.totalWon||0;
@@ -680,6 +681,7 @@ function handle(msg){
     case 'serverList': renderSrvList(msg.servers); break;
     case 'joinedServer':
       curRoom=msg.server; amSpec=!!msg.spectating;
+      if(msg.playerId) myId=msg.playerId;
       show('room'); renderRoom(); break;
     case 'playerJoined':
       curRoom=msg.server; renderRoom();
@@ -703,7 +705,10 @@ function handle(msg){
       setTimeout(()=>show('lobby'),1400); break;
     case 'error':
       log('⚠ '+msg.message,'bad');
-      ['#li-err','#rg-err','#host-err','#cr-err','#join-err','#set-err'].forEach(id=>{ const el=Q(id); if(el) el.textContent=msg.message; });
+      // Show in whichever error div is currently visible
+      if(Q('#sc-lobby.active')) Q('#cr-err').textContent=msg.message;
+      if(Q('#sc-room.active')) Q('#host-err').textContent=msg.message;
+      ['#li-err','#rg-err','#join-err','#set-err'].forEach(id=>{ const el=Q(id); if(el) el.textContent=msg.message; });
       break;
     case 'stats':
       Q('#stat-chips').textContent=msg.chips;
@@ -755,7 +760,9 @@ function renderRoom(){
   if(!curRoom) return;
   Q('#room-title').textContent=curRoom.name;
   Q('#room-id').textContent='ID: '+curRoom.id;
-  const isOwner=curRoom.ownerId===myId;
+  // Check ownership — match by id OR by the isOwner flag on our player entry
+  const myPlayer = curRoom.players.find(p=>p.id===myId) || curRoom.players.find(p=>p.name===myUser&&!p.isBot);
+  const isOwner = curRoom.ownerId===myId || (myPlayer&&myPlayer.isOwner);
   Q('#hctrl').style.display=isOwner?'':'none';
   const list=Q('#room-players'); list.innerHTML='';
   curRoom.players.forEach(p=>{
@@ -1078,7 +1085,8 @@ Q('#btn-refresh').addEventListener('click',()=>send({type:'refreshServers'}));
 Q('#btn-keybinds').addEventListener('click',openKb);
 Q('#btn-create').addEventListener('click',()=>{
   const n=Q('#ns-name').value.trim();
-  if(!n){ Q('#cr-err').textContent='Name required.'; return; }
+  if(!n){ Q('#cr-err').textContent='Server name required.'; return; }
+  if(!ws||ws.readyState!==1){ Q('#cr-err').textContent='Not connected — please wait.'; return; }
   Q('#cr-err').textContent='';
   send({type:'createServer',name:n,password:Q('#ns-pw').value});
 });
