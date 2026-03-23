@@ -481,7 +481,7 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 }
 .ut-pill-lane {
   position:absolute; top:50%; left:0; right:0;
-  height:12px; background:#080; transform:translateY(-50%);
+  height:8px; background:#080; transform:translateY(-50%);
 }
 .ut-pill-cursor {
   position:absolute; top:0; bottom:0; width:5px;
@@ -2001,7 +2001,7 @@ let utState = null;        // current server state
 let sliderAnim = null;     // requestAnimationFrame id for accuracy slider
 let sliderPos = 0;         // 0–100
 let sliderDir = 1;
-let sliderSpeed = 1.4;     // % per frame
+let sliderSpeed = 2.8;     // % per frame — fast enough to be challenging
 let sliderStopped = false;
 let dodgeKeys = {};        // active keys for soul movement
 let dodgeAnimId = null;
@@ -2127,9 +2127,16 @@ function enterBattle() {
 }
 
 function leaveBattle() {
-  show('lobby');
   stopSlider();
   stopDodge();
+  utState = null;
+  // Close any open overlays
+  const dod=Q('#ut-dodge-overlay'); if(dod) dod.classList.remove('open');
+  const shop=Q('#ut-shop-modal'); if(shop) shop.classList.remove('open');
+  const pvp=Q('#ut-pvp-modal'); if(pvp) pvp.classList.remove('open');
+  show('lobby');
+  // Refresh servers so the lobby is in sync
+  send({type:'refreshServers'});
 }
 
 // ── Render state ───────────────────────────────────────────
@@ -2176,7 +2183,8 @@ function renderUtState() {
   // Enemy sprite + dialogue
   if(enemy){
     drawSprite('ut-sprite-canvas', enemy.id, !!enemy.isBoss);
-    drawSprite('ut-fight-sprite', enemy.id, !!enemy.isBoss);
+    // ut-fight-sprite only exists when fight overlay is shown — guard null
+    if(Q('#ut-fight-sprite')) drawSprite('ut-fight-sprite', enemy.id, !!enemy.isBoss);
     const bl=Q('#ut-boss-label'); if(bl) bl.style.display=enemy.isBoss?'':'none';
     if(enemy.flavorTexts?.length){
       const txt=enemy.flavorTexts[Math.floor(Math.random()*enemy.flavorTexts.length)];
@@ -2189,8 +2197,10 @@ function renderUtState() {
   const lh=Q('#ut-lobby-hp'); if(lh) lh.textContent=`HP ${stats.hp}/${stats.maxHp}`;
   const lk=Q('#ut-lobby-kills'); if(lk) lk.textContent=`Kills: ${stats.kills||0}`;
 
+  // Trigger dodge AFTER everything else is set up
   if(utState.battlePhase==='dodging'&&utState.attackPattern){
-    startDodge(utState.attackPattern, enemy?.name||'Enemy');
+    // Small delay so DOM settles before spawning projectiles
+    setTimeout(()=>startDodge(utState.attackPattern, enemy?.name||'Enemy'), 80);
   } else {
     utShowMenu();
   }
@@ -2222,6 +2232,8 @@ function utShowFight() {
   const fo=Q('#ut-fight-overlay'); if(fo) fo.style.display='flex';
   const ao=Q('#ut-act-overlay');   if(ao) ao.style.display='none';
   const io=Q('#ut-item-overlay');  if(io) io.style.display='none';
+  // Draw sprite in fight overlay now that canvas is visible
+  if(utState?.enemy) drawSprite('ut-fight-sprite', utState.enemy.id, !!utState.enemy.isBoss);
   startSlider();
 }
 
@@ -2440,11 +2452,11 @@ function startSlider() {
   stopSlider();
   sliderPos=0; sliderDir=1; sliderStopped=false;
 
-  // Build bone obstacles in pill
+  // Build bone obstacles in pill — more bones, random heights
   const pill=Q('#ut-attack-pill'); if(!pill) return;
   pill.querySelectorAll('.ut-bone').forEach(b=>b.remove());
-  const bonePositions=[18,35,52,68,82]; // % positions
-  const boneHeights=[20,14,28,14,20];
+  const bonePositions=[12,26,40,55,68,80,92]; // more bones
+  const boneHeights=[24,16,32,14,28,18,24];
   bonePositions.forEach((pos,i)=>{
     const b=document.createElement('div'); b.className='ut-bone';
     b.style.left=pos+'%'; b.style.height=(boneHeights[i]||18)+'px';
@@ -2491,7 +2503,7 @@ function utStopSlider() {
 }
 
 // ── Dodge mechanic ─────────────────────────────────────────
-let soulSpeed = 2.8; // slightly slower so dodging in smaller box is harder
+let soulSpeed = 3.2; // moves fast — in a 168px box this is tight
 let arenaW=0, arenaH=0;
 let isPvpDodge=false;
 
@@ -2646,7 +2658,7 @@ function spawnProjectile(arena, x, y, vx, vy, dmg, type) {
 
 function spawnAttackPattern(pattern, arena) {
   const count = pattern.count || 8;
-  const spd   = (pattern.speed || 3) * 0.85;
+  const spd   = (pattern.speed || 3) * 1.7; // much faster
   const dmg   = pattern.damage || 8;
   const dur   = pattern.duration || 4000;
   const type  = pattern.type || 'bullets';
@@ -2655,88 +2667,101 @@ function spawnAttackPattern(pattern, arena) {
     case 'bullets':
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          const x = Math.random() * (arenaW - 12);
-          const vx = (Math.random() - 0.5) * spd * 1.8;
-          const vy = spd + Math.random() * 1.5;
-          spawnProjectile(arena, x, -12, vx, vy, dmg, 'bullets');
-        }, i * (dur / count));
+          for(let j=0;j<2;j++){
+            const x = Math.random() * (arenaW - 12);
+            const vx = (Math.random()-0.5)*spd*1.4;
+            const vy = spd*(0.8+Math.random()*0.5);
+            spawnProjectile(arena, x, -12, vx, vy, dmg, 'bullets');
+          }
+        }, i*(dur/count));
       }
       break;
 
     case 'rain':
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          const x = Math.random() * (arenaW - 12);
-          spawnProjectile(arena, x, -12, 0, spd + Math.random() * 1.5, dmg, 'rain');
-        }, i * (dur / count));
+          const aimed = Math.random()<0.6;
+          const x = aimed
+            ? Math.max(0,Math.min(arenaW-12,soulX+(Math.random()-0.5)*24))
+            : Math.random()*(arenaW-12);
+          spawnProjectile(arena, x, -12, 0, spd*(0.9+Math.random()*0.4), dmg, 'rain');
+        }, i*(dur/count*0.65));
       }
       break;
 
     case 'walls':
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          const fromLeft = i % 2 === 0;
-          const gap = 36 + Math.random() * 28;
-          const gapY = Math.random() * (arenaH - gap);
-
-          const makeWall = (h, top, bot) => {
-            const w = document.createElement('div');
-            w.style.cssText = `position:absolute;background:#fff;width:16px;height:${h}px;top:${bot?'auto':'0'};bottom:${bot?'0':'auto'};${fromLeft ? 'left:-16px' : 'right:-16px'};image-rendering:pixelated;`;
+          const fromLeft = i%2===0;
+          const gap = 26+Math.random()*10; // tight gap
+          const gapY = 8+Math.random()*(arenaH-gap-16);
+          const makeWall=(h,isTop)=>{
+            if(h<=0)return;
+            const w=document.createElement('div');
+            w.style.cssText=`position:absolute;background:#fff;width:18px;height:${h}px;${isTop?'top:0':'bottom:0'};${fromLeft?'left:-18px':'right:-18px'};image-rendering:pixelated;`;
             arena.appendChild(w);
-            const vx = (fromLeft ? 1 : -1) * spd;
-            projectiles.push({ el: w, vx, vy: 0, damage: dmg, hit: false });
-            const move = () => {
-              if (!w.parentNode) return;
-              const side = fromLeft ? 'left' : 'right';
-              w.style[side] = (parseFloat(w.style[side] || 0) + vx) + 'px';
-              const pos = parseFloat(w.style[side] || 0);
-              if (pos > arenaW + 30 || pos < -30) w.remove();
+            const vx=(fromLeft?1:-1)*spd*1.1;
+            projectiles.push({el:w,vx,vy:0,damage:dmg,hit:false});
+            const move=()=>{
+              if(!w.parentNode)return;
+              const side=fromLeft?'left':'right';
+              w.style[side]=(parseFloat(w.style[side]||0)+vx)+'px';
+              const pos=parseFloat(w.style[side]||0);
+              if(pos>arenaW+30||pos<-30)w.remove();
               else requestAnimationFrame(move);
             };
             requestAnimationFrame(move);
           };
-          makeWall(gapY, true, false);
-          makeWall(arenaH - gapY - gap, false, true);
-        }, i * (dur / count));
+          makeWall(gapY,true);
+          makeWall(arenaH-gapY-gap,false);
+        }, i*(dur/count));
       }
       break;
 
     case 'spiral': {
-      let angle = 0;
+      let angle=0;
+      const arms=3;
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          const a = angle + i * (Math.PI * 2 / Math.min(count, 8));
-          const vx = Math.cos(a) * spd;
-          const vy = Math.sin(a) * spd;
-          spawnProjectile(arena, arenaW / 2 - 6, arenaH / 2 - 6, vx, vy, dmg, 'spiral');
-          angle += 0.25;
-        }, i * (dur / (count * 1.4)));
+          for(let arm=0;arm<arms;arm++){
+            const a=angle+arm*(Math.PI*2/arms);
+            spawnProjectile(arena,arenaW/2-6,arenaH/2-6,Math.cos(a)*spd,Math.sin(a)*spd,dmg,'spiral');
+          }
+          angle+=0.22;
+        }, i*(dur/count*0.75));
       }
       break;
     }
 
     case 'cross':
-      // Sweeping horizontal laser bars
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          const el = document.createElement('div');
-          const y = 16 + Math.random() * (arenaH - 32);
-          el.style.cssText = `position:absolute;height:10px;width:0;top:${y}px;left:0;background:#ff0;box-shadow:0 0 6px #ff0;image-rendering:pixelated;`;
+          const el=document.createElement('div');
+          const isHoriz=i%2===0;
+          const pos=12+Math.random()*((isHoriz?arenaH:arenaW)-24);
+          if(isHoriz){
+            el.style.cssText=`position:absolute;height:10px;width:0;top:${pos}px;left:0;background:#f80;image-rendering:pixelated;`;
+          } else {
+            el.style.cssText=`position:absolute;width:10px;height:0;left:${pos}px;top:0;background:#f80;image-rendering:pixelated;`;
+          }
           arena.appendChild(el);
-          let w = 0;
-          const p = { el, vx: 0, vy: 0, damage: dmg, hit: false };
-          projectiles.push(p);
-          const expand = () => {
-            if (!el.parentNode) return;
-            w += spd * 5;
-            el.style.width = Math.min(w, arenaW) + 'px';
-            if (w < arenaW) requestAnimationFrame(expand);
-            else setTimeout(() => { if (el.parentNode) el.remove(); }, 400);
-          };
-          // Brief warning flash before expanding
-          el.style.background = '#f80';
-          setTimeout(() => { el.style.background = '#ff0'; requestAnimationFrame(expand); }, 300);
-        }, i * (dur / count));
+          projectiles.push({el,vx:0,vy:0,damage:dmg,hit:false});
+          setTimeout(()=>{
+            if(!el.parentNode)return;
+            el.style.background='#ff0';
+            const max=isHoriz?arenaW:arenaH;
+            let sz=0;
+            const expand=()=>{
+              if(!el.parentNode)return;
+              sz+=spd*8;
+              if(isHoriz)el.style.width=Math.min(sz,max)+'px';
+              else el.style.height=Math.min(sz,max)+'px';
+              if(sz<max)requestAnimationFrame(expand);
+              else setTimeout(()=>{if(el.parentNode)el.remove();},300);
+            };
+            requestAnimationFrame(expand);
+          },200);
+        }, i*(dur/count*0.85));
       }
       break;
 
@@ -2744,19 +2769,22 @@ function spawnAttackPattern(pattern, arena) {
     default:
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          const cx = Math.random() * (arenaW - 12);
-          const cy = Math.random() * (arenaH - 12);
-          const ang = Math.random() * Math.PI * 2;
-          const vx = Math.cos(ang) * spd;
-          const vy = Math.sin(ang) * spd;
-          spawnProjectile(arena, cx, cy, vx, vy, dmg, 'random');
-        }, i * (dur / count));
+          const edge=Math.floor(Math.random()*4);
+          let sx,sy;
+          if(edge===0){sx=Math.random()*arenaW;sy=-12;}
+          else if(edge===1){sx=Math.random()*arenaW;sy=arenaH+12;}
+          else if(edge===2){sx=-12;sy=Math.random()*arenaH;}
+          else{sx=arenaW+12;sy=Math.random()*arenaH;}
+          const dx=(soulX-sx)+(Math.random()-0.5)*28;
+          const dy=(soulY-sy)+(Math.random()-0.5)*28;
+          const dist=Math.sqrt(dx*dx+dy*dy)||1;
+          spawnProjectile(arena,sx,sy,(dx/dist)*spd,(dy/dist)*spd,dmg,'random');
+        }, i*(dur/count*0.6));
       }
       break;
   }
 }
 
-// ── Shop ───────────────────────────────────────────────────
 function openUtShop() {
   const list=Q('#ut-shop-list'); list.innerHTML='';
   Q('#ut-shop-gold').textContent='G: '+(utState?.stats?.gold||0);
