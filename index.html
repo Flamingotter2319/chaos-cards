@@ -83,9 +83,10 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .lby-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;
   background:rgba(0,0,0,0.72);border-bottom:1px solid var(--gdim);flex-shrink:0;
   position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);}
-.lby-grid{display:grid;grid-template-columns:220px 1fr 300px;gap:13px;padding:14px;max-width:1200px;margin:0 auto;}
-@media(max-width:900px){.lby-grid{grid-template-columns:1fr 280px;}}
-@media(max-width:660px){.lby-grid{grid-template-columns:1fr;}}
+.lby-grid{display:grid;grid-template-columns:200px 1fr 240px 280px;gap:12px;padding:14px;max-width:1400px;margin:0 auto;}
+@media(max-width:1100px){.lby-grid{grid-template-columns:180px 1fr 220px;}}
+@media(max-width:800px){.lby-grid{grid-template-columns:1fr 240px;}}
+@media(max-width:600px){.lby-grid{grid-template-columns:1fr;}}
 .srv-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto;}
 .srv-item{display:flex;align-items:center;justify-content:space-between;
   padding:9px 12px;background:rgba(0,0,0,0.28);border:1px solid rgba(201,168,76,0.1);
@@ -446,18 +447,27 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 
 /* Menu bar: FIGHT ACT ITEM MERCY */
 .ut-menu-bar {
-  display:flex; padding:5px 8px; gap:6px;
-  background:#000; border-top:2px solid #fff; flex-shrink:0;
+  display:flex; padding:6px 8px; gap:5px;
+  background:#000; border-top:3px solid #fff; flex-shrink:0;
+  min-height:70px; /* taller bar */
 }
 .ut-menu-btn {
-  display:flex; align-items:center; justify-content:center; gap:5px;
-  background:#000; border:2px solid #fff; color:#fff;
-  padding:7px 0; font-family:var(--ut-font); font-size:9px;
-  cursor:pointer; flex:1; outline:none;
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:3px;
+  background:#000; border:3px solid #fff; color:#fff;
+  padding:8px 4px; font-family:var(--ut-font); font-size:8px;
+  cursor:pointer; flex:1; outline:none; line-height:1.2;
+  position:relative;
 }
-.ut-menu-btn .heart { display:none; color:#ff8c00; }
-.ut-menu-btn.selected { border-color:#ff8c00; color:#ff8c00; }
-.ut-menu-btn.selected .heart { display:inline; }
+.ut-menu-btn .btn-icon {
+  font-size:20px; line-height:1; display:block;
+  image-rendering:pixelated;
+}
+.ut-menu-btn .heart { display:none; position:absolute; left:3px; top:50%; transform:translateY(-50%); color:#ff8c00; font-size:12px; }
+.ut-menu-btn.selected { border-color:#ff8c00; color:#ff8c00; background:#0a0a00; }
+.ut-menu-btn.selected .heart { display:block; }
+.ut-menu-btn:hover { border-color:#ff8c00; color:#ff8c00; }
+.ut-menu-btn:hover .heart { display:block; }
 
 /* Fight overlay — full screen attack bar */
 .ut-fight-overlay {
@@ -474,27 +484,36 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
   position:absolute; top:12px; left:50%; transform:translateX(-50%);
 }
 /* Pill attack bar */
-.ut-attack-pill-wrap { position:relative; width:88%; max-width:500px; height:52px; }
-.ut-attack-pill {
-  position:absolute; inset:0; border-radius:26px;
-  border:3px solid #fff; background:#000; overflow:hidden;
+/* Undertale-exact attack bar: wide rectangle, yellow border, green centre lane, red bones */
+.ut-attack-pill-wrap {
+  position:relative; width:90%; max-width:520px; height:60px;
+  /* Outer yellow/gold border like Undertale */
+  border:4px solid #ff0; background:#000;
+  box-shadow:0 0 0 2px #000, 0 0 0 5px #ff0;
 }
+.ut-attack-pill {
+  position:absolute; inset:0; background:#000; overflow:hidden;
+  border-radius:0; border:none;
+}
+/* Green lane — centre strip */
 .ut-pill-lane {
   position:absolute; top:50%; left:0; right:0;
-  height:8px; background:#080; transform:translateY(-50%);
+  height:10px; background:#0a0; transform:translateY(-50%);
 }
+/* White moving cursor bar */
 .ut-pill-cursor {
-  position:absolute; top:0; bottom:0; width:5px;
+  position:absolute; top:0; bottom:0; width:8px;
   background:#fff; transform:translateX(-50%); z-index:5;
-  box-shadow:0 0 6px #fff;
 }
+/* Red bone obstacles — vertical bars crossing full height */
 .ut-bone {
-  position:absolute; top:50%; transform:translateY(-50%);
-  width:9px; background:#900;
+  position:absolute; top:0; bottom:0;
+  width:10px; background:#f00;
 }
 .ut-dmg-preview {
-  font-family:var(--ut-font); font-size:18px; color:#fff;
-  text-align:center; text-shadow:2px 2px #f00; min-height:26px;
+  font-family:var(--ut-font); font-size:16px; color:#fff;
+  text-align:center; text-shadow:2px 2px #f00; min-height:24px;
+  margin-top:8px;
 }
 .ut-attack-hint { font-family:var(--ut-font); font-size:7px; color:#888; text-align:center; }
 
@@ -682,9 +701,8 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
       <div class="srv-list" id="srv-list"><div class="empty">No servers yet — create one!</div></div>
     </div>
 
-    <!-- RIGHT: Account + Create + Join + Chat + Friends -->
-    <div style="display:flex;flex-direction:column;gap:12px;overflow-y:auto;">
-      <!-- Stats -->
+    <!-- 3rd COLUMN: Account + Create + Join -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
       <div class="panel" id="stats-panel">
         <div class="ptitle">⬡ YOUR ACCOUNT ⬡</div>
         <div class="stat-row"><span class="stat-label">Chips</span><span class="stat-val" id="stat-chips">—</span></div>
@@ -705,43 +723,45 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
         <div id="join-err" class="err"></div>
         <button class="btn btn-ghost" id="btn-joinid">Join</button>
       </div>
-      <!-- Chat + Friends as tabs below -->
-      <div class="panel" style="flex:1;min-height:0;display:flex;flex-direction:column;">
-        <div class="tabs" style="margin-bottom:10px">
-          <div class="tab active" id="ltab-chat" onclick="switchLTab('chat')">Global Chat</div>
-          <div class="tab" id="ltab-friends" onclick="switchLTab('friends')">Friends</div>
+    </div>
+
+    <!-- 4th COLUMN: Chat + Friends (always visible, same level as Create Server) -->
+    <div class="panel" style="display:flex;flex-direction:column;min-height:0;max-height:100%;">
+      <div class="tabs" style="margin-bottom:10px">
+        <div class="tab active" id="ltab-chat" onclick="switchLTab('chat')">Global Chat</div>
+        <div class="tab" id="ltab-friends" onclick="switchLTab('friends')">Friends</div>
+      </div>
+      <div id="lpane-chat" style="display:flex;flex-direction:column;flex:1;min-height:0;">
+        <div id="global-chat-msgs" style="flex:1;min-height:120px;max-height:260px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:7px;padding:8px;font-size:12px;margin-bottom:8px;"></div>
+        <div style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);margin-bottom:5px">@username message to DM</div>
+        <div style="display:flex;gap:6px">
+          <input type="text" id="gchat-lobby-inp" placeholder="Message everyone…" maxlength="300" style="flex:1;font-size:12px;padding:7px 10px;">
+          <button class="btn btn-ghost btn-sm" id="btn-gchat-lobby" style="margin-top:0">→</button>
         </div>
-        <!-- GLOBAL CHAT pane -->
-        <div id="lpane-chat" style="display:flex;flex-direction:column;flex:1;min-height:0;">
-          <div id="global-chat-msgs" style="flex:1;min-height:160px;max-height:260px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:7px;padding:8px;font-size:12px;margin-bottom:8px;"></div>
-          <div style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);margin-bottom:5px">@username message to DM</div>
-          <div style="display:flex;gap:6px">
-            <input type="text" id="gchat-lobby-inp" placeholder="Message everyone…" maxlength="300" style="flex:1;font-size:12px;padding:7px 10px;">
-            <button class="btn btn-ghost btn-sm" id="btn-gchat-lobby" style="margin-top:0">→</button>
-          </div>
+      </div>
+      <div id="lpane-friends" style="display:none;overflow-y:auto;flex:1;">
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <input type="text" id="friend-inp" placeholder="Add friend by username…" maxlength="20" style="flex:1;font-size:12px;padding:7px 10px;">
+          <button class="btn btn-ghost btn-sm" id="btn-add-friend" style="margin-top:0">+ Add</button>
         </div>
-        <!-- FRIENDS pane -->
-        <div id="lpane-friends" style="display:none;">
-          <div style="display:flex;gap:6px;margin-bottom:10px">
-            <input type="text" id="friend-inp" placeholder="Add friend by username…" maxlength="20" style="flex:1;font-size:12px;padding:7px 10px;">
-            <button class="btn btn-ghost btn-sm" id="btn-add-friend" style="margin-top:0">+ Add</button>
+        <div id="friend-err" class="err"></div>
+        <div id="friend-requests-section" style="display:none">
+          <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">INCOMING REQUESTS</div>
+          <div id="friend-requests-list"></div>
+          <hr class="g">
+        </div>
+        <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">YOUR FRIENDS</div>
+        <div id="friends-list"><div class="empty" style="padding:14px">No friends yet.</div></div>
+        <div id="dm-panel" style="display:none;margin-top:10px">
+          <hr class="g">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <span style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold)">DM: <span id="dm-with"></span></span>
+            <button class="btn btn-ghost btn-sm" style="font-size:9px;padding:2px 6px;margin-top:0" onclick="Q('#dm-panel').style.display='none'">✕ Close</button>
           </div>
-          <div id="friend-err" class="err"></div>
-          <div id="friend-requests-section" style="display:none">
-            <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:6px">INCOMING REQUESTS</div>
-            <div id="friend-requests-list"></div>
-            <hr class="g">
-          </div>
-          <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:6px">YOUR FRIENDS</div>
-          <div id="friends-list"><div class="empty" style="padding:14px">No friends yet.</div></div>
-          <div id="dm-panel" style="display:none;margin-top:10px">
-            <hr class="g">
-            <div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px;margin-bottom:5px">DM: <span id="dm-with"></span></div>
-            <div id="dm-msgs" style="height:130px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:6px;padding:6px;font-size:11px;margin-bottom:5px;"></div>
-            <div style="display:flex;gap:5px">
-              <input type="text" id="dm-inp" placeholder="Direct message…" maxlength="300" style="flex:1;font-size:11px;padding:6px 9px;">
-              <button class="btn btn-ghost btn-sm" id="btn-dm-send" style="margin-top:0">→</button>
-            </div>
+          <div id="dm-msgs" style="height:130px;overflow-y:auto;background:rgba(0,0,0,.22);border:1px solid rgba(201,168,76,.08);border-radius:6px;padding:6px;font-size:11px;margin-bottom:5px;"></div>
+          <div style="display:flex;gap:5px">
+            <input type="text" id="dm-inp" placeholder="Direct message…" maxlength="300" style="flex:1;font-size:11px;padding:6px 9px;">
+            <button class="btn btn-ghost btn-sm" id="btn-dm-send" style="margin-top:0">→</button>
           </div>
         </div>
       </div>
@@ -881,10 +901,51 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
           <div class="ptitle" style="font-size:9px">SPECIALS IN DECK</div>
           <div id="g-specials-list" style="font-size:9px;color:var(--dim);line-height:1.9;font-family:'Special Elite',cursive;"></div>
         </div>
+        <div id="g-reserve-section" style="display:none">
+          <div class="ptitle" style="font-size:9px;color:var(--gold2)">YOUR SPECIALS</div>
+          <div id="g-reserve-list" style="display:flex;flex-direction:column;gap:4px;"></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- FLOATING CHAT WINDOW -->
+<div id="float-chat" style="display:none;position:fixed;bottom:80px;right:20px;width:320px;max-height:480px;
+  background:rgba(4,2,7,.97);border:1px solid var(--gdim);border-radius:9px;
+  z-index:400;display:none;flex-direction:column;overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);backdrop-filter:blur(14px);">
+  <!-- Header / drag bar -->
+  <div id="float-chat-header" style="display:flex;align-items:center;justify-content:space-between;
+    padding:8px 12px;background:rgba(201,168,76,.08);border-bottom:1px solid var(--gdim);cursor:move;flex-shrink:0;">
+    <span style="font-family:'Special Elite',cursive;font-size:10px;color:var(--gold);letter-spacing:1px">💬 MESSAGES</span>
+    <button onclick="toggleFloatChat()" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px;padding:0 4px;">✕</button>
+  </div>
+  <!-- Friend list view -->
+  <div id="float-friends-view" style="flex:1;overflow-y:auto;padding:8px;">
+    <div style="font-family:'Special Elite',cursive;font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:8px">SELECT A FRIEND</div>
+    <div id="float-friends-list"></div>
+  </div>
+  <!-- DM conversation view -->
+  <div id="float-dm-view" style="display:none;flex-direction:column;flex:1;min-height:0;">
+    <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--gdim);flex-shrink:0;">
+      <button onclick="floatShowFriends()" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:11px;font-family:'Special Elite',cursive;">← Back</button>
+      <span style="font-family:'Special Elite',cursive;font-size:10px;color:var(--cream)" id="float-dm-name"></span>
+      <span id="float-dm-online" style="font-size:8px;color:var(--dim);margin-left:auto"></span>
+    </div>
+    <div id="float-dm-msgs" style="flex:1;min-height:200px;max-height:280px;overflow-y:auto;padding:8px;font-size:11px;"></div>
+    <div style="display:flex;gap:5px;padding:6px;border-top:1px solid var(--gdim);flex-shrink:0;">
+      <input type="text" id="float-dm-inp" placeholder="Message…" maxlength="300"
+        style="flex:1;font-size:11px;padding:6px 9px;background:rgba(0,0,0,.4);border:1px solid var(--gdim);color:var(--cream);border-radius:5px;">
+      <button class="btn btn-ghost btn-sm" id="float-dm-send" style="margin-top:0">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating chat toggle button -->
+<button id="float-chat-toggle" onclick="toggleFloatChat()" style="display:none;position:fixed;bottom:20px;right:20px;
+  background:rgba(4,2,7,.95);border:1px solid var(--gdim);border-radius:50%;width:44px;height:44px;
+  font-size:18px;cursor:pointer;z-index:399;box-shadow:0 4px 12px rgba(0,0,0,.5);" title="Chat (C)">💬</button>
 
 <!-- ROUND SUMMARY MODAL -->
 <!-- Mobile action bar — only shows when sidebar is hidden on small screens -->
@@ -1033,6 +1094,7 @@ function handle(msg){
       setTimeout(()=>{ send({type:'getFriends'}); send({type:'getOnline'}); },300);
       if(Q('#ltab-chat')) Q('#ltab-chat').textContent='Global Chat';
       if(Q('#ltab-friends')) Q('#ltab-friends').textContent='Friends';
+      showChatToggle(true);
       break;
     case 'authError':
       // Only show error on the active pane
@@ -1052,15 +1114,27 @@ function handle(msg){
       }
       break;
     case 'dm':
-      // Show in DM panel if open to this person, otherwise notify
-      if(msg.self){
-        if(dmTarget===msg.to) addDMMsg(msg.from,msg.text,true);
-        addGlobalMsg(`DM→${msg.to}`,msg.text,msg.ts);
-      } else {
-        if(dmTarget===msg.from) addDMMsg(msg.from,msg.text,false);
-        else { openDM(msg.from); addDMMsg(msg.from,msg.text,false); }
-        addGlobalMsg(`DM from ${msg.from}`,msg.text,msg.ts);
-        log(`💬 DM from ${msg.from}: ${msg.text.slice(0,40)}`,'good');
+      // Store message locally
+      {
+        const key = msg.self ? msg.to : msg.from;
+        if(!dmStore[key]) dmStore[key]=[];
+        dmStore[key].push({from:msg.from,to:msg.to||floatChatTarget,text:msg.text,ts:msg.ts||Date.now(),read:msg.self||floatChatTarget===key});
+        // If float chat is open on this conversation, re-render
+        if(floatChatTarget===key&&floatChatOpen) floatRenderDMs(key);
+        // If received (not self), show in float window and notify
+        if(!msg.self){
+          if(floatChatOpen&&floatChatTarget===msg.from){
+            floatRenderDMs(msg.from);
+          } else {
+            // Bring up the floating chat
+            floatChatOpen=true;
+            const win=Q('#float-chat'); if(win) win.style.display='flex';
+            floatOpenDM(msg.from);
+            log(`💬 DM from ${msg.from}`, 'good');
+          }
+        }
+        // Also add to global chat view
+        addGlobalMsg(msg.self?`→ ${msg.to}`:msg.from, msg.text, msg.ts);
       }
       break;
     case 'dmError':
@@ -1251,7 +1325,136 @@ function renderFriends(){
   });
 }
 
-// ── Broke timer ────────────────────────────────────────────
+// ── Floating Chat Window ─────────────────────────────────────
+let floatChatOpen = false;
+let floatChatTarget = '';
+// Message store — persists DMs for offline delivery (keyed by username)
+const dmStore = {};  // {to: [{from,text,ts,read}]}
+
+function toggleFloatChat() {
+  floatChatOpen = !floatChatOpen;
+  const win = Q('#float-chat');
+  const btn = Q('#float-chat-toggle');
+  if(!win) return;
+  win.style.display = floatChatOpen ? 'flex' : 'none';
+  if(btn) btn.style.background = floatChatOpen ? 'rgba(201,168,76,.2)' : 'rgba(4,2,7,.95)';
+  if(floatChatOpen) { floatRenderFriends(); }
+}
+
+function floatShowFriends() {
+  Q('#float-friends-view').style.display = '';
+  Q('#float-dm-view').style.display = 'none';
+  floatChatTarget = '';
+  floatRenderFriends();
+}
+
+function floatRenderFriends() {
+  const list = Q('#float-friends-list'); if(!list) return;
+  list.innerHTML = '';
+  if(!myFriends.length) {
+    list.innerHTML = '<div style="font-family:\'Special Elite\',cursive;font-size:10px;color:var(--dim);padding:8px">No friends yet.</div>';
+    return;
+  }
+  myFriends.forEach(u => {
+    const online = onlineUsers.includes(u);
+    const unread = (dmStore[u]||[]).filter(m=>!m.read&&m.from!==myUser).length;
+    const d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 8px;cursor:pointer;border-radius:5px;border:1px solid transparent;';
+    d.onmouseover = ()=>d.style.borderColor='var(--gdim)';
+    d.onmouseout = ()=>d.style.borderColor='transparent';
+    d.innerHTML = `
+      <span style="width:8px;height:8px;border-radius:50%;background:${online?'#4caf50':'#555'};flex-shrink:0;display:inline-block"></span>
+      <span style="font-family:'Special Elite',cursive;font-size:10px;color:var(--cream);flex:1">${esc(u)}</span>
+      ${unread?`<span style="background:var(--gold);color:#000;border-radius:10px;padding:1px 6px;font-size:8px;font-family:'Special Elite',cursive">${unread}</span>`:''}
+      <button class="btn btn-ghost btn-xs" style="margin:0;font-size:9px">💬</button>
+    `;
+    d.onclick = ()=>floatOpenDM(u);
+    list.appendChild(d);
+  });
+}
+
+function floatOpenDM(u) {
+  floatChatTarget = u;
+  Q('#float-friends-view').style.display = 'none';
+  const dmView = Q('#float-dm-view'); dmView.style.display = 'flex';
+  Q('#float-dm-name').textContent = u;
+  const online = onlineUsers.includes(u);
+  Q('#float-dm-online').textContent = online ? '● Online' : '○ Offline';
+  Q('#float-dm-online').style.color = online ? '#4caf50' : '#555';
+  // Render stored messages
+  floatRenderDMs(u);
+  Q('#float-dm-inp')?.focus();
+}
+
+function floatRenderDMs(u) {
+  const box = Q('#float-dm-msgs'); if(!box) return;
+  box.innerHTML = '';
+  const msgs = dmStore[u]||[];
+  // Mark as read
+  msgs.forEach(m=>{ if(m.from!==myUser) m.read=true; });
+  msgs.forEach(m=>{
+    const p = document.createElement('div');
+    p.style.cssText = 'margin-bottom:5px;padding:4px 7px;border-radius:5px;font-size:11px;line-height:1.4;word-break:break-word;max-width:90%;'+(m.from===myUser?'margin-left:auto;background:rgba(201,168,76,.1);text-align:right;':'background:rgba(255,255,255,.05);');
+    const time = new Date(m.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    p.innerHTML = `<span style="color:${m.from===myUser?'#81c784':'var(--gold)'};font-size:9px">${esc(m.from===myUser?'You':m.from)}</span> <span style="color:var(--dim);font-size:8px">${time}</span><br>${esc(m.text)}`;
+    box.appendChild(p);
+  });
+  box.scrollTop = box.scrollHeight;
+  floatRenderFriends(); // refresh unread badges
+}
+
+function floatSendDM() {
+  const inp = Q('#float-dm-inp');
+  const text = inp?.value?.trim();
+  if(!text||!floatChatTarget) return;
+  send({type:'dm',to:floatChatTarget,text});
+  // Add to local store immediately
+  if(!dmStore[floatChatTarget]) dmStore[floatChatTarget]=[];
+  dmStore[floatChatTarget].push({from:myUser,to:floatChatTarget,text,ts:Date.now(),read:true});
+  floatRenderDMs(floatChatTarget);
+  inp.value='';
+}
+
+// Override openDM to use floating window instead
+function openDM(u) {
+  // Show the floating chat and open the DM
+  floatChatOpen = true;
+  const win = Q('#float-chat'); if(win) win.style.display='flex';
+  floatOpenDM(u);
+}
+
+// Show/hide the chat toggle button when logged in
+function showChatToggle(show) {
+  const btn = Q('#float-chat-toggle');
+  if(btn) btn.style.display = show ? 'block' : 'none';
+}
+
+// Make floating chat window draggable
+(function(){
+  let dragging=false,ox=0,oy=0,startX=0,startY=0;
+  document.addEventListener('mousedown',e=>{
+    const hdr=Q('#float-chat-header');
+    if(hdr&&hdr.contains(e.target)&&e.target.tagName!=='BUTTON'){
+      dragging=true;
+      const win=Q('#float-chat');
+      const r=win.getBoundingClientRect();
+      ox=r.right-window.innerWidth; oy=r.bottom-window.innerHeight;
+      startX=e.clientX; startY=e.clientY;
+      e.preventDefault();
+    }
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!dragging)return;
+    const dx=e.clientX-startX, dy=e.clientY-startY;
+    const win=Q('#float-chat');
+    const r=win.getBoundingClientRect();
+    win.style.right=Math.max(0,-(r.right-window.innerWidth)-dx)+'px';
+    win.style.bottom=Math.max(0,-(r.bottom-window.innerHeight)-dy)+'px';
+    startX=e.clientX; startY=e.clientY;
+  });
+  document.addEventListener('mouseup',()=>dragging=false);
+})();
+
 function showBroke(waitMs){
   clearInterval(brokeInterval);
   const end=Date.now()+waitMs;
@@ -1306,6 +1509,8 @@ function setMode(m){
   const sel=Q('#set-mode'); if(sel) sel.value=m;
   Q('#bj-rules').style.display=(m==='blackjack'||m==='lucky21')?'':'none';
   Q('#pk-rules').style.display=m==='poker'?'':'none';
+  // Auto-save settings so room always has the right mode
+  if(curRoom) send({type:'updateSettings',settings:collectSettings()});
 }
 
 function applySetDisplay(s){
@@ -1404,108 +1609,147 @@ const DEALER_POS=[50,8];
 function renderGame(){
   const g=game; if(!g) return;
   const ph={betting:'BETTING',play:'PLAY',reveal:'SHOWDOWN'};
-  Q('#g-round').textContent=`ROUND ${g.round} · ${ph[g.phase]||g.phase.toUpperCase()} · ${(g.mode||'blackjack').toUpperCase()}`;
+  Q('#g-round').textContent=`ROUND ${g.round} \u00b7 ${ph[g.phase]||g.phase.toUpperCase()} \u00b7 ${(g.mode||'blackjack').toUpperCase()}`;
   Q('#tc-mode').textContent=(g.mode||'blackjack').toUpperCase();
   Q('#tc-pot').textContent=`POT: ${g.pot}`;
   Q('#tc-deck').textContent=`${g.deckSize} CARDS`;
 
-  // Community
-  const cc=Q('#tc-comm'); cc.innerHTML='';
-  g.community.forEach(c=>cc.appendChild(mkCard(c)));
+  // Community cards - only rebuild if count changed
+  const cc=Q('#tc-comm');
+  if(cc.children.length!==g.community.length){ cc.innerHTML=''; g.community.forEach(c=>cc.appendChild(mkCard(c))); }
 
-  // Enabled specials list in sidebar
   const sl=Q('#g-specials-list');
   if(sl){ const inDeck=ALL_SC.filter(s=>g.enabledSpecials?.includes(s.id)||(g.enabledSpecials===undefined));
     sl.innerHTML=inDeck.map(s=>`${s.icon} ${s.name}`).join('<br>')||'None'; }
 
-  // Remove old seats
-  Q('#felt-oval').querySelectorAll('.seat').forEach(s=>s.remove());
-
-  // ── Render DEALER ─────────────────────────────────────────
-  const hasDealer = !!g.dealer;
-  if(hasDealer) renderDealerSeat(g);
-
-  // ── Render PLAYERS ────────────────────────────────────────
-  const myIdx=g.players.findIndex(p=>p.id===myId), n=g.players.length;
+  const hasDealer=!!g.dealer;
+  const myIdx=g.players.findIndex(p=>p.id===myId),n=g.players.length;
   const myP=g.players[myIdx];
+  const oval=Q('#felt-oval');
 
-  // Player positions: if dealer present, skip position index 4 (top-center) so players wrap around
-  function playerPos(pi){
-    if(!hasDealer) return SPOS[Math.min(pi, SPOS.length-1)];
-    // Use all positions except index 4 (top center — that's the dealer)
-    const playerSlots=[0,1,2,3,5,6,7]; // skip index 4
-    return SPOS[playerSlots[Math.min(pi, playerSlots.length-1)]];
+  // Only fully rebuild seats when player count changes - prevents bot-turn glitch
+  const existingSeats=oval.querySelectorAll('.seat');
+  const needsRebuild=existingSeats.length!==(n+(hasDealer?1:0));
+
+  if(needsRebuild){
+    oval.querySelectorAll('.seat').forEach(s=>s.remove());
+    if(hasDealer) renderDealerSeat(g);
+    g.players.forEach((p,ri)=>{
+      const pi=myIdx>=0?(ri-myIdx+n)%n:ri;
+      const pos=utPlayerPos(pi,hasDealer);
+      const seat=buildPlayerSeat(p,g,pi,hasDealer,myIdx>=0?(ri-myIdx+n)%n:ri);
+      seat.dataset.pid=p.id; seat.style.left=pos[0]+'%'; seat.style.top=pos[1]+'%';
+      oval.appendChild(seat);
+      const hel=document.getElementById('sh-'+p.id);
+      if(p.hand&&p.hand.length) p.hand.forEach(c=>hel.appendChild(mkCard(c)));
+    });
+  } else {
+    // Incremental update - no DOM rebuild, just patch text/classes
+    g.players.forEach((p,ri)=>{
+      const seat=oval.querySelector(`.seat[data-pid="${p.id}"]`); if(!seat) return;
+      const isTurn=g.currentPlayerId===p.id&&g.phase==='play';
+      const isMe=p.id===myId;
+      const score=p.score||0;
+      // Badge
+      let badgeHtml='';
+      if(isTurn) badgeHtml=`<div class="sbadge sb-turn">${isMe?'YOUR TURN':'PLAYING'}</div>`;
+      else if(p.status==='bust') badgeHtml='<div class="sbadge sb-bust">BUST</div>';
+      else if(score===21&&p.hand?.length===2) badgeHtml='<div class="sbadge sb-bj">BLACKJACK!</div>';
+      else if(p.status==='standing') badgeHtml='<div class="sbadge sb-stand">STANDING</div>';
+      else if(p.status==='winner') badgeHtml='<div class="sbadge sb-win">WIN</div>';
+      const eb=seat.querySelector('.sbadge');
+      if(badgeHtml){ if(eb) eb.outerHTML=badgeHtml; else seat.insertAdjacentHTML('afterbegin',badgeHtml); }
+      else if(eb) eb.remove();
+      // Plate
+      let plateCls='splate';
+      if(isTurn&&isMe) plateCls+=' my-turn';
+      if(p.status==='bust') plateCls+=' busted';
+      if(p.status==='winner') plateCls+=' winner';
+      if(p.status==='standing') plateCls+=' stand';
+      const plate=seat.querySelector('.splate');
+      if(plate){
+        plate.className=plateCls;
+        let sc=''; if(score>21)sc='ss-bust'; else if(score===21)sc='ss-bj'; else if(score>=17)sc='ss-ok';
+        const scoreStr=g.mode==='poker'?(p.pokerLabel||''):((p.duckLocked?'':'')+(score||''));
+        const se=plate.querySelector('.sscore'); if(se){se.className='sscore '+sc;se.textContent=scoreStr;}
+        const ch=plate.querySelector('.schips'); if(ch) ch.textContent=`${p.chips}\uD83E\uDE99${p.bet?' \u00b7bet'+p.bet:''}${p.debt?' owes'+p.debt:''}`;
+      }
+      // Hand - only rebuild if card count changed
+      const hel=document.getElementById('sh-'+p.id);
+      if(hel&&p.hand&&hel.children.length!==p.hand.length){ hel.innerHTML=''; p.hand.forEach(c=>hel.appendChild(mkCard(c))); }
+    });
+    // Dealer update
+    if(hasDealer&&g.dealer){
+      const ds=oval.querySelector('.seat[data-pid="__dealer__"]');
+      if(ds){
+        const hel=document.getElementById('sh-__dealer__');
+        if(hel&&g.dealer.hand&&hel.children.length!==g.dealer.hand.length){
+          hel.innerHTML='';
+          g.dealer.hand.forEach(c=>{ if(c.faceDown)hel.appendChild(mkFaceDown()); else hel.appendChild(mkCard(c)); });
+        }
+        const sc=ds.querySelector('.sscore');
+        if(sc){
+          const vis=g.dealer.hand.filter(c=>!c.faceDown);
+          const vs=vis.length?handScore(vis,false):0;
+          sc.innerHTML=g.dealer.hasFaceDown?`${vs}<span style="font-size:10px;color:var(--dim)">+?</span>`:`${vs||''}`;
+        }
+      }
+    }
   }
-
-  g.players.forEach((p,ri)=>{
-    const pi=myIdx>=0?(ri-myIdx+n)%n:ri;
-    const pos=playerPos(pi);
-    const isTurn=g.currentPlayerId===p.id&&g.phase==='play';
-    const isMe=p.id===myId;
-    const score=p.score||0;
-
-    const seat=document.createElement('div'); seat.className='seat';
-    seat.style.left=pos[0]+'%'; seat.style.top=pos[1]+'%';
-
-    // Status badge
-    let badge='';
-    if(isTurn)                              badge=`<div class="sbadge sb-turn">${isMe?'YOUR TURN':'PLAYING'}</div>`;
-    else if(p.status==='bust')              badge='<div class="sbadge sb-bust">BUST</div>';
-    else if(score===21&&p.hand?.length===2) badge='<div class="sbadge sb-bj">BLACKJACK!</div>';
-    else if(p.status==='standing')          badge='<div class="sbadge sb-stand">STANDING</div>';
-    else if(p.status==='winner')            badge='<div class="sbadge sb-win">🏆 WIN</div>';
-    else if(amSpec&&isMe)                   badge='<div class="sbadge sb-spec">SPECTATING</div>';
-
-    let sc=''; if(score>21) sc='ss-bust'; else if(score===21) sc='ss-bj'; else if(score>=17) sc='ss-ok';
-    const scoreStr = g.mode==='poker'
-      ? (p.pokerLabel||'')
-      : ((p.duckLocked?'🦆':'')+((p.hand?.filter(c=>!c.isSpecial).length||score)?score:''));
-
-    let plateCls='splate';
-    if(isTurn&&isMe) plateCls+=' my-turn';
-    if(p.status==='bust') plateCls+=' busted';
-    if(p.status==='winner') plateCls+=' winner';
-    if(p.status==='standing') plateCls+=' stand';
-
-    const blindTag=(p.isSmallBlind?'<span class="tag t-spec" style="font-size:7px;margin-left:3px">SB</span>':'')
-                  +(p.isBigBlind?'<span class="tag t-spec" style="font-size:7px;margin-left:3px">BB</span>':'');
-
-    seat.innerHTML=`
-      ${badge}
-      <div class="${plateCls}">
-        <div class="sname">${esc(p.name)}${blindTag}${p.isBot?' 🤖':''}${isMe?' <span style="color:#81c784;font-size:8px">(you)</span>':''}</div>
-        <div class="sscore ${sc}">${scoreStr}</div>
-        <div class="schips">${p.chips}🪙${p.bet?' ·bet'+p.bet:''}${p.debt?' owes'+p.debt:''}</div>
-      </div>
-      <div class="shand" id="sh-${p.id}"></div>
-    `;
-    Q('#felt-oval').appendChild(seat);
-
-    const hel=document.getElementById('sh-'+p.id);
-    if(p.hand&&p.hand.length) p.hand.forEach(c=>hel.appendChild(mkCard(c)));
-  });
-
   renderActBar(g,myP);
+
+  // Render reserve cards for the local player
+  const myPFull = g.players.find(p=>p.id===myId);
+  const reserveSection = Q('#g-reserve-section');
+  const reserveList = Q('#g-reserve-list');
+  if(reserveSection && reserveList) {
+    const reserve = myPFull?.reserve||[];
+    reserveSection.style.display = reserve.length ? '' : 'none';
+    reserveList.innerHTML = '';
+    reserve.forEach((sc,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'qb';
+      btn.style.cssText = 'width:100%;text-align:left;padding:5px 8px;font-size:9px;display:flex;align-items:center;gap:6px;';
+      btn.innerHTML = `<span>${sc.icon||'✨'}</span><span>${esc(sc.name)}</span>`;
+      btn.title = sc.effect||'';
+      btn.onclick = ()=>{
+        if(confirm(`Use ${sc.name}?\n${sc.effect||''}`)) send({type:'useSpecial',idx:i});
+      };
+      reserveList.appendChild(btn);
+    });
+  }
 }
 
-// Client-side card scoring (mirrors server)
-function simpleVal(card){
-  if(!card) return 0;
-  if(card.isSpecial) return card.id==='wildcard'?7:0;
-  if(['J','Q','K'].includes(card.rank)) return 10;
-  return parseInt(card.rank)||0;
+function utPlayerPos(pi,hasDealer){
+  if(!hasDealer) return SPOS[Math.min(pi,SPOS.length-1)];
+  const slots=[0,1,2,3,5,6,7];
+  return SPOS[slots[Math.min(pi,slots.length-1)]];
 }
-function handScore(hand, duckLocked){
-  if(duckLocked) return 17;
-  let total=0, aces=0;
-  (hand||[]).forEach(c=>{
-    if(c.isSpecial){total+=simpleVal(c);return;}
-    if(c.rank==='A'){aces++;total+=11;}
-    else total+=simpleVal(c);
-  });
-  while(total>21&&aces>0){total-=10;aces--;}
-  return total;
+
+function buildPlayerSeat(p,g,pi,hasDealer,myOffset){
+  const isMe=p.id===myId;
+  const isTurn=g.currentPlayerId===p.id&&g.phase==='play';
+  const score=p.score||0;
+  let badge='';
+  if(isTurn) badge=`<div class="sbadge sb-turn">${isMe?'YOUR TURN':'PLAYING'}</div>`;
+  else if(p.status==='bust') badge='<div class="sbadge sb-bust">BUST</div>';
+  else if(score===21&&p.hand?.length===2) badge='<div class="sbadge sb-bj">BLACKJACK!</div>';
+  else if(p.status==='standing') badge='<div class="sbadge sb-stand">STANDING</div>';
+  else if(p.status==='winner') badge='<div class="sbadge sb-win">WIN</div>';
+  else if(amSpec&&isMe) badge='<div class="sbadge sb-spec">SPECTATING</div>';
+  let sc=''; if(score>21)sc='ss-bust'; else if(score===21)sc='ss-bj'; else if(score>=17)sc='ss-ok';
+  const scoreStr=g.mode==='poker'?(p.pokerLabel||''):((p.duckLocked?'':'')+(score||''));
+  let plateCls='splate';
+  if(isTurn&&isMe)plateCls+=' my-turn';
+  if(p.status==='bust')plateCls+=' busted';
+  if(p.status==='winner')plateCls+=' winner';
+  if(p.status==='standing')plateCls+=' stand';
+  const blindTag=(p.isSmallBlind?'<span class="tag t-spec" style="font-size:7px;margin-left:3px">SB</span>':'')+(p.isBigBlind?'<span class="tag t-spec" style="font-size:7px;margin-left:3px">BB</span>':'');
+  const seat=document.createElement('div'); seat.className='seat';
+  seat.innerHTML=`${badge}<div class="${plateCls}"><div class="sname">${esc(p.name)}${blindTag}${p.isBot?' \uD83E\uDD16':''}${isMe?' <span style="color:#81c784;font-size:8px">(you)</span>':''}</div><div class="sscore ${sc}">${scoreStr}</div><div class="schips">${p.chips}\uD83E\uDE99${p.bet?' \u00b7bet'+p.bet:''}${p.debt?' owes'+p.debt:''}</div></div><div class="shand" id="sh-${p.id}"></div>`;
+  return seat;
 }
+
 
 function renderDealerSeat(g){
   const d=g.dealer;
@@ -1740,7 +1984,8 @@ Q('#btn-create').addEventListener('click',()=>{
   if(!n){ Q('#cr-err').textContent='Server name required.'; return; }
   if(!ws||ws.readyState!==1){ Q('#cr-err').textContent='Not connected — please wait.'; return; }
   Q('#cr-err').textContent='';
-  send({type:'createServer',name:n,password:Q('#ns-pw').value});
+  // Always send current settings so mode is correct from the start
+  send({type:'createServer',name:n,password:Q('#ns-pw').value,settings:collectSettings()});
 });
 Q('#btn-joinid').addEventListener('click',()=>{
   const id=Q('#ji-id').value.trim();
@@ -1769,11 +2014,20 @@ Q('#ltab-friends').addEventListener('click',()=>{ Q('#ltab-friends').textContent
 Q('#btn-dm-send').addEventListener('click', sendDM);
 Q('#dm-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') sendDM(); });
 
+// Float chat event listeners
+Q('#float-dm-send').addEventListener('click', floatSendDM);
+Q('#float-dm-inp').addEventListener('keydown', e=>{ if(e.key==='Enter') floatSendDM(); });
+
 // Room
 Q('#btn-leave-room').addEventListener('click',()=>{ send({type:'leaveServer'}); curRoom=null; show('lobby'); send({type:'refreshServers'}); });
 Q('#btn-room-kb').addEventListener('click',openKb);
 Q('#btn-addbot').addEventListener('click',()=>send({type:'addBot'}));
-Q('#btn-start').addEventListener('click',()=>{ Q('#host-err').textContent=''; send({type:'startGame'}); });
+Q('#btn-start').addEventListener('click',()=>{
+  Q('#host-err').textContent='';
+  // Always save current settings before starting so mode is correct
+  send({type:'updateSettings',settings:collectSettings()});
+  setTimeout(()=>send({type:'startGame'}),150);
+});
 Q('#btn-saveset').addEventListener('click',()=>{ send({type:'updateSettings',settings:collectSettings()}); log('Settings saved.','good'); });
 Q('#btn-rchat').addEventListener('click',()=>sendChat('rchat-inp'));
 Q('#rchat-inp').addEventListener('keydown',e=>{ if(e.key==='Enter') sendChat('rchat-inp'); });
@@ -1836,19 +2090,27 @@ connect();
         <span style="margin-left:auto;font-size:7px;color:#555" id="ut-gold-bar">G:0</span>
       </div>
 
-      <!-- Menu bar: FIGHT ACT ITEM MERCY -->
+      <!-- Menu bar: FIGHT ACT ITEM MERCY — big Undertale style -->
       <div class="ut-menu-bar" id="ut-menu-bar">
         <button class="ut-menu-btn" id="ut-btn-fight" data-menu="0" onclick="utShowFight()">
-          <span class="heart">&#9829; </span>FIGHT
+          <span class="heart">&#9829;</span>
+          <canvas class="btn-icon" id="menu-icon-fight" width="22" height="22" style="image-rendering:pixelated"></canvas>
+          <span>FIGHT</span>
         </button>
         <button class="ut-menu-btn" id="ut-btn-act" data-menu="1" onclick="utShowActs()">
-          <span class="heart">&#9829; </span>ACT
+          <span class="heart">&#9829;</span>
+          <canvas class="btn-icon" id="menu-icon-act" width="22" height="22" style="image-rendering:pixelated"></canvas>
+          <span>ACT</span>
         </button>
         <button class="ut-menu-btn" id="ut-btn-item" data-menu="2" onclick="utShowItems()">
-          <span class="heart">&#9829; </span>ITEM
+          <span class="heart">&#9829;</span>
+          <canvas class="btn-icon" id="menu-icon-item" width="22" height="22" style="image-rendering:pixelated"></canvas>
+          <span>ITEM</span>
         </button>
         <button class="ut-menu-btn" id="ut-btn-mercy" data-menu="3" onclick="utMercy()">
-          <span class="heart">&#9829; </span>MERCY
+          <span class="heart">&#9829;</span>
+          <canvas class="btn-icon" id="menu-icon-mercy" width="22" height="22" style="image-rendering:pixelated"></canvas>
+          <span>MERCY</span>
         </button>
       </div>
 
@@ -1937,18 +2199,36 @@ connect();
   </div>
 </div>
 
-<!-- SHOP MODAL -->
-<div class="mbg" id="ut-shop-modal">
-  <div class="mbox" style="background:#000;border:3px solid #fff;font-family:var(--ut-font);max-width:480px;text-align:left;border-radius:0">
-    <div style="font-size:10px;color:#fff;margin-bottom:12px">* SHOP</div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <span class="ut-gold" id="ut-shop-gold">G: 0</span>
-      <span style="font-size:7px;color:#555">CONVERT CHIPS:</span>
-      <input type="number" id="ut-convert-chips" min="1" class="ut-inp" placeholder="chips">
-      <button class="ut-px-btn" id="ut-btn-convert">x5G</button>
+<!-- UNDERTALE SHOP — full Undertale-style scene -->
+<div id="ut-shop-screen" style="display:none;position:fixed;inset:0;z-index:600;background:#000;font-family:var(--ut-font);flex-direction:column;background-image:linear-gradient(rgba(0,80,0,0.35) 1px,transparent 1px),linear-gradient(90deg,rgba(0,80,0,0.35) 1px,transparent 1px);background-size:40px 40px;">
+  <!-- Shopkeeper area -->
+  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding:16px 16px 8px;min-height:0;">
+    <canvas id="ut-shop-keeper" width="80" height="96" style="image-rendering:pixelated;margin-right:16px;margin-bottom:8px;flex-shrink:0"></canvas>
+    <div style="background:#000;border:3px solid #fff;padding:10px 14px;font-size:9px;line-height:2.2;color:#fff;max-width:320px;position:relative;margin-bottom:8px;">
+      <span id="ut-shop-dialog">* Welcome! Take a look around.</span>
+      <span style="position:absolute;bottom:4px;right:8px;animation:ut-blink .7s step-end infinite">&#9660;</span>
     </div>
-    <div id="ut-shop-list"></div>
-    <button class="ut-px-btn" id="ut-btn-shop-close" style="margin-top:10px;width:100%">CLOSE</button>
+  </div>
+  <!-- Shop items -->
+  <div style="background:#000;border-top:3px solid #fff;padding:8px 12px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;border-bottom:1px solid #333;padding-bottom:6px;flex-wrap:wrap;">
+      <span style="font-size:8px;color:#ff0" id="ut-shop-gold">G: 0</span>
+      <span style="font-size:7px;color:#555">CHIPS&#x2192;G:</span>
+      <input type="number" id="ut-convert-chips" min="1" class="ut-inp" placeholder="chips" style="width:55px">
+      <button class="ut-px-btn" id="ut-btn-convert" style="font-size:7px;padding:4px 8px">x5G</button>
+      <span style="font-size:7px;color:#555;margin-left:auto" id="ut-shop-refresh-hint">STOCK REFRESHES EVERY 5 KILLS</span>
+    </div>
+    <div id="ut-shop-items-list" style="display:flex;flex-direction:column;gap:3px;max-height:220px;overflow-y:auto;"></div>
+  </div>
+  <!-- Bottom status bar -->
+  <div style="display:flex;align-items:center;gap:12px;padding:5px 10px;background:#000;border-top:2px solid #fff;font-size:8px;flex-shrink:0;">
+    <span>LV <span id="ut-shop-lv">1</span></span>
+    <span>HP</span>
+    <span style="display:inline-block;width:80px;height:14px;background:#000;border:2px solid #fff;vertical-align:middle;overflow:hidden;">
+      <span id="ut-shop-hp-fill" style="display:block;height:100%;background:#ff0;width:100%;transition:width .3s"></span>
+    </span>
+    <span style="font-size:7px" id="ut-shop-hp-nums">20/20</span>
+    <button class="ut-px-btn" id="ut-btn-shop-close" style="margin-left:auto;font-size:7px;padding:4px 10px">LEAVE SHOP</button>
   </div>
 </div>
 
@@ -2124,6 +2404,8 @@ function handleUtMessage(msg) {
 function enterBattle() {
   show('ut');
   send({type:'utGetState'});
+  // Draw menu icons after screen shows
+  setTimeout(drawMenuIcons, 100);
 }
 
 function leaveBattle() {
@@ -2132,7 +2414,7 @@ function leaveBattle() {
   utState = null;
   // Close any open overlays
   const dod=Q('#ut-dodge-overlay'); if(dod) dod.classList.remove('open');
-  const shop=Q('#ut-shop-modal'); if(shop) shop.classList.remove('open');
+  const shop=Q('#ut-shop-screen'); if(shop) shop.style.display='none';
   const pvp=Q('#ut-pvp-modal'); if(pvp) pvp.classList.remove('open');
   show('lobby');
   // Refresh servers so the lobby is in sync
@@ -2324,6 +2606,53 @@ const SPRITE_COLORS = {
   mad_dummy:'#808080',knight_knight:'#8080ff',madjick:'#c040c0',final_froggit:'#60c060',
   toriel:'#c06060',papyrus:'#f0f0a0',undyne:'#4040c0',mettaton:'#f0f0f0',asgore:'#c0a020',
 };
+
+// ── Menu button pixel icons ────────────────────────────────
+function drawMenuIcons() {
+  const icons = {
+    'menu-icon-fight': (ctx) => {
+      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
+      // Sword blade
+      [0,1,2,3,4].forEach(y=>px(5,y,'#ccc'));
+      // Crossguard
+      [4,5,6].forEach(x=>px(x,5,'#c80'));
+      // Handle
+      [6,7,8,9].forEach(y=>px(5,y,'#888'));
+    },
+    'menu-icon-act': (ctx) => {
+      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
+      // Speech bubble outline
+      for(let x=2;x<=8;x++){px(x,1,'#fff');px(x,7,'#fff');}
+      for(let y=2;y<=6;y++){px(1,y,'#fff');px(9,y,'#fff');}
+      px(3,8,'#fff');px(4,9,'#fff');
+      // Dots
+      [3,5,7].forEach(x=>px(x,4,'#000'));
+    },
+    'menu-icon-item': (ctx) => {
+      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
+      // Bag
+      for(let x=2;x<=8;x++) for(let y=3;y<=9;y++) px(x,y,'#a0a');
+      [4,5,6].forEach(x=>{px(x,1,'#808');px(x,2,'#808');});
+      // Latch
+      for(let x=2;x<=8;x++) px(x,5,'#c0c');
+    },
+    'menu-icon-mercy': (ctx) => {
+      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
+      // Heart shape
+      [[1,3],[2,2],[3,1],[4,2],[5,3],[6,2],[7,1],[8,2],[9,3]].forEach(([x,y])=>px(x,y,'#f06'));
+      for(let x=1;x<=9;x++) if(!(x===1||x===9)) px(x,4,'#f06');
+      [2,3,4,5,6,7,8].forEach(x=>px(x,5,'#f06'));
+      [3,4,5,6,7].forEach(x=>px(x,6,'#f06'));
+      [4,5,6].forEach(x=>px(x,7,'#f06'));
+      px(5,8,'#f06');
+    },
+  };
+  Object.entries(icons).forEach(([id,draw])=>{
+    const cv=Q('#'+id); if(!cv) return;
+    const ctx=cv.getContext('2d'); ctx.clearRect(0,0,22,22);
+    draw(ctx);
+  });
+}
 
 function drawSprite(canvasId, enemyId, isBoss) {
   const canvas = document.getElementById(canvasId); if(!canvas) return;
@@ -2785,23 +3114,105 @@ function spawnAttackPattern(pattern, arena) {
   }
 }
 
+// ── Shop ───────────────────────────────────────────────────
+function drawShopkeeper() {
+  const cv=Q('#ut-shop-keeper'); if(!cv) return;
+  const ctx=cv.getContext('2d'); ctx.clearRect(0,0,80,96);
+  const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*4,y*4,4,4);};
+  // Robe
+  for(let r=8;r<=22;r++) for(let cl=3;cl<=16;cl++) px(cl,r,'#3040a0');
+  // Face
+  for(let r=2;r<=7;r++) for(let cl=5;cl<=14;cl++) px(cl,r,'#c09060');
+  // Eyes
+  [6,7,12,13].forEach(cl=>px(cl,4,'#000'));
+  // Smile
+  [7,8,11,12].forEach(cl=>px(cl,6,'#000'));
+  [9,10].forEach(cl=>px(cl,7,'#000'));
+  // Horns
+  [[5,0],[5,1],[14,0],[14,1]].forEach(([cl,r])=>px(cl,r,'#806020'));
+  // Gold trim
+  for(let cl=3;cl<=16;cl++){px(cl,8,'#c09010');px(cl,22,'#c09010');}
+  // Arms
+  for(let r=9;r<=14;r++){[1,2,17,18].forEach(cl=>px(cl,r,'#3040a0'));}
+}
+
+const SHOP_STOCKS = [
+  ['monster_candy','bandage','bisicle','stick','faded_ribbon'],
+  ['bandage','nice_cream','bisicle','toy_knife','faded_ribbon','manly_bandanna'],
+  ['nice_cream','steak','toy_knife','tough_glove','manly_bandanna','cloudy_glasses'],
+  ['steak','butterscotch','tough_glove','ballet_shoes','cloudy_glasses','empty_gun'],
+  ['butterscotch','steak','ballet_shoes','empty_gun','torn_notebook','temmie_armor','snowman_piece'],
+];
+const SHOP_DIALOGS = [
+  '* Welcome! I sell things.\n  Take a look!',
+  '* Oh! A customer! Don\'t\n  be shy, come on in!',
+  '* Business is booming!\n  Can I interest you?',
+  '* Everything I sell is\n  perfectly legal. Probably.',
+  '* You look like you need\n  something. I can help!',
+];
+let shopCursorIdx=0, shopItems=[];
+
+function getShopStock(kills){ return SHOP_STOCKS[Math.min(Math.floor((kills||0)/5),SHOP_STOCKS.length-1)]; }
+
 function openUtShop() {
-  const list=Q('#ut-shop-list'); list.innerHTML='';
-  Q('#ut-shop-gold').textContent='G: '+(utState?.stats?.gold||0);
-  const items=[
-    {id:'monster_candy'},{id:'bandage'},{id:'bisicle'},{id:'nice_cream'},{id:'steak'},{id:'butterscotch'},
-    {id:'faded_ribbon'},{id:'manly_bandanna'},{id:'cloudy_glasses'},{id:'temmie_armor'},
-    {id:'toy_knife'},{id:'tough_glove'},{id:'ballet_shoes'},{id:'empty_gun'},{id:'torn_notebook'},
-  ];
-  items.forEach(({id})=>{
+  const screen=Q('#ut-shop-screen'); if(!screen) return;
+  screen.style.display='flex';
+  drawShopkeeper();
+  const d=Q('#ut-shop-dialog');
+  if(d) d.textContent=SHOP_DIALOGS[Math.floor(Math.random()*SHOP_DIALOGS.length)];
+  const stats=utState?.stats||{};
+  const gold=stats.gold||0, hp=stats.hp||20, maxHp=stats.maxHp||20, lv=stats.level||1, kills=stats.kills||0;
+  const goldEl=Q('#ut-shop-gold'); if(goldEl) goldEl.textContent='G: '+gold;
+  const lvEl=Q('#ut-shop-lv'); if(lvEl) lvEl.textContent=lv;
+  const hpF=Q('#ut-shop-hp-fill'); if(hpF) hpF.style.width=(hp/maxHp*100)+'%';
+  const hpN=Q('#ut-shop-hp-nums'); if(hpN) hpN.textContent=hp+'/'+maxHp;
+  shopItems=getShopStock(kills); shopCursorIdx=0;
+  const hint=Q('#ut-shop-refresh-hint');
+  if(hint){ const next=Math.ceil((kills+1)/5)*5; hint.textContent=kills<5?'STOCK REFRESHES EVERY 5 KILLS':'NEXT REFRESH AT '+next+' KILLS'; }
+  renderShopItems(gold);
+}
+
+function renderShopItems(gold) {
+  const list=Q('#ut-shop-items-list'); if(!list) return;
+  if(gold===undefined) gold=utState?.stats?.gold||0;
+  list.innerHTML='';
+  shopItems.forEach((id,i)=>{
     const it=UT_ITEMS[id]; if(!it) return;
-    const d=document.createElement('div'); d.className='ut-shop-item';
-    d.innerHTML=`${it.icon} <b>${it.name}</b> — ${it.goldCost}G <span style="color:#888;font-size:10px">${it.desc}</span>`;
-    d.onclick=()=>{ send({type:'utShopBuy',itemId:id}); Q('#ut-shop-gold').textContent='G: '+(utState?.stats?.gold||0); };
+    const canAfford=gold>=it.goldCost;
+    const sel=i===shopCursorIdx;
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:10px;padding:7px 8px;font-family:var(--ut-font);font-size:8px;cursor:pointer;border:2px solid '+(sel?'#ff8c00':'transparent')+';background:'+(sel?'#0a0800':'#000')+';color:'+(canAfford?'#fff':'#555')+';line-height:1.5;';
+    d.innerHTML='<span style="color:#ff8c00;width:12px;display:inline-block">'+(sel?'&#9829;':'&nbsp;')+'</span>'
+      +'<span style="min-width:110px">'+it.name+'</span>'
+      +'<span style="color:'+(canAfford?'#ff0':'#555')+';min-width:44px">'+it.goldCost+'G</span>'
+      +'<span style="color:#666;font-size:7px;flex:1">'+( it.desc||'')+'</span>';
+    d.onclick=()=>{ shopCursorIdx=i; renderShopItems(gold); buyShopItem(id,gold); };
     list.appendChild(d);
   });
-  Q('#ut-shop-modal').classList.add('open');
 }
+
+function buyShopItem(id,gold) {
+  const it=UT_ITEMS[id]; if(!it) return;
+  if((gold||0)<it.goldCost){
+    const d=Q('#ut-shop-dialog'); if(d) d.textContent='* You need '+(it.goldCost-(gold||0))+'G more!\n  Come back when you\'re richer.';
+    return;
+  }
+  send({type:'utShopBuy',itemId:id});
+  const newG=(utState?.stats?.gold||0)-it.goldCost;
+  const goldEl=Q('#ut-shop-gold'); if(goldEl) goldEl.textContent='G: '+Math.max(0,newG);
+  const d=Q('#ut-shop-dialog'); if(d) d.textContent='* You bought '+it.name+'!\n  Enjoy!';
+  renderShopItems(Math.max(0,newG));
+}
+
+document.addEventListener('keydown', e=>{
+  const sc=Q('#ut-shop-screen');
+  if(!sc||sc.style.display==='none') return;
+  if(e.key==='ArrowDown'||e.key==='s'){ shopCursorIdx=Math.min(shopCursorIdx+1,shopItems.length-1); renderShopItems(); e.preventDefault(); }
+  if(e.key==='ArrowUp'||e.key==='w'){ shopCursorIdx=Math.max(shopCursorIdx-1,0); renderShopItems(); e.preventDefault(); }
+  if(e.key==='z'||e.key==='Z'||e.key==='Enter'){ const id=shopItems[shopCursorIdx]; if(id) buyShopItem(id,utState?.stats?.gold||0); e.preventDefault(); }
+  if(e.key==='x'||e.key==='X'||e.key==='Escape'){ sc.style.display='none'; e.preventDefault(); }
+});
+
 
 // ── PvP ────────────────────────────────────────────────────
 function showPvpAttackPanel() {
@@ -2846,7 +3257,7 @@ function stopPvpSlider() {
 Q('#btn-enter-battle').addEventListener('click', enterBattle);
 Q('#ut-btn-leave-battle').addEventListener('click', leaveBattle);
 Q('#ut-btn-shop').addEventListener('click', openUtShop);
-Q('#ut-btn-shop-close').addEventListener('click',()=>Q('#ut-shop-modal').classList.remove('open'));
+Q('#ut-btn-shop-close').addEventListener('click',()=>Q('#ut-shop-screen').style.display='none');
 Q('#ut-btn-pvp').addEventListener('click',()=>Q('#ut-pvp-modal').classList.add('open'));
 Q('#ut-btn-pvp-close').addEventListener('click',()=>{ Q('#ut-pvp-modal').classList.remove('open'); stopPvpSlider(); });
 Q('#ut-btn-fight').addEventListener('click', utShowFight);

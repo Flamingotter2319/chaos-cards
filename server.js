@@ -480,8 +480,37 @@ function checkAllBet(room){
 }
 
 function dealTo(game,idx){
-  const c=drawCard(game);game.players[idx].hand.push(c);
-  if(c.isSpecial)game._pendingLogs=(game._pendingLogs||[]).concat(applySpecial(game,idx,c));
+  // Draw a normal card for the hand
+  let c=drawCard(game);
+  // If we drew a special, put it in reserve and draw a normal card instead
+  if(c.isSpecial){
+    const p=game.players[idx];
+    if(!p.reserve) p.reserve=[];
+    p.reserve.push(c);
+    game._pendingLogs=(game._pendingLogs||[]).concat([{msg:`✨ ${p.name} found a ${c.name}! (held in reserve)`,type:'chaos'}]);
+    // Draw a normal card to replace it
+    let normal=drawCard(game);
+    let tries=0;
+    while(normal.isSpecial&&tries<20){
+      p.reserve.push(normal);
+      game._pendingLogs=(game._pendingLogs||[]).concat([{msg:`✨ ${p.name} found a ${normal.name}! (held in reserve)`,type:'chaos'}]);
+      normal=drawCard(game);tries++;
+    }
+    c=normal;
+  }
+  game.players[idx].hand.push(c);
+
+  // 20% chance to also give a bonus special card to reserve
+  if(Math.random()<0.20&&game.deck.length>0){
+    const top=game.deck[game.deck.length-1];
+    if(top&&top.isSpecial){
+      const sc=game.deck.pop();
+      const p=game.players[idx];
+      if(!p.reserve) p.reserve=[];
+      p.reserve.push(sc);
+      game._pendingLogs=(game._pendingLogs||[]).concat([{msg:`✨ Bonus! ${p.name} found ${sc.name} in reserve.`,type:'chaos'}]);
+    }
+  }
 }
 function dealComm(game){
   // Community cards are always normal cards — no specials in the river
@@ -759,6 +788,7 @@ function broadcastGame(room,extraLogs=[]){
         hand:p.hand,bustImmune:p.bustImmune,duckLocked:p.duckLocked,
         debt:p.debt,mirrorScore:p.mirrorScore,
         isSmallBlind:p.isSmallBlind,isBigBlind:p.isBigBlind,
+        reserve:p.reserve||[],
       })),
       currentPlayerIdx:game.currentPlayerIdx,
       currentPlayerId:game.players[game.currentPlayerIdx]?.id,
@@ -911,6 +941,18 @@ wss.on('connection',ws=>{
         commitBet(game,game.players.indexOf(p),amount);
         broadcastGame(room,[{msg:`${p.name} bets ${p.bet}.`}]);
         checkAllBet(room);break;
+      }
+      case 'useSpecial':{
+        const room=servers.get(meta.serverId);if(!room||!room.game) break;
+        const game=room.game;
+        const p=game.players.find(pl=>pl.id===playerId);if(!p||!p.reserve?.length) break;
+        const idx2=parseInt(msg.idx)||0;
+        const sc=p.reserve[idx2]; if(!sc) break;
+        p.reserve.splice(idx2,1);
+        const logs=applySpecial(game,game.players.indexOf(p),sc);
+        logs.unshift({msg:`🎴 ${p.name} used ${sc.name}!`,type:'chaos'});
+        broadcastGame(room,logs);
+        break;
       }
       case 'hit':case 'stand':{
         const room=servers.get(meta.serverId);if(room&&room.game)playerAction(room,playerId,msg.type);break;
