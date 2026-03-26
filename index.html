@@ -367,268 +367,250 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
 .eli.good{border-color:#2e7a32;color:#80c880;}
 .eli.bad{border-color:#7a2020;color:#f08080;}
 @keyframes logIn{from{transform:translateX(11px);opacity:0}to{transform:none;opacity:1}}
-/* ══ UNDERTALE — EXACT REPLICA ════════════════════════════ */
+/* ══ UNDERTALE — PIXEL PERFECT ════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 :root { --ut-font:'Press Start 2P',monospace; }
 
 #sc-ut {
-  background:#000; font-family:var(--ut-font); color:#fff;
-  image-rendering:pixelated; overflow:hidden;
+  background:#000;font-family:var(--ut-font);color:#fff;
+  image-rendering:pixelated;overflow:hidden;
 }
 
-/* Top utility bar */
-.ut-topbar {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:3px 8px; background:#000; border-bottom:2px solid #333; flex-shrink:0;
-}
-.ut-topbar-btn {
-  background:#000; border:1px solid #555; color:#aaa;
-  padding:3px 7px; font-family:var(--ut-font); font-size:6px; cursor:pointer;
-}
-.ut-topbar-btn:hover { border-color:#fff; color:#fff; }
-.ut-topbar-btn.red { border-color:#700; color:#f44; }
-.ut-topbar-btn.red:hover { border-color:#f00; color:#f00; }
+/* Thin top utility bar */
+.ut-topbar{display:flex;align-items:center;justify-content:space-between;
+  padding:3px 8px;background:#000;border-bottom:1px solid #333;flex-shrink:0;}
+.ut-topbar-btn{background:#000;border:1px solid #555;color:#aaa;
+  padding:3px 7px;font-family:var(--ut-font);font-size:6px;cursor:pointer;}
+.ut-topbar-btn:hover{border-color:#fff;color:#fff;}
+.ut-topbar-btn.red{border-color:#700;color:#f44;}
+.ut-topbar-btn.red:hover{border-color:#f00;color:#f00;}
 
-/* Main battle area with dark green grid */
-.ut-main {
-  flex:1; display:flex; overflow:hidden; min-height:0;
-}
-.ut-battle-col {
-  flex:1; display:flex; flex-direction:column; overflow:hidden; position:relative;
+/* Main area */
+.ut-main{flex:1;display:flex;overflow:hidden;min-height:0;}
+.ut-battle-col{
+  flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;
+  background:#000;
   background-image:
-    linear-gradient(rgba(0,80,0,0.35) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,80,0,0.35) 1px, transparent 1px);
-  background-size:40px 40px; background-color:#000;
+    linear-gradient(rgba(0,60,0,0.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,60,0,0.4) 1px,transparent 1px);
+  background-size:36px 36px;
 }
 
-/* Enemy area — top */
-.ut-enemy-area {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:flex-end;
-  padding:12px 12px 8px; min-height:0;
-}
-#ut-sprite-canvas {
-  image-rendering:pixelated; image-rendering:crisp-edges; display:block;
-}
-.ut-boss-label {
-  font-family:var(--ut-font); font-size:7px; color:#f00;
-  letter-spacing:2px; text-align:center; margin-bottom:6px;
-}
+/* Enemy area top */
+.ut-enemy-area{flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;padding:12px 12px 8px;min-height:0;}
+#ut-sprite-canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block;}
+.ut-boss-label{font-family:var(--ut-font);font-size:7px;color:#f00;
+  letter-spacing:2px;text-align:center;margin-bottom:6px;}
 
-/* Dialogue box */
-.ut-dialog-box {
-  background:#000; border:3px solid #fff;
-  padding:10px 14px; margin:0 8px 4px;
-  min-height:54px; font-family:var(--ut-font);
-  font-size:9px; line-height:2.2; color:#fff;
-  flex-shrink:0; position:relative;
+/* Dialogue box — white border, Undertale-style */
+.ut-dialog-box{
+  background:#000;border:4px solid #fff;
+  padding:12px 16px;margin:0 8px 0;
+  min-height:60px;font-family:var(--ut-font);
+  font-size:9px;line-height:2.2;color:#fff;
+  flex-shrink:0;position:relative;
 }
-.ut-dialog-arrow {
-  position:absolute; bottom:5px; right:10px;
-  font-size:8px; color:#fff;
-  animation:ut-blink .7s step-end infinite;
-}
+.ut-dialog-arrow{position:absolute;bottom:5px;right:10px;font-size:10px;color:#fff;
+  animation:ut-blink .7s step-end infinite;}
 @keyframes ut-blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* Status bar: LU 1  HP [bar] 20/20 */
-.ut-status-bar {
-  display:flex; align-items:center; gap:10px;
-  padding:5px 10px; background:#000;
-  font-family:var(--ut-font); font-size:8px; color:#fff;
-  flex-shrink:0; border-top:2px solid #555;
+/* Status bar — same as Undertale's bottom bar */
+.ut-status-bar{
+  display:flex;align-items:center;padding:5px 10px;
+  background:#000;font-family:var(--ut-font);font-size:8px;color:#fff;
+  flex-shrink:0;border-top:2px solid #555;gap:8px;
 }
-.ut-status-hp-bar {
-  display:inline-block; width:80px; height:14px;
-  background:#000; border:2px solid #fff; vertical-align:middle;
-  position:relative; overflow:hidden;
+.ut-status-hp-bar{
+  display:inline-block;width:90px;height:14px;
+  background:#000;border:3px solid #fff;vertical-align:middle;
+  position:relative;overflow:hidden;
 }
-.ut-status-hp-bar-fill { height:100%; background:#ff0; transition:width .3s steps(10); }
-.ut-status-hp-nums { font-size:7px; }
+.ut-status-hp-bar-fill{height:100%;background:#ff0;transition:width .3s;}
+.ut-status-hp-nums{font-size:7px;color:#ff0;}
 
-/* Menu bar: FIGHT ACT ITEM MERCY */
-.ut-menu-bar {
-  display:flex; padding:6px 8px; gap:5px;
-  background:#000; border-top:3px solid #fff; flex-shrink:0;
-  min-height:70px; /* taller bar */
+/* FIGHT/ACT/ITEM/MERCY menu bar — Undertale style, MUCH bigger */
+.ut-menu-bar{
+  display:flex;padding:0;gap:0;
+  background:#000;border-top:4px solid #fff;flex-shrink:0;
+  height:80px; /* tall like Undertale */
 }
-.ut-menu-btn {
-  display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:3px;
-  background:#000; border:3px solid #fff; color:#fff;
-  padding:8px 4px; font-family:var(--ut-font); font-size:8px;
-  cursor:pointer; flex:1; outline:none; line-height:1.2;
-  position:relative;
+.ut-menu-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;background:#000;border-right:3px solid #fff;color:#fff;
+  padding:0;font-family:var(--ut-font);font-size:9px;
+  cursor:pointer;flex:1;outline:none;position:relative;
+  transition:background 0s;
 }
-.ut-menu-btn .btn-icon {
-  font-size:20px; line-height:1; display:block;
-  image-rendering:pixelated;
+.ut-menu-btn:last-child{border-right:none;}
+.ut-menu-btn canvas{image-rendering:pixelated;}
+.ut-menu-btn .heart{
+  display:none;position:absolute;left:6px;top:50%;transform:translateY(-50%);
+  color:#ff8c00;font-size:14px;font-family:serif;
 }
-.ut-menu-btn .heart { display:none; position:absolute; left:3px; top:50%; transform:translateY(-50%); color:#ff8c00; font-size:12px; }
-.ut-menu-btn.selected { border-color:#ff8c00; color:#ff8c00; background:#0a0a00; }
-.ut-menu-btn.selected .heart { display:block; }
-.ut-menu-btn:hover { border-color:#ff8c00; color:#ff8c00; }
-.ut-menu-btn:hover .heart { display:block; }
+.ut-menu-btn.selected{background:#1a1a00;border-bottom:none;}
+.ut-menu-btn.selected .heart{display:block;}
+.ut-menu-btn:hover{background:#111;}
+.ut-menu-btn .btn-label{font-size:8px;letter-spacing:0;}
 
-/* Fight overlay — full screen attack bar */
-.ut-fight-overlay {
-  position:absolute; inset:0; background:#000;
+/* Fight overlay */
+.ut-fight-overlay{
+  position:absolute;inset:0;background:#000;
   background-image:
-    linear-gradient(rgba(0,80,0,0.35) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,80,0,0.35) 1px, transparent 1px);
-  background-size:40px 40px;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:14px; z-index:20;
+    linear-gradient(rgba(0,60,0,0.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,60,0,0.4) 1px,transparent 1px);
+  background-size:36px 36px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;z-index:20;
 }
-.ut-enemy-area-small {
-  position:absolute; top:12px; left:50%; transform:translateX(-50%);
-}
-/* Pill attack bar */
-/* Undertale-exact attack bar: wide rectangle, yellow border, green centre lane, red bones */
-.ut-attack-pill-wrap {
-  position:relative; width:90%; max-width:520px; height:60px;
-  /* Outer yellow/gold border like Undertale */
-  border:4px solid #ff0; background:#000;
-  box-shadow:0 0 0 2px #000, 0 0 0 5px #ff0;
-}
-.ut-attack-pill {
-  position:absolute; inset:0; background:#000; overflow:hidden;
-  border-radius:0; border:none;
-}
-/* Green lane — centre strip */
-.ut-pill-lane {
-  position:absolute; top:50%; left:0; right:0;
-  height:10px; background:#0a0; transform:translateY(-50%);
-}
-/* White moving cursor bar */
-.ut-pill-cursor {
-  position:absolute; top:0; bottom:0; width:8px;
-  background:#fff; transform:translateX(-50%); z-index:5;
-}
-/* Red bone obstacles — vertical bars crossing full height */
-.ut-bone {
-  position:absolute; top:0; bottom:0;
-  width:10px; background:#f00;
-}
-.ut-dmg-preview {
-  font-family:var(--ut-font); font-size:16px; color:#fff;
-  text-align:center; text-shadow:2px 2px #f00; min-height:24px;
-  margin-top:8px;
-}
-.ut-attack-hint { font-family:var(--ut-font); font-size:7px; color:#888; text-align:center; }
 
-/* Submenu overlays (ACT / ITEM) */
-.ut-submenu-overlay {
-  position:absolute; bottom:0; left:0; right:0;
-  background:#000; border-top:2px solid #fff;
-  padding:6px 10px; z-index:20;
-  display:flex; flex-direction:column; gap:3px;
-  max-height:50%; overflow-y:auto;
+/* Undertale attack bar — EXACT REPLICA */
+/* Outer container with yellow double-border */
+.ut-attack-bar-outer{
+  position:relative;width:80%;max-width:480px;
+  /* Yellow border effect via box-shadow */
+  border:3px solid #ff0;
+  box-shadow:0 0 0 2px #000,0 0 0 4px #ff0;
+  height:54px;
+  background:#000;overflow:hidden;
 }
-.ut-sub-item {
-  display:flex; align-items:center; gap:6px;
-  font-family:var(--ut-font); font-size:8px; color:#fff;
-  padding:5px 8px; cursor:pointer; border:1px solid transparent;
+/* Green centre lane */
+.ut-attack-bar-lane{
+  position:absolute;top:50%;left:0;right:0;
+  height:12px;background:#0a0;transform:translateY(-50%);
 }
-.ut-sub-item.selected,.ut-sub-item:hover { color:#ff8c00; border-color:#ff8c00; }
-.ut-sub-item .heart { display:none; }
-.ut-sub-item.selected .heart,.ut-sub-item:hover .heart { display:inline; color:#ff8c00; }
+/* Red bone obstacles */
+.ut-bone{position:absolute;top:0;bottom:0;width:10px;background:#f00;}
+/* White cursor */
+.ut-attack-bar-cursor{
+  position:absolute;top:0;bottom:0;width:8px;
+  background:#fff;transform:translateX(-50%);z-index:5;
+}
 
-/* DODGE OVERLAY */
-.ut-dodge-overlay {
-  position:fixed; inset:0; z-index:500; display:none;
-  flex-direction:column;
-  background-color:#000;
+/* Damage preview */
+.ut-dmg-preview{
+  font-family:var(--ut-font);font-size:16px;color:#fff;
+  text-align:center;text-shadow:2px 2px #f00;min-height:22px;
+}
+.ut-attack-hint{font-family:var(--ut-font);font-size:7px;color:#888;text-align:center;}
+
+/* ACT / ITEM submenus */
+.ut-submenu-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  background:#000;border-top:4px solid #fff;
+  padding:6px 10px;z-index:20;
+  display:flex;flex-direction:column;gap:3px;
+  max-height:50%;overflow-y:auto;
+}
+.ut-sub-item{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--ut-font);font-size:8px;color:#fff;
+  padding:6px 8px;cursor:pointer;border:1px solid transparent;
+  line-height:1.4;
+}
+.ut-sub-item.selected,.ut-sub-item:hover{color:#ff8c00;border-color:#ff8c00;}
+.ut-sub-item .heart{display:none;color:#ff8c00;}
+.ut-sub-item.selected .heart,.ut-sub-item:hover .heart{display:inline;}
+
+/* DODGE OVERLAY — full screen, grid bg, enemy top-left, soul box bottom-centre */
+.ut-dodge-overlay{
+  position:fixed;inset:0;z-index:500;display:none;flex-direction:column;
+  background:#000;
   background-image:
-    linear-gradient(rgba(0,80,0,0.35) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,80,0,0.35) 1px, transparent 1px);
-  background-size:40px 40px;
+    linear-gradient(rgba(0,60,0,0.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,60,0,0.4) 1px,transparent 1px);
+  background-size:36px 36px;
 }
-.ut-dodge-overlay.open { display:flex; }
-/* Enemy sprite at top during dodge */
-.ut-dodge-enemy-area {
-  flex:1; display:flex; align-items:flex-start; padding:14px;
-  position:relative; min-height:0;
+.ut-dodge-overlay.open{display:flex;}
+.ut-dodge-enemy-area{flex:1;display:flex;align-items:flex-start;padding:14px;
+  position:relative;min-height:0;}
+#ut-dodge-sprite{image-rendering:pixelated;image-rendering:crisp-edges;}
+/* Soul box */
+.ut-dodge-box-wrap{display:flex;justify-content:center;padding:6px 0 4px;}
+.ut-soul-arena{
+  position:relative;width:156px;height:156px;
+  border:4px solid #fff;background:#000;
+  overflow:hidden;flex-shrink:0;image-rendering:pixelated;
 }
-#ut-dodge-sprite { image-rendering:pixelated; image-rendering:crisp-edges; }
-/* Soul box bottom-centre */
-.ut-dodge-box-wrap { display:flex; justify-content:center; padding:6px 0 4px; }
-.ut-soul-arena {
-  position:relative; width:168px; height:168px;
-  border:4px solid #fff; background:#000;
-  overflow:hidden; flex-shrink:0; image-rendering:pixelated;
-}
-.ut-soul {
-  position:absolute; width:14px; height:14px; background:#f00;
-  z-index:10; pointer-events:none; transform:translate(-50%,-50%);
+/* Red heart soul */
+.ut-soul{
+  position:absolute;width:14px;height:14px;background:#f00;
+  z-index:10;pointer-events:none;transform:translate(-50%,-50%);
   clip-path:polygon(50% 0%,61% 11%,100% 11%,100% 50%,50% 100%,0% 50%,0% 11%,39% 11%);
 }
-.ut-projectile { position:absolute; pointer-events:none; image-rendering:pixelated; }
-.ut-wall        { position:absolute; pointer-events:none; background:#fff; }
-.ut-laser       { position:absolute; pointer-events:none; background:#ff0; }
+.ut-projectile{position:absolute;pointer-events:none;image-rendering:pixelated;}
+.ut-wall{position:absolute;pointer-events:none;background:#fff;}
+.ut-laser{position:absolute;pointer-events:none;background:#ff0;}
+
 /* Dodge status bar */
-.ut-dodge-status {
-  display:flex; align-items:center; gap:10px;
-  padding:5px 10px; background:#000;
-  font-family:var(--ut-font); font-size:8px; color:#fff;
-  flex-shrink:0; border-top:2px solid #555;
+.ut-dodge-status{
+  display:flex;align-items:center;gap:10px;
+  padding:5px 10px;background:#000;
+  font-family:var(--ut-font);font-size:8px;color:#fff;
+  flex-shrink:0;border-top:2px solid #555;
 }
-.ut-dodge-hp-bar {
-  display:inline-block; width:80px; height:14px;
-  background:#000; border:2px solid #fff; vertical-align:middle; overflow:hidden;
+.ut-dodge-hp-bar{
+  display:inline-block;width:90px;height:14px;
+  background:#000;border:3px solid #fff;vertical-align:middle;overflow:hidden;
 }
-.ut-dodge-hp-fill { height:100%; background:#ff0; transition:width .2s steps(8); }
-/* Dodge menu bar (greyed out) */
-.ut-dodge-menu-bar {
-  display:flex; padding:5px 8px; gap:6px;
-  background:#000; border-top:2px solid #fff; flex-shrink:0;
+.ut-dodge-hp-fill{height:100%;background:#ff0;transition:width .2s;}
+/* Dodge menu bar (greyed) */
+.ut-dodge-menu-bar{
+  display:flex;height:50px;
+  background:#000;border-top:4px solid #fff;flex-shrink:0;
 }
-.ut-dodge-menu-btn {
-  display:flex; align-items:center; justify-content:center;
-  background:#000; border:2px solid #555; color:#555;
-  padding:7px 0; font-family:var(--ut-font); font-size:9px; flex:1;
+.ut-dodge-menu-btn{
+  display:flex;align-items:center;justify-content:center;
+  background:#000;border-right:3px solid #555;color:#555;
+  font-family:var(--ut-font);font-size:9px;flex:1;
 }
+.ut-dodge-menu-btn:last-child{border-right:none;}
 
 /* Stats sidebar */
-.ut-right {
-  width:200px; border-left:2px solid #333;
-  background:#000; display:flex; flex-direction:column; overflow:hidden;
-}
-.ut-right-inner { flex:1; overflow-y:auto; padding:10px; }
-@media(max-width:700px){ .ut-right{ display:none; } }
-.ut-stat-row {
-  display:flex; justify-content:space-between;
-  font-family:var(--ut-font); font-size:7px;
-  padding:4px 0; border-bottom:1px solid #1a1a1a; color:#ccc;
-}
-.ut-stat-val { color:#ff0; }
-.ut-section { font-family:var(--ut-font); font-size:7px; color:#555; letter-spacing:2px; margin:8px 0 4px; }
-.ut-inv-item {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:4px 6px; border:1px solid #333; margin-bottom:3px;
-  font-family:var(--ut-font); font-size:7px; cursor:pointer;
-}
-.ut-inv-item:hover,.ut-inv-item.selected { border-color:#fff; color:#ff0; }
-.ut-inv-item.equipped { border-color:#ff0; }
-.ut-gold { color:#ffd700; font-family:var(--ut-font); font-size:8px; }
+.ut-right{width:190px;border-left:2px solid #333;background:#000;
+  display:flex;flex-direction:column;overflow:hidden;}
+.ut-right-inner{flex:1;overflow-y:auto;padding:10px;}
+@media(max-width:700px){.ut-right{display:none;}}
+.ut-stat-row{display:flex;justify-content:space-between;
+  font-family:var(--ut-font);font-size:7px;
+  padding:4px 0;border-bottom:1px solid #1a1a1a;color:#ccc;}
+.ut-stat-val{color:#ff0;}
+.ut-section{font-family:var(--ut-font);font-size:7px;color:#555;
+  letter-spacing:2px;margin:8px 0 4px;}
+.ut-inv-item{display:flex;justify-content:space-between;align-items:center;
+  padding:4px 6px;border:1px solid #333;margin-bottom:3px;
+  font-family:var(--ut-font);font-size:7px;cursor:pointer;}
+.ut-inv-item:hover,.ut-inv-item.selected{border-color:#fff;color:#ff0;}
+.ut-inv-item.equipped{border-color:#ff0;}
+.ut-gold{color:#ffd700;font-family:var(--ut-font);font-size:8px;}
 
-/* Shop / PvP modals */
-.ut-shop-item {
-  padding:6px 8px; border:1px solid #333; margin-bottom:4px;
-  cursor:pointer; font-family:var(--ut-font); font-size:7px; background:#000; color:#fff;
-}
-.ut-shop-item:hover { border-color:#ff0; color:#ff0; }
-.ut-inp { background:#000; border:2px solid #fff; color:#fff; padding:5px 8px; font-family:var(--ut-font); font-size:9px; width:70px; }
-.ut-px-btn { background:#000; border:2px solid #fff; color:#fff; padding:6px 10px; font-family:var(--ut-font); font-size:8px; cursor:pointer; }
-.ut-px-btn:hover { background:#fff; color:#000; }
-.ut-pvp-hp-row { display:flex; justify-content:space-between; margin-bottom:10px; font-family:var(--ut-font); font-size:8px; }
-.ut-challenge-item { padding:6px 8px; border:1px solid #555; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center; font-family:var(--ut-font); font-size:8px; }
-.ut-acc-label { font-family:var(--ut-font); font-size:7px; color:#aaa; margin-bottom:4px; }
-.ut-acc-outer { position:relative; height:48px; background:#000; border:3px solid #fff; margin:8px 0; overflow:visible; }
-.ut-acc-track-fill { position:absolute; inset:0; background:linear-gradient(90deg,#550000 0%,#aa0000 20%,#ffaa00 35%,#ffff00 45%,#fff 50%,#ffff00 55%,#ffaa00 65%,#aa0000 80%,#550000 100%); }
-.ut-acc-center-line { position:absolute; top:-4px; bottom:-4px; left:50%; width:3px; background:#fff; transform:translateX(-50%); z-index:3; }
-.ut-acc-slider { position:absolute; top:-6px; bottom:-6px; width:6px; background:#fff; transform:translateX(-50%); z-index:5; box-shadow:0 0 0 2px #000,0 0 0 4px #fff; }
-.ut-dmg-preview-small { font-family:var(--ut-font); font-size:12px; color:#fff; margin-top:8px; text-align:center; text-shadow:2px 2px #f00; }
+/* Shop / PvP */
+.ut-shop-item{padding:6px 8px;border:1px solid #333;margin-bottom:4px;
+  cursor:pointer;font-family:var(--ut-font);font-size:7px;background:#000;color:#fff;}
+.ut-shop-item:hover{border-color:#ff0;color:#ff0;}
+.ut-inp{background:#000;border:2px solid #fff;color:#fff;
+  padding:5px 8px;font-family:var(--ut-font);font-size:9px;width:70px;}
+.ut-px-btn{background:#000;border:2px solid #fff;color:#fff;
+  padding:6px 10px;font-family:var(--ut-font);font-size:8px;cursor:pointer;}
+.ut-px-btn:hover{background:#fff;color:#000;}
+.ut-pvp-hp-row{display:flex;justify-content:space-between;margin-bottom:10px;
+  font-family:var(--ut-font);font-size:8px;}
+.ut-challenge-item{padding:6px 8px;border:1px solid #555;margin-bottom:4px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--ut-font);font-size:8px;}
+.ut-acc-label{font-family:var(--ut-font);font-size:7px;color:#aaa;margin-bottom:4px;}
+.ut-acc-outer{position:relative;height:48px;background:#000;
+  border:3px solid #fff;margin:8px 0;overflow:visible;}
+.ut-acc-track-fill{position:absolute;inset:0;
+  background:linear-gradient(90deg,#550000 0%,#aa0000 20%,#ffaa00 35%,#ffff00 45%,#fff 50%,#ffff00 55%,#ffaa00 65%,#aa0000 80%,#550000 100%);}
+.ut-acc-center-line{position:absolute;top:-4px;bottom:-4px;left:50%;width:3px;
+  background:#fff;transform:translateX(-50%);z-index:3;}
+.ut-acc-slider{position:absolute;top:-6px;bottom:-6px;width:6px;background:#fff;
+  transform:translateX(-50%);z-index:5;box-shadow:0 0 0 2px #000,0 0 0 4px #fff;}
+.ut-dmg-preview-small{font-family:var(--ut-font);font-size:12px;color:#fff;
+  margin-top:8px;text-align:center;text-shadow:2px 2px #f00;}
+
 
 </style>
 </head>
@@ -796,7 +778,7 @@ hr.g{border:none;border-top:1px solid rgba(201,168,76,0.11);margin:11px 0;}
         <hr class="g">
         <div class="ptitle" style="text-align:left;margin-top:5px">GAME SETTINGS</div>
         <label>Game Mode</label>
-        <select id="set-mode" onchange="setMode(this.value)">
+        <select id="set-mode" onchange="setMode(this.value, false)">
           <option value="blackjack">♠ Blackjack — closest to 21 wins</option>
           <option value="poker">🃏 Poker — best 5-card hand wins</option>
           <option value="highorlow">⚖️ High or Low — closest to 7 wins</option>
@@ -1192,7 +1174,11 @@ function handle(msg){
     case 'gameStarting': show('game'); break;
     case 'gameState':
       game=msg; amSpec=!msg.players.find(p=>p.id===myId);
-      renderGame();
+      // Throttle renders - don't redraw faster than 200ms to prevent glitch
+      if(!window._renderPending){
+        window._renderPending=true;
+        setTimeout(()=>{ window._renderPending=false; if(game) renderGame(); },100);
+      }
       if(msg.logs) msg.logs.forEach(l=>log(l.msg,l.type||''));
       break;
     case 'roundSummary': showSummary(msg.results,msg.mode); break;
@@ -1504,17 +1490,19 @@ function renderRoom(){
   renderScGrid();
 }
 
-function setMode(m){
+function setMode(m, silent){
   currentMode=m;
   const sel=Q('#set-mode'); if(sel) sel.value=m;
   Q('#bj-rules').style.display=(m==='blackjack'||m==='lucky21')?'':'none';
   Q('#pk-rules').style.display=m==='poker'?'':'none';
-  // Auto-save settings so room always has the right mode
-  if(curRoom) send({type:'updateSettings',settings:collectSettings()});
+  // Only auto-send if explicitly triggered by user (not from applySetDisplay)
+  if(!silent && curRoom && curRoom.ownerId===myId) {
+    send({type:'updateSettings',settings:collectSettings()});
+  }
 }
 
 function applySetDisplay(s){
-  if(s.mode) setMode(s.mode);
+  if(s.mode) setMode(s.mode, true); // silent=true, don't send back to server
   const sv=(id,v)=>{ const el=Q(id); if(el) el.value=v; };
   sv('#set-decks',s.deckCount||1); sv('#set-minbet',s.minBet||5); sv('#set-maxbet',s.maxBet||100);
   sv('#bj-pays',s.bjBlackjackPays||'3:2');
@@ -1618,9 +1606,16 @@ function renderGame(){
   const cc=Q('#tc-comm');
   if(cc.children.length!==g.community.length){ cc.innerHTML=''; g.community.forEach(c=>cc.appendChild(mkCard(c))); }
 
+  // Only rebuild specials list when enabledSpecials changes (not on every bot update)
   const sl=Q('#g-specials-list');
-  if(sl){ const inDeck=ALL_SC.filter(s=>g.enabledSpecials?.includes(s.id)||(g.enabledSpecials===undefined));
-    sl.innerHTML=inDeck.map(s=>`${s.icon} ${s.name}`).join('<br>')||'None'; }
+  if(sl){
+    const newHash=(g.enabledSpecials||[]).join(',');
+    if(sl.dataset.hash!==newHash){
+      sl.dataset.hash=newHash;
+      const inDeck=ALL_SC.filter(s=>g.enabledSpecials?.includes(s.id)||(g.enabledSpecials===undefined));
+      sl.innerHTML=inDeck.map(s=>`${s.icon} ${s.name}`).join('<br>')||'None';
+    }
+  }
 
   const hasDealer=!!g.dealer;
   const myIdx=g.players.findIndex(p=>p.id===myId),n=g.players.length;
@@ -2053,98 +2048,84 @@ connect();
 
 <!-- ════ UNDERTALE BATTLE SCREEN ════ -->
 <div id="sc-ut" class="screen">
-  <!-- Thin top bar: shop/pvp/leave -->
+  <!-- Thin top bar -->
   <div class="ut-topbar">
-    <span style="font-family:var(--ut-font);font-size:7px;color:#555">* UNDERTALE</span>
-    <div style="display:flex;gap:5px">
+    <span style="font-family:var(--ut-font);font-size:6px;color:#444">UNDERTALE</span>
+    <div style="display:flex;gap:4px">
       <button class="ut-topbar-btn" id="ut-btn-shop">SHOP</button>
       <button class="ut-topbar-btn" id="ut-btn-pvp">PvP</button>
       <button class="ut-topbar-btn red" id="ut-btn-leave-battle">LEAVE</button>
     </div>
   </div>
-
-  <!-- Main layout: battle column + stats sidebar -->
   <div class="ut-main">
+    <!-- Battle column -->
     <div class="ut-battle-col" id="ut-battle-col">
-
       <!-- Enemy sprite area -->
       <div class="ut-enemy-area" id="ut-enemy-area">
         <div id="ut-boss-label" class="ut-boss-label" style="display:none">* BOSS ENCOUNTER *</div>
-        <canvas id="ut-sprite-canvas" width="96" height="96"></canvas>
+        <canvas id="ut-sprite-canvas" width="120" height="120"></canvas>
       </div>
-
       <!-- Dialogue box -->
       <div class="ut-dialog-box" id="ut-dialog">
         * ...
-        <span class="ut-dialog-arrow">▼</span>
+        <span class="ut-dialog-arrow">&#9660;</span>
       </div>
-
-      <!-- Status bar: LU 1  HP [bar] 20/20 -->
+      <!-- Status bar: LV 1   HP [====] 20/20 -->
       <div class="ut-status-bar">
-        <span class="ut-status-lv">LV <span id="ut-lv">1</span></span>
-        <span style="margin-left:8px">HP</span>
+        <span>LV&nbsp;<span id="ut-lv">1</span></span>
+        <span style="margin-left:6px">HP</span>
         <span class="ut-status-hp-bar">
-          <span class="ut-status-hp-bar-fill" id="ut-status-hp-fill" style="width:100%;display:block;height:100%;"></span>
+          <span class="ut-status-hp-bar-fill" id="ut-status-hp-fill" style="width:100%"></span>
         </span>
-        <span class="ut-status-hp-nums"><span id="ut-status-hp">20</span> / <span id="ut-status-maxhp">20</span></span>
+        <span class="ut-status-hp-nums"><span id="ut-status-hp">20</span>&nbsp;/&nbsp;<span id="ut-status-maxhp">20</span></span>
         <span style="margin-left:auto;font-size:7px;color:#555" id="ut-gold-bar">G:0</span>
       </div>
-
-      <!-- Menu bar: FIGHT ACT ITEM MERCY — big Undertale style -->
+      <!-- FIGHT / ACT / ITEM / MERCY — tall Undertale buttons -->
       <div class="ut-menu-bar" id="ut-menu-bar">
-        <button class="ut-menu-btn" id="ut-btn-fight" data-menu="0" onclick="utShowFight()">
+        <button class="ut-menu-btn selected" id="ut-btn-fight" data-menu="0" onclick="utShowFight()">
           <span class="heart">&#9829;</span>
-          <canvas class="btn-icon" id="menu-icon-fight" width="22" height="22" style="image-rendering:pixelated"></canvas>
-          <span>FIGHT</span>
+          <canvas id="menu-icon-fight" width="28" height="28" style="image-rendering:pixelated"></canvas>
+          <span class="btn-label">FIGHT</span>
         </button>
         <button class="ut-menu-btn" id="ut-btn-act" data-menu="1" onclick="utShowActs()">
           <span class="heart">&#9829;</span>
-          <canvas class="btn-icon" id="menu-icon-act" width="22" height="22" style="image-rendering:pixelated"></canvas>
-          <span>ACT</span>
+          <canvas id="menu-icon-act" width="28" height="28" style="image-rendering:pixelated"></canvas>
+          <span class="btn-label">ACT</span>
         </button>
         <button class="ut-menu-btn" id="ut-btn-item" data-menu="2" onclick="utShowItems()">
           <span class="heart">&#9829;</span>
-          <canvas class="btn-icon" id="menu-icon-item" width="22" height="22" style="image-rendering:pixelated"></canvas>
-          <span>ITEM</span>
+          <canvas id="menu-icon-item" width="28" height="28" style="image-rendering:pixelated"></canvas>
+          <span class="btn-label">ITEM</span>
         </button>
         <button class="ut-menu-btn" id="ut-btn-mercy" data-menu="3" onclick="utMercy()">
           <span class="heart">&#9829;</span>
-          <canvas class="btn-icon" id="menu-icon-mercy" width="22" height="22" style="image-rendering:pixelated"></canvas>
-          <span>MERCY</span>
+          <canvas id="menu-icon-mercy" width="28" height="28" style="image-rendering:pixelated"></canvas>
+          <span class="btn-label">MERCY</span>
         </button>
       </div>
 
-      <!-- FIGHT overlay (full screen, shown over battle col) -->
+      <!-- FIGHT overlay -->
       <div id="ut-fight-overlay" class="ut-fight-overlay" style="display:none">
-        <!-- Sprite shown small above bar -->
-        <canvas id="ut-fight-sprite" width="72" height="72" style="image-rendering:pixelated;margin-bottom:4px"></canvas>
-
-        <!-- Pill attack bar -->
-        <div class="ut-attack-pill-wrap" id="ut-attack-pill-wrap">
-          <div class="ut-attack-pill" id="ut-attack-pill">
-            <div class="ut-pill-lane"></div>
-            <!-- bone obstacles injected by JS -->
-            <div id="ut-pill-obstacles"></div>
-            <div class="ut-pill-cursor" id="ut-pill-cursor" style="left:0%"></div>
-          </div>
+        <canvas id="ut-fight-sprite" width="100" height="100" style="image-rendering:pixelated"></canvas>
+        <!-- Undertale attack bar: yellow double border, green lane, red bones, white cursor -->
+        <div class="ut-attack-bar-outer" id="ut-attack-bar-outer">
+          <div class="ut-attack-bar-lane"></div>
+          <div id="ut-pill-obstacles"></div>
+          <div class="ut-attack-bar-cursor" id="ut-pill-cursor" style="left:0%"></div>
         </div>
-
-        <!-- Damage preview -->
-        <div class="ut-dmg-preview" id="ut-dmg-preview">—</div>
-        <div class="ut-attack-hint">Z / ENTER to attack &nbsp;|&nbsp; X to back</div>
+        <div class="ut-dmg-preview" id="ut-dmg-preview">&#8212;</div>
+        <div class="ut-attack-hint">Z / ENTER to strike &nbsp;&bull;&nbsp; X to cancel</div>
       </div>
 
-      <!-- ACT submenu overlay -->
+      <!-- ACT overlay -->
       <div id="ut-act-overlay" class="ut-submenu-overlay" style="display:none">
         <div id="ut-acts-list"></div>
       </div>
-
-      <!-- ITEM submenu overlay -->
+      <!-- ITEM overlay -->
       <div id="ut-item-overlay" class="ut-submenu-overlay" style="display:none">
         <div id="ut-item-list"></div>
       </div>
-
-    </div><!-- end .ut-battle-col -->
+    </div>
 
     <!-- Stats sidebar -->
     <div class="ut-right">
@@ -2165,30 +2146,32 @@ connect();
         <div id="ut-log" style="font-family:var(--ut-font);font-size:7px;color:#aaa;line-height:2;overflow-y:auto;max-height:200px"></div>
       </div>
     </div>
-  </div><!-- end .ut-main -->
-</div><!-- end #sc-ut -->
+  </div>
+</div>
 
 <!-- DODGE OVERLAY -->
 <div class="ut-dodge-overlay" id="ut-dodge-overlay">
-  <!-- Enemy sprite top area -->
+  <!-- Enemy sprite top-left, dialogue top-right -->
   <div class="ut-dodge-enemy-area">
-    <canvas id="ut-dodge-sprite" width="96" height="96"></canvas>
-    <div style="position:absolute;top:14px;left:120px;font-family:var(--ut-font);font-size:8px;color:#fff;line-height:2.2;max-width:200px" id="ut-dodge-dialog">* ...</div>
+    <canvas id="ut-dodge-sprite" width="100" height="100"></canvas>
+    <div style="position:absolute;top:14px;left:130px;background:#000;border:3px solid #fff;
+      padding:8px 12px;font-family:var(--ut-font);font-size:8px;color:#fff;
+      max-width:240px;line-height:2.2;" id="ut-dodge-dialog">* ...</div>
   </div>
-
-  <!-- Soul box centred bottom -->
+  <!-- Soul box bottom-centre -->
   <div class="ut-dodge-box-wrap">
     <div class="ut-soul-arena" id="ut-soul-arena">
       <div class="ut-soul" id="ut-soul"></div>
     </div>
   </div>
-
   <!-- Status bar -->
   <div class="ut-dodge-status">
-    <span>LV <span id="ut-dodge-lv">1</span></span>
+    <span>LV&nbsp;<span id="ut-dodge-lv">1</span></span>
     <span style="margin-left:8px">HP</span>
-    <span class="ut-dodge-hp-bar"><span class="ut-dodge-hp-fill" id="ut-dodge-hp-fill" style="width:100%;display:block;height:100%"></span></span>
-    <span style="font-size:7px" id="ut-dodge-hp-text">20 / 20</span>
+    <span class="ut-dodge-hp-bar">
+      <span class="ut-dodge-hp-fill" id="ut-dodge-hp-fill" style="width:100%;display:block;height:100%"></span>
+    </span>
+    <span style="font-size:7px;color:#ff0" id="ut-dodge-hp-text">20 / 20</span>
   </div>
   <!-- Greyed menu bar -->
   <div class="ut-dodge-menu-bar">
@@ -2570,87 +2553,121 @@ function utUseItem(id) { send({type:'utUseItem',itemId:id}); }
 // ── Pixel sprite renderer ──────────────────────────────────
 // Each enemy has a unique pixel art sprite drawn on canvas
 const SPRITES = {
-  froggit:    [[0,1,0,1,0],[1,1,1,1,1],[1,0,1,0,1],[0,1,1,1,0],[1,0,0,0,1]],
-  whimsun:    [[0,1,0,1,0],[0,1,1,1,0],[1,1,1,1,1],[0,1,1,1,0],[1,0,0,0,1]],
-  moldsmal:   [[0,1,1,1,0],[1,1,1,1,1],[1,1,0,1,1],[1,1,1,1,1],[0,1,1,1,0]],
-  loox:       [[0,1,1,1,0],[1,0,1,0,1],[1,1,1,1,1],[0,1,0,1,0],[0,1,1,1,0]],
-  vegetoid:   [[1,1,0,1,1],[0,1,1,1,0],[0,1,1,1,0],[1,1,1,1,1],[0,0,1,0,0]],
-  snowdrake:  [[1,0,0,0,1],[1,1,0,1,1],[0,1,1,1,0],[0,0,1,0,0],[0,1,0,1,0]],
-  chilldrake: [[1,1,0,1,1],[1,1,1,1,1],[0,1,1,1,0],[0,1,0,1,0],[0,1,1,1,0]],
-  icecap:     [[1,1,1,1,1],[0,1,1,1,0],[1,0,1,0,1],[0,1,1,1,0],[1,0,0,0,1]],
-  gyftrot:    [[0,1,0,1,0],[1,1,1,1,1],[0,1,1,1,0],[1,1,1,1,1],[1,0,0,0,1]],
-  doggo:      [[0,1,1,1,0],[1,0,0,0,1],[0,1,1,1,0],[0,1,0,1,0],[0,1,1,1,0]],
-  lesser_dog: [[1,1,0,1,1],[1,1,1,1,1],[0,0,1,0,0],[0,1,1,1,0],[1,1,0,1,1]],
-  greater_dog:[[1,0,1,0,1],[1,1,1,1,1],[0,1,1,1,0],[1,1,1,1,1],[1,0,0,0,1]],
-  royal_guard1:[[1,1,1,1,1],[1,0,1,0,1],[1,1,1,1,1],[0,1,0,1,0],[1,0,1,0,1]],
-  royal_guard2:[[1,1,1,1,1],[0,1,1,1,0],[1,1,0,1,1],[0,1,1,1,0],[1,1,1,1,1]],
-  vulkin:     [[0,1,1,1,0],[1,1,1,1,1],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0]],
-  tsunderplane:[[1,0,0,0,1],[1,1,1,1,1],[0,1,1,1,0],[0,0,1,0,0],[1,0,1,0,1]],
-  mad_dummy:  [[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]],
-  knight_knight:[[1,1,1,1,1],[1,1,0,1,1],[1,0,0,0,1],[1,1,0,1,1],[0,1,1,1,0]],
-  madjick:    [[0,1,1,1,0],[1,1,0,1,1],[0,1,1,1,0],[1,0,1,0,1],[0,1,0,1,0]],
-  final_froggit:[[1,0,1,0,1],[0,1,1,1,0],[1,1,1,1,1],[0,1,0,1,0],[1,0,1,0,1]],
-  // Bosses — bigger feel via color
-  toriel:     [[0,1,1,1,0],[1,1,1,1,1],[1,0,1,0,1],[1,1,1,1,1],[0,1,0,1,0]],
-  papyrus:    [[1,0,1,0,1],[1,1,1,1,1],[0,1,1,1,0],[1,0,1,0,1],[1,1,1,1,1]],
-  undyne:     [[0,1,0,1,0],[1,1,1,1,1],[1,1,1,1,1],[0,1,1,1,0],[1,0,0,0,1]],
-  mettaton:   [[1,1,1,1,1],[1,1,1,1,1],[1,1,0,1,1],[1,1,1,1,1],[0,1,1,1,0]],
-  asgore:     [[1,0,1,0,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,0,1,1],[1,0,1,0,1]],
+  // Each sprite is a 10x10 pixel grid. 1=filled, 0=empty
+  // Colors come from SPRITE_COLORS
+  froggit:    [[0,0,1,1,0,0,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,1,1,1,1,0,1,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,1,0,0,1,1,1,0],[0,0,1,0,1,1,0,1,0,0],[0,1,0,0,0,0,0,0,1,0],[1,1,0,0,0,0,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,0]],
+  whimsun:    [[0,0,0,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,0,0],[0,1,1,0,1,1,0,1,1,0],[0,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1],[1,1,0,1,1,1,1,0,1,1],[0,1,0,0,0,0,0,0,1,0],[1,0,1,0,0,0,0,1,0,1],[1,0,0,0,0,0,0,0,0,1],[0,1,0,0,0,0,0,0,1,0]],
+  moldsmal:   [[0,0,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,1,0,1,1,0,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,0,1,1,1,1,0,1,1],[1,1,1,1,0,0,1,1,1,1],[0,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,0,0,0],[0,0,0,0,1,1,0,0,0,0]],
+  loox:       [[0,0,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,1,1,0,0,1,1],[1,1,0,1,1,1,1,0,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,0,0,0,0,0,0,1,1],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,0,0,0],[0,0,0,0,1,1,0,0,0,0]],
+  vegetoid:   [[0,1,1,0,0,0,0,1,1,0],[1,1,1,1,0,0,1,1,1,1],[0,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,0,0,0],[0,0,0,1,1,1,1,0,0,0],[0,0,1,1,0,0,1,1,0,0],[0,1,1,0,0,0,0,1,1,0],[1,1,0,0,0,0,0,0,1,1],[0,0,0,0,0,0,0,0,0,0]],
+  snowdrake:  [[0,1,1,0,0,0,0,1,1,0],[1,1,1,1,0,0,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,0,1,1,0,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,0,0,0,0,1,1],[1,1,1,0,0,0,0,1,1,1],[0,1,1,1,0,0,1,1,1,0],[0,0,1,1,1,1,1,1,0,0]],
+  chilldrake: [[0,1,1,0,0,0,0,1,1,0],[1,1,1,1,0,0,1,1,1,1],[1,0,1,1,1,1,1,1,0,1],[0,1,0,1,1,1,1,0,1,0],[0,1,1,1,1,1,1,1,1,0],[1,1,1,0,0,0,0,1,1,1],[1,0,0,0,0,0,0,0,0,1],[1,1,0,1,0,0,1,0,1,1],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,1,1,1,1,0,0]],
+  icecap:     [[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,0,0,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,1,1,1,1,0,1,1],[1,0,0,0,0,0,0,0,0,1],[0,1,0,0,0,0,0,0,1,0],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,1,1,1,1,0,0]],
+  gyftrot:    [[0,1,0,1,0,0,1,0,1,0],[1,1,1,1,1,1,1,1,1,1],[1,0,1,1,1,1,1,1,0,1],[0,1,1,0,1,1,0,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,1,1,0,0,1,1],[1,1,0,0,0,0,0,0,1,1],[0,1,1,0,0,0,0,1,1,0],[0,1,1,0,0,0,0,1,1,0]],
+  doggo:      [[0,1,1,1,0,0,1,1,1,0],[1,1,0,1,1,1,1,0,1,1],[1,0,0,1,1,1,1,0,0,1],[1,1,1,1,0,0,1,1,1,1],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,1,1,0,1,1,0,1,1,0],[1,1,0,0,0,0,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[0,1,1,1,1,1,1,1,1,0]],
+  lesser_dog: [[0,0,0,1,1,1,1,0,0,0],[0,0,1,1,0,0,1,1,0,0],[0,1,1,0,0,0,0,1,1,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,1,1,1,1,0,1,1],[1,0,0,1,1,1,1,0,0,1],[0,0,0,1,1,1,1,0,0,0],[0,0,0,1,0,0,1,0,0,0],[0,0,1,1,0,0,1,1,0,0],[0,1,1,0,0,0,0,1,1,0]],
+  greater_dog:[[0,1,1,1,0,0,1,1,1,0],[1,1,1,1,1,1,1,1,1,1],[1,0,1,0,1,1,0,1,0,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,1,1,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[1,1,0,1,0,0,1,0,1,1],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,1,1,1,1,0,0]],
+  royal_guard1:[[1,1,1,1,1,1,1,1,1,1],[1,0,0,1,1,1,1,0,0,1],[1,0,1,0,1,1,0,1,0,1],[1,1,1,1,0,0,1,1,1,1],[1,1,0,1,1,1,1,0,1,1],[1,0,0,1,1,1,1,0,0,1],[1,1,1,0,0,0,0,1,1,1],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,0,0,1,1,0,0],[0,0,1,0,0,0,0,1,0,0]],
+  royal_guard2:[[1,1,1,1,1,1,1,1,1,1],[1,0,1,0,1,1,0,1,0,1],[1,1,1,1,1,1,1,1,1,1],[0,1,0,1,1,1,1,0,1,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,1,1,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[1,1,1,0,0,0,0,1,1,1],[0,0,1,1,0,0,1,1,0,0],[0,0,0,1,1,1,1,0,0,0]],
+  vulkin:     [[0,0,0,1,1,1,1,0,0,0],[0,0,1,1,1,1,1,1,0,0],[0,1,1,0,1,1,0,1,1,0],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,0,0,1,1,1,1,0,0,0],[0,0,0,0,1,1,0,0,0,0],[0,0,0,1,1,1,1,0,0,0]],
+  tsunderplane:[[1,0,0,0,0,0,0,0,0,1],[1,1,0,0,0,0,0,0,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1],[1,1,0,0,0,0,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,0],[0,0,0,1,0,0,1,0,0,0],[0,0,0,1,0,0,1,0,0,0],[0,0,0,0,0,0,0,0,0,0]],
+  mad_dummy:  [[1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,1],[1,0,1,0,0,0,0,1,0,1],[1,0,1,0,0,0,0,1,0,1],[1,0,0,0,1,1,0,0,0,1],[1,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1],[0,0,0,1,1,1,1,0,0,0],[0,0,1,0,0,0,0,1,0,0],[0,1,0,0,0,0,0,0,1,0]],
+  knight_knight:[[1,1,1,1,1,1,1,1,1,1],[1,1,0,1,1,1,1,0,1,1],[1,0,0,0,1,1,0,0,0,1],[1,0,1,0,0,0,0,1,0,1],[1,1,1,1,0,0,1,1,1,1],[1,1,0,1,1,1,1,0,1,1],[0,1,0,0,1,1,0,0,1,0],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,0,0,1,1,0,0],[0,0,0,1,1,1,1,0,0,0]],
+  madjick:    [[0,0,1,1,0,0,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,1,1,0,0,1,1],[0,1,1,1,1,1,1,1,1,0],[0,0,1,1,1,1,1,1,0,0],[1,0,1,0,1,1,0,1,0,1],[1,1,1,1,1,1,1,1,1,1],[0,1,0,1,0,0,1,0,1,0],[1,0,1,0,0,0,0,1,0,1],[0,1,0,0,1,1,0,0,1,0]],
+  final_froggit:[[0,1,1,0,0,0,0,1,1,0],[1,1,1,1,1,1,1,1,1,1],[1,0,1,1,0,0,1,1,0,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,0,1,1,0,1,1,0],[0,0,1,1,0,0,1,1,0,0],[0,1,1,0,0,0,0,1,1,0],[1,1,0,0,0,0,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,0,0]],
+  // BOSSES — larger, more detailed
+  toriel:     [[0,1,1,0,1,1,0,1,1,0],[1,1,1,1,1,1,1,1,1,1],[1,0,1,0,1,1,0,1,0,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,1,0,0,1,1,1,0],[0,0,1,0,1,1,0,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,1,1,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[0,1,1,0,0,0,0,1,1,0]],
+  papyrus:    [[0,1,1,1,0,0,1,1,1,0],[1,1,0,1,1,1,1,0,1,1],[1,0,0,0,1,1,0,0,0,1],[0,1,1,1,1,1,1,1,1,0],[0,0,1,0,1,1,0,1,0,0],[0,1,0,1,1,1,1,0,1,0],[1,1,1,1,1,1,1,1,1,1],[1,0,0,0,1,1,0,0,0,1],[0,1,0,1,0,0,1,0,1,0],[0,1,1,0,0,0,0,1,1,0]],
+  undyne:     [[0,0,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,0],[1,1,0,0,1,1,0,0,1,1],[1,0,1,0,1,1,0,1,0,1],[1,1,1,1,1,1,1,1,1,1],[1,1,0,1,1,1,1,0,1,1],[0,1,1,0,1,1,0,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,0,0,1,0,0,1,0,0,0],[0,0,1,1,0,0,1,1,0,0]],
+  mettaton:   [[1,1,1,1,1,1,1,1,1,1],[1,1,0,0,1,1,0,0,1,1],[1,0,0,0,0,0,0,0,0,1],[1,1,0,1,0,0,1,0,1,1],[1,1,1,1,1,1,1,1,1,1],[1,0,0,1,1,1,1,0,0,1],[0,1,0,0,1,1,0,0,1,0],[0,1,1,0,0,0,0,1,1,0],[0,0,1,1,0,0,1,1,0,0],[0,0,0,1,1,1,1,0,0,0]],
+  asgore:     [[1,0,1,0,1,1,0,1,0,1],[0,1,1,1,1,1,1,1,1,0],[1,1,0,1,1,1,1,0,1,1],[1,1,1,1,1,1,1,1,1,1],[0,1,1,0,1,1,0,1,1,0],[0,0,1,1,1,1,1,1,0,0],[0,1,1,0,0,0,0,1,1,0],[1,1,0,0,0,0,0,0,1,1],[1,0,0,1,0,0,1,0,0,1],[0,1,1,0,0,0,0,1,1,0]],
 };
 
 const SPRITE_COLORS = {
-  froggit:'#4a8c4a',whimsun:'#e0a0ff',moldsmal:'#40a040',loox:'#ff4040',
-  vegetoid:'#40c040',snowdrake:'#80c0ff',chilldrake:'#a0e0ff',icecap:'#c0e0ff',
-  gyftrot:'#c08040',doggo:'#c0a060',lesser_dog:'#e0c080',greater_dog:'#ffd080',
-  royal_guard1:'#8080c0',royal_guard2:'#a0a0e0',vulkin:'#ff6020',tsunderplane:'#a0a0a0',
-  mad_dummy:'#808080',knight_knight:'#8080ff',madjick:'#c040c0',final_froggit:'#60c060',
-  toriel:'#c06060',papyrus:'#f0f0a0',undyne:'#4040c0',mettaton:'#f0f0f0',asgore:'#c0a020',
+  froggit:'#4a9a4a',whimsun:'#d080ff',moldsmal:'#50b850',loox:'#ff5050',
+  vegetoid:'#50c050',snowdrake:'#90c8ff',chilldrake:'#a8e8ff',icecap:'#c8e8ff',
+  gyftrot:'#c89050',doggo:'#c8a870',lesser_dog:'#e0c890',greater_dog:'#ffd890',
+  royal_guard1:'#8890d8',royal_guard2:'#a8a8e8',vulkin:'#ff7030',tsunderplane:'#b8b8b8',
+  mad_dummy:'#909090',knight_knight:'#9090ff',madjick:'#d050d0',final_froggit:'#70d070',
+  toriel:'#d07070',papyrus:'#f8f8b8',undyne:'#5050d0',mettaton:'#f8f8f8',asgore:'#d0b030',
 };
 
-// ── Menu button pixel icons ────────────────────────────────
+function drawSprite(canvasId, enemyId, isBoss) {
+  const canvas = document.getElementById(canvasId); if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const size = isBoss ? 120 : 96;
+  canvas.width = size; canvas.height = size;
+  ctx.clearRect(0, 0, size, size);
+  const pattern = SPRITES[enemyId] || SPRITES.froggit;
+  const color = SPRITE_COLORS[enemyId] || '#ffffff';
+  const rows = pattern.length, cols = pattern[0].length;
+  const ps = Math.floor(size / cols); // pixel size
+  const offX = Math.floor((size - cols*ps)/2);
+  const offY = Math.floor((size - rows*ps)/2);
+  if(isBoss){ ctx.shadowColor=color; ctx.shadowBlur=10; }
+  for(let r=0;r<rows;r++){
+    for(let cl=0;cl<cols;cl++){
+      if(pattern[r][cl]){
+        ctx.fillStyle=color;
+        ctx.fillRect(offX+cl*ps, offY+r*ps, ps, ps);
+        // Pixel highlight top-left corner
+        ctx.fillStyle='rgba(255,255,255,0.25)';
+        ctx.fillRect(offX+cl*ps, offY+r*ps, Math.max(1,ps/3), Math.max(1,ps/3));
+      }
+    }
+  }
+  ctx.shadowBlur=0;
+}
+
+
 function drawMenuIcons() {
-  const icons = {
-    'menu-icon-fight': (ctx) => {
-      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
-      // Sword blade
-      [0,1,2,3,4].forEach(y=>px(5,y,'#ccc'));
-      // Crossguard
-      [4,5,6].forEach(x=>px(x,5,'#c80'));
-      // Handle
-      [6,7,8,9].forEach(y=>px(5,y,'#888'));
-    },
-    'menu-icon-act': (ctx) => {
-      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
-      // Speech bubble outline
-      for(let x=2;x<=8;x++){px(x,1,'#fff');px(x,7,'#fff');}
-      for(let y=2;y<=6;y++){px(1,y,'#fff');px(9,y,'#fff');}
-      px(3,8,'#fff');px(4,9,'#fff');
-      // Dots
-      [3,5,7].forEach(x=>px(x,4,'#000'));
-    },
-    'menu-icon-item': (ctx) => {
-      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
-      // Bag
-      for(let x=2;x<=8;x++) for(let y=3;y<=9;y++) px(x,y,'#a0a');
-      [4,5,6].forEach(x=>{px(x,1,'#808');px(x,2,'#808');});
-      // Latch
-      for(let x=2;x<=8;x++) px(x,5,'#c0c');
-    },
-    'menu-icon-mercy': (ctx) => {
-      const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
-      // Heart shape
-      [[1,3],[2,2],[3,1],[4,2],[5,3],[6,2],[7,1],[8,2],[9,3]].forEach(([x,y])=>px(x,y,'#f06'));
-      for(let x=1;x<=9;x++) if(!(x===1||x===9)) px(x,4,'#f06');
-      [2,3,4,5,6,7,8].forEach(x=>px(x,5,'#f06'));
-      [3,4,5,6,7].forEach(x=>px(x,6,'#f06'));
-      [4,5,6].forEach(x=>px(x,7,'#f06'));
-      px(5,8,'#f06');
-    },
-  };
-  Object.entries(icons).forEach(([id,draw])=>{
+  const draw = (id, fn) => {
     const cv=Q('#'+id); if(!cv) return;
-    const ctx=cv.getContext('2d'); ctx.clearRect(0,0,22,22);
-    draw(ctx);
+    cv.width=28; cv.height=28;
+    const ctx=cv.getContext('2d'); ctx.clearRect(0,0,28,28);
+    // 2px per logical pixel for 14x14 grid
+    const px=(x,y,col)=>{ctx.fillStyle=col;ctx.fillRect(x*2,y*2,2,2);};
+    fn(px);
+  };
+
+  // FIGHT — red sword
+  draw('menu-icon-fight', px=>{
+    // Blade
+    for(let i=0;i<7;i++) px(6,i,'#e8e8e8');
+    px(5,0,'#fff'); px(7,0,'#fff');
+    // Crossguard
+    for(let x=3;x<=9;x++) px(x,7,'#c8a000');
+    // Handle
+    for(let i=8;i<=12;i++) px(6,i,'#a06030');
+    px(6,13,'#c8a000');
+  });
+
+  // ACT — speech bubble
+  draw('menu-icon-act', px=>{
+    for(let x=2;x<=11;x++){px(x,1,'#fff');px(x,8,'#fff');}
+    for(let y=2;y<=7;y++){px(1,y,'#fff');px(12,y,'#fff');}
+    [3,6,9].forEach(x=>px(x,5,'#000'));
+    px(3,10,'#fff'); px(4,11,'#fff');
+  });
+
+  // ITEM — yellow star/candy
+  draw('menu-icon-item', px=>{
+    // Bag shape
+    for(let x=3;x<=10;x++) for(let y=4;y<=11;y++) px(x,y,'#d4a800');
+    for(let x=5;x<=8;x++){px(x,2,'#c09000');px(x,3,'#c09000');}
+    // Shine
+    px(4,5,'#fff'); px(5,5,'#fff'); px(4,6,'#fff');
+  });
+
+  // MERCY — white dove/heart
+  draw('menu-icon-mercy', px=>{
+    // Heart shape
+    [[2,3],[3,2],[4,1],[5,2],[6,3],[7,2],[8,1],[9,2],[10,3]].forEach(([x,y])=>px(x,y,'#ff4488'));
+    for(let x=2;x<=10;x++) if(x!==6) px(x,4,'#ff4488');
+    [3,4,5,6,7,8,9].forEach(x=>px(x,5,'#ff4488'));
+    [4,5,6,7,8].forEach(x=>px(x,6,'#ff4488'));
+    [5,6,7].forEach(x=>px(x,7,'#ff4488'));
+    px(6,8,'#ff4488');
   });
 }
 
@@ -2781,15 +2798,15 @@ function startSlider() {
   stopSlider();
   sliderPos=0; sliderDir=1; sliderStopped=false;
 
-  // Build bone obstacles in pill — more bones, random heights
-  const pill=Q('#ut-attack-pill'); if(!pill) return;
-  pill.querySelectorAll('.ut-bone').forEach(b=>b.remove());
-  const bonePositions=[12,26,40,55,68,80,92]; // more bones
-  const boneHeights=[24,16,32,14,28,18,24];
-  bonePositions.forEach((pos,i)=>{
+  // Build bone obstacles in the attack bar
+  const bar=Q('#ut-attack-bar-outer'); if(!bar) return;
+  bar.querySelectorAll('.ut-bone').forEach(b=>b.remove());
+  // Random bone positions each attack
+  const bonePositions=[10,23,38,52,65,78,90];
+  bonePositions.forEach(pos=>{
     const b=document.createElement('div'); b.className='ut-bone';
-    b.style.left=pos+'%'; b.style.height=(boneHeights[i]||18)+'px';
-    pill.appendChild(b);
+    b.style.left=pos+'%';
+    bar.appendChild(b);
   });
 
   const cursor=Q('#ut-pill-cursor');
@@ -2803,11 +2820,9 @@ function startSlider() {
     if(cursor) cursor.style.left=sliderPos+'%';
     if(preview){
       const dmg=calcPreviewDamage(sliderPos);
-      // Check if cursor is on a bone (bad position)
-      const onBone=bonePositions.some(bp=>Math.abs(sliderPos-bp)<3);
-      // Green lane is the sweet spot (centre of pill)
+      const onBone=bonePositions.some(bp=>Math.abs(sliderPos-bp)<4);
       const dist=Math.abs(sliderPos-50);
-      const col=onBone?'#f00':dist<15?'#fff':dist<30?'#ff0':'#f80';
+      const col=onBone?'#f00':dist<12?'#fff':dist<28?'#ff0':'#f80';
       preview.style.color=col;
       preview.textContent=dmg+' DMG';
     }
@@ -2846,7 +2861,7 @@ function startDodge(pattern, enemyName, isPvp=false) {
   const dd=Q('#ut-dodge-dialog');
   if(dd&&enemyName) dd.textContent=`* ${enemyName} attacks!`;
   const arena=Q('#ut-soul-arena');
-  arenaW=arena.clientWidth||168; arenaH=arena.clientHeight||168;
+  arenaW=arena.clientWidth||156; arenaH=arena.clientHeight||156;
   soulX=arenaW/2; soulY=arenaH/2;
   dodgeDmg=0; dodgeKeys={};
   projectiles=[];
@@ -3264,10 +3279,9 @@ Q('#ut-btn-fight').addEventListener('click', utShowFight);
 Q('#ut-btn-act').addEventListener('click', utShowActs);
 Q('#ut-btn-item').addEventListener('click', utShowItems);
 Q('#ut-btn-mercy').addEventListener('click', utMercy);
-// Click anywhere on the attack pill bar to stop
-const pillWrap=Q('#ut-attack-pill-wrap');
+// Click on attack bar to stop slider
+const pillWrap=Q('#ut-attack-bar-outer');
 if(pillWrap) pillWrap.addEventListener('click', utStopSlider);
-// Also wire up the fight overlay itself
 const fightOverlay=Q('#ut-fight-overlay');
 if(fightOverlay) fightOverlay.addEventListener('click', e=>{
   if(utCurrentPanel==='fight') utStopSlider();
