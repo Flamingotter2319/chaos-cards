@@ -1136,11 +1136,15 @@ function handle(msg){
       myFriends=msg.friends||[];
       pendingRequests=msg.friendRequestsReceived||[];
       renderFriends();
+      // Update tab badge
       if(pendingRequests.length&&Q('#ltab-friends')&&!Q('#ltab-friends').classList.contains('active'))
         Q('#ltab-friends').textContent=`Friends (${pendingRequests.length})`;
+      else if(Q('#ltab-friends')) Q('#ltab-friends').textContent='Friends';
       break;
     case 'friendsUpdate':
       myFriends=msg.friends||[];
+      // Also refresh to get updated pending list
+      send({type:'getFriends'});
       renderFriends(); break;
     case 'friendOk':
       Q('#friend-err') && (Q('#friend-err').style.color='#81c784');
@@ -1174,10 +1178,13 @@ function handle(msg){
     case 'gameStarting': show('game'); break;
     case 'gameState':
       game=msg; amSpec=!msg.players.find(p=>p.id===myId);
-      // Throttle renders - don't redraw faster than 200ms to prevent glitch
+      // Throttle renders - don't redraw faster than 150ms to prevent glitch
       if(!window._renderPending){
         window._renderPending=true;
-        setTimeout(()=>{ window._renderPending=false; if(game) renderGame(); },100);
+        requestAnimationFrame(()=>{
+          window._renderPending=false;
+          if(game) renderGame();
+        });
       }
       if(msg.logs) msg.logs.forEach(l=>log(l.msg,l.type||''));
       break;
@@ -1188,6 +1195,9 @@ function handle(msg){
       log('⚠ '+msg.reason,'bad'); curRoom=null; game=null;
       {const ab=Q('#actbar');if(ab){ab.classList.remove('vis');ab.innerHTML='';}}
       {const ap=Q('#g-action-panel');if(ap)ap.innerHTML='';}
+      // Clear room chats
+      {const rc=Q('#rchat');if(rc)rc.innerHTML='';}
+      {const gc=Q('#gchat');if(gc)gc.innerHTML='';}
       setTimeout(()=>show('lobby'),1400); break;
     case 'error':
       log('⚠ '+msg.message,'bad');
@@ -1461,9 +1471,24 @@ function renderSrvList(list){
   el.innerHTML='';
   list.forEach(s=>{
     const d=document.createElement('div'); d.className='srv-item';
-    const badge=s.inGame?'<span class="badge b-ing">In Game</span>':s.hasPassword?'<span class="badge b-pw">🔒 Private</span>':'<span class="badge b-open">Open</span>';
-    d.innerHTML=`<div><div class="srv-name">${esc(s.name)}</div><div class="srv-sub">${s.playerCount}/8 · ID: ${s.id}</div></div>${badge}`;
-    d.onclick=()=>{ if(s.hasPassword){ Q('#ji-id').value=s.id; Q('#ji-pw').focus(); return; } send({type:'joinServer',serverId:s.id}); };
+    if(s.gameType==='undertale'){
+      // UT challenge entry
+      d.innerHTML=`<div>
+        <div class="srv-name" style="color:#f00">⚔ ${esc(s.name)}</div>
+        <div class="srv-sub" style="color:#555;font-family:'Courier New',monospace;font-size:9px">UNDERTALE BATTLE · Click to challenge</div>
+      </div><span class="badge" style="background:rgba(255,0,0,0.15);color:#f00;border:1px solid #f00">UT</span>`;
+      d.onclick=()=>{
+        if(confirm(`Challenge ${s.challengeTarget} to an Undertale battle?`)){
+          send({type:'utChallenge',target:s.challengeTarget});
+          // Open the UT PvP modal
+          Q('#ut-pvp-modal')?.classList.add('open');
+        }
+      };
+    } else {
+      const badge=s.inGame?'<span class="badge b-ing">In Game</span>':s.hasPassword?'<span class="badge b-pw">🔒 Private</span>':'<span class="badge b-open">Open</span>';
+      d.innerHTML=`<div><div class="srv-name">${esc(s.name)}</div><div class="srv-sub">${s.playerCount}/8 · ID: ${s.id}</div></div>${badge}`;
+      d.onclick=()=>{ if(s.hasPassword){ Q('#ji-id').value=s.id; Q('#ji-pw').focus(); return; } send({type:'joinServer',serverId:s.id}); };
+    }
     el.appendChild(d);
   });
 }
@@ -1800,15 +1825,21 @@ function mkFaceDown(){
 function renderActBar(g,p){
   const panel=Q('#g-action-panel');
   const mobileBar=Q('#actbar');
-  if(panel) panel.innerHTML='';
-  if(mobileBar) { mobileBar.innerHTML=''; mobileBar.classList.remove('vis'); }
-  if(!p||amSpec) return;
+  if(!p||amSpec){
+    if(panel) panel.innerHTML='';
+    if(mobileBar){mobileBar.innerHTML='';mobileBar.classList.remove('vis');}
+    return;
+  }
+
+  // Preserve existing bet value to avoid wiping input on every render
+  const existingBetVal=Q('#bet-val')?.value;
 
   let html='';
 
   if(g.phase==='betting'&&(p.status==='waiting'||p.status==='betting')){
     const mn=g.minBet||5, mx=Math.min(g.maxBet||100,p.chips);
-    const cur=Math.min(mn*2,mx);
+    // Use existing value if present, otherwise default
+    const cur=existingBetVal?Math.min(Math.max(parseInt(existingBetVal)||mn,mn),mx):Math.min(mn*2,mx);
     html=`
       <div class="ptitle">YOUR BET</div>
       <div style="display:flex;flex-direction:column;gap:7px">
@@ -1841,8 +1872,6 @@ function renderActBar(g,p){
         </button>
       </div>
     `;
-  } else if(g.phase==='betting'&&(p.status==='waiting'||p.status==='betting')){
-    html=`<div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);text-align:center;padding:8px">WAITING FOR OTHER PLAYERS TO BET…</div>`;
   } else if(g.phase==='play'&&p.status==='active'){
     html=`<div style="font-family:'Special Elite',cursive;font-size:10px;color:var(--dim);text-align:center;padding:8px">WAITING FOR YOUR TURN…</div>`;
   } else if(g.phase==='reveal'){
@@ -1850,12 +1879,8 @@ function renderActBar(g,p){
   }
 
   if(panel) panel.innerHTML=html;
-
-  // Also populate mobile bar for small screens (hidden on desktop via CSS)
-  if(mobileBar && html){
-    mobileBar.innerHTML=html;
-    mobileBar.classList.add('vis');
-  }
+  if(mobileBar&&html){mobileBar.innerHTML=html;mobileBar.classList.add('vis');}
+  else if(mobileBar){mobileBar.innerHTML='';mobileBar.classList.remove('vis');}
 }
 
 function setbet(v){ const el=Q('#bet-val'); if(el) el.value=v; }
@@ -2050,7 +2075,15 @@ connect();
 <div id="sc-ut" class="screen">
   <!-- Thin top bar -->
   <div class="ut-topbar">
-    <span style="font-family:var(--ut-font);font-size:6px;color:#444">UNDERTALE</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-family:var(--ut-font);font-size:6px;color:#444">UNDERTALE</span>
+      <button id="ut-public-toggle" onclick="toggleUtPublic()"
+        style="background:#000;border:1px solid #555;color:#555;padding:2px 8px;
+        font-family:var(--ut-font);font-size:6px;cursor:pointer;letter-spacing:0"
+        title="Make your battle public so others can challenge you">
+        PRIVATE
+      </button>
+    </div>
     <div style="display:flex;gap:4px">
       <button class="ut-topbar-btn" id="ut-btn-shop">SHOP</button>
       <button class="ut-topbar-btn" id="ut-btn-pvp">PvP</button>
@@ -2253,6 +2286,33 @@ connect();
   </div>
 </div>
 
+<!-- UNDERTALE DEATH SCREEN -->
+<div id="ut-death-screen" style="display:none;position:fixed;inset:0;z-index:700;
+  background:#000;flex-direction:column;align-items:center;justify-content:center;
+  font-family:var(--ut-font);gap:20px;">
+  <div style="font-size:10px;color:#f00;letter-spacing:2px;text-align:center" id="ut-death-title">YOU DIED.</div>
+  <canvas id="ut-death-sprite" width="120" height="120" style="image-rendering:pixelated;opacity:0.4"></canvas>
+  <div style="background:#000;border:3px solid #fff;padding:12px 16px;max-width:320px;font-size:8px;line-height:2.4;color:#fff;text-align:center" id="ut-death-msg">
+    * You lost everything.
+  </div>
+  <div style="display:flex;gap:12px;margin-top:8px">
+    <button id="ut-btn-restart" style="background:#000;border:3px solid #fff;color:#fff;
+      padding:10px 20px;font-family:var(--ut-font);font-size:8px;cursor:pointer;letter-spacing:1px;"
+      onmouseover="this.style.background='#fff';this.style.color='#000'"
+      onmouseout="this.style.background='#000';this.style.color='#fff'">
+      &#9829; CONTINUE
+    </button>
+    <button onclick="Q('#ut-death-screen').style.display='none';leaveBattle();"
+      style="background:#000;border:3px solid #555;color:#555;
+      padding:10px 20px;font-family:var(--ut-font);font-size:8px;cursor:pointer;letter-spacing:1px;"
+      onmouseover="this.style.borderColor='#fff';this.style.color='#fff'"
+      onmouseout="this.style.borderColor='#555';this.style.color='#555'">
+      GIVE UP
+    </button>
+  </div>
+  <div style="font-size:7px;color:#333;margin-top:4px" id="ut-death-stats"></div>
+</div>
+
 <!-- Boot -->
 <script>
 // ══════════════════════════════════════════════════════════
@@ -2320,6 +2380,10 @@ function handleUtMessage(msg) {
       utLog(`💱 Converted ${msg.chipsSpent} chips → ${msg.goldGained}G`);
       Q('#stat-chips').textContent = msg.newChips;
       break;
+    case 'utDeath':
+      // Show death screen overlay
+      showUtDeathScreen(msg.killCount||0, msg.level||1);
+      break;
     case 'utError':
       utDialog('* ' + (msg.msg||'Something went wrong.'));
       break;
@@ -2384,24 +2448,71 @@ function handleUtMessage(msg) {
 // switchLTab only handles servers/chat/friends now
 
 // ── Enter/leave battle ─────────────────────────────────────
+function showUtDeathScreen(kills, level) {
+  stopSlider(); stopDodge();
+  // Close dodge overlay if open
+  const dod=Q('#ut-dodge-overlay'); if(dod) dod.classList.remove('open');
+  // Draw the enemy sprite faded on death screen
+  if(utState?.enemy) drawSprite('ut-death-sprite', utState.enemy.id, false);
+  Q('#ut-death-stats').textContent=`LV ${level}  |  ${kills} kills`;
+  const msgEl=Q('#ut-death-msg');
+  const deathMsgs=[
+    '* You lost everything.\n  Determination... gone.',
+    '* The darkness takes you.\n  Start again.',
+    '* Your SOUL shattered.\n  But you can try again.',
+    '* You gave it your best.\n  Time to try again.',
+  ];
+  msgEl.textContent=deathMsgs[Math.floor(Math.random()*deathMsgs.length)];
+  Q('#ut-death-screen').style.display='flex';
+}
+
+Q('#ut-btn-restart')?.addEventListener('click',()=>{
+  Q('#ut-death-screen').style.display='none';
+  send({type:'utRestart'});
+});
+
 function enterBattle() {
   show('ut');
   send({type:'utGetState'});
-  // Draw menu icons after screen shows
-  setTimeout(drawMenuIcons, 100);
+  setTimeout(drawMenuIcons, 120);
 }
 
 function leaveBattle() {
   stopSlider();
   stopDodge();
-  utState = null;
-  // Close any open overlays
+  utState=null;
+  Q('#ut-death-screen').style.display='none';
   const dod=Q('#ut-dodge-overlay'); if(dod) dod.classList.remove('open');
   const shop=Q('#ut-shop-screen'); if(shop) shop.style.display='none';
   const pvp=Q('#ut-pvp-modal'); if(pvp) pvp.classList.remove('open');
+  // If we had a public UT server, remove it
+  if(utPublicServerId){
+    send({type:'removeUtServer',id:utPublicServerId});
+    utPublicServerId=null;
+  }
   show('lobby');
-  // Refresh servers so the lobby is in sync
   send({type:'refreshServers'});
+}
+
+// ── UT Public Server toggle ────────────────────────────────
+let utPublicServerId=null;
+let utIsPublic=false;
+
+function toggleUtPublic(){
+  utIsPublic=!utIsPublic;
+  const btn=Q('#ut-public-toggle');
+  if(utIsPublic){
+    btn.style.borderColor='#4caf50'; btn.style.color='#4caf50';
+    btn.textContent='PUBLIC';
+    // Register as a challengeable player in the server list
+    send({type:'utSetPublic',public:true,username:myUser});
+    utLog('You are now visible in the server list for PvP challenges.');
+  } else {
+    btn.style.borderColor='#555'; btn.style.color='#555';
+    btn.textContent='PRIVATE';
+    send({type:'utSetPublic',public:false});
+    utLog('You are now hidden from the server list.');
+  }
 }
 
 // ── Render state ───────────────────────────────────────────

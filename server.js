@@ -811,9 +811,16 @@ function roomSnap(room){
     playerCount:room.players.size,inGame:!!room.game,settings:room.settings,
     players:[...room.players.values()].map(p=>({id:p.id,name:p.name,isBot:p.isBot,chips:p.chips,isOwner:p.id===room.ownerId,spectating:p.spectating||false,botType:p.botType}))};
 }
+// Track players who made themselves public for UT challenges
+const utPublicPlayers = new Map(); // username → playerId
+
 function srvList(){
   const cards=[...servers.values()].map(r=>({id:r.id,name:r.name,hasPassword:!!r.password,playerCount:r.players.size,inGame:!!r.game,gameType:'cards'}));
-  return cards;
+  const utPlayers=[...utPublicPlayers.entries()].map(([username,pid])=>({
+    id:'ut_'+pid, name:username+"'s Battle", gameType:'undertale',
+    playerCount:1, hasPassword:false, inGame:false, challengeTarget:username,
+  }));
+  return [...cards,...utPlayers];
 }
 function broadcastSrvList(){const list=srvList();wss.clients.forEach(ws=>{const m=clients.get(ws);if(!m||!m.serverId)sendTo(ws,{type:'serverList',servers:list});});}
 
@@ -1062,6 +1069,10 @@ wss.on('connection',ws=>{
         sendTo(ws,{type:'friendOk',message:`Invite sent to ${to}.`});
         break;
       }
+      case 'utSetPublic':
+        if(msg.public){ utPublicPlayers.set(meta.username,playerId); }
+        else { utPublicPlayers.delete(meta.username); }
+        broadcastSrvList(); break;
       case 'getOnline':
         sendTo(ws,{type:'onlineList',users:onlineList()}); break;
       // ── UNDERTALE ───────────────────────────────────────────
@@ -1121,17 +1132,31 @@ wss.on('connection',ws=>{
         if(!s||s.battlePhase!=='dodging') break;
         const dmgTaken=parseInt(msg.dmgTaken)||0;
         s.stats.hp=Math.max(0,s.stats.hp-dmgTaken);
-        if(dmgTaken===0) s.log.push('✨ You dodged perfectly! No damage taken.');
-        else s.log.push(`💔 You took ${dmgTaken} damage. HP: ${s.stats.hp}/${s.stats.maxHp}`);
+        if(dmgTaken===0) s.log.push('✨ You dodged perfectly!');
+        else s.log.push(`💔 Took ${dmgTaken} damage. HP: ${s.stats.hp}/${s.stats.maxHp}`);
         s.battlePhase='idle';
         if(s.stats.hp<=0){
-          // Player died
-          s.log.push('💀 You have been defeated! Returning to LV 1...');
+          // Send death message FIRST so client can show death screen
+          sendTo(ws,{type:'utDeath',killCount:s.stats.kills,level:s.stats.level});
+          // Reset stats but DON'T save yet — wait for client utRestart
           s.stats=UT.newPlayerStats();
           s.enemy=UT.pickEnemy(0);
+          s.battlePhase='idle';
+          s.log=['💀 You were defeated. Everything is gone.'];
+        } else {
           await updateAcc(meta.username,{utStats:s.stats});
-          s.log.push('You lost everything and start over.');
+          sendTo(ws,UT.sessionState(s));
         }
+        break;
+      }
+      case 'utRestart':{
+        // Player confirmed restart after death
+        const s=UT.utSessions.get(meta.username);
+        if(!s) break;
+        s.stats=UT.newPlayerStats();
+        s.enemy=UT.pickEnemy(0);
+        s.battlePhase='idle';
+        s.log=['* You wake up. Everything feels... gone.','* But you remember. And you try again.'];
         await updateAcc(meta.username,{utStats:s.stats});
         sendTo(ws,UT.sessionState(s));
         break;
@@ -1303,7 +1328,11 @@ wss.on('connection',ws=>{
 
   ws.on('close',()=>{
     const m=clients.get(ws);
-    if(m){handleLeave(ws,m);if(m.username&&loggedIn.get(m.username)===m.playerId)loggedIn.delete(m.username);}
+    if(m){
+      handleLeave(ws,m);
+      if(m.username&&loggedIn.get(m.username)===m.playerId) loggedIn.delete(m.username);
+      if(m.username) utPublicPlayers.delete(m.username);
+    }
     clients.delete(ws);
     setTimeout(broadcastOnlineList,100);
   });
